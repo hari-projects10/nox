@@ -39,8 +39,7 @@ const tools: Tool[] = [
       "Per-channel transfer curves",
       "Deterministic across batches",
     ],
-    image:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=2000&q=85&auto=format&fit=crop",
+    image: "/images/chroma-90.jpg",
     alt: "Portrait used to demonstrate film colour grading",
     process: "grade",
   },
@@ -55,8 +54,7 @@ const tools: Tool[] = [
       "Relative-height normalisation",
       "Automatic reframe and level",
     ],
-    image:
-      "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=2000&q=85&auto=format&fit=crop",
+    image: "/images/align-ai.jpg",
     alt: "Four people of differing heights framed together at sunset",
     process: "reframe",
   },
@@ -71,8 +69,7 @@ const tools: Tool[] = [
       "Edge-accurate matte",
       "Synthesised optical defocus",
     ],
-    image:
-      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=2000&q=85&auto=format&fit=crop",
+    image: "/images/depth-isolate.jpg",
     alt: "Close-up portrait used to demonstrate subject and background separation",
     process: "isolate",
   },

@@ -43,7 +43,10 @@ export function DemoPreview({ src, title, design, background, fit }: DemoPreview
         setMounted(true);
         observer.disconnect();
       },
-      { rootMargin: "400px" },
+      /* A screen and a half of warning: these carry a 3.4MB model and a
+         WebGL runtime, so arriving at the panel should not be the moment
+         the download starts. */
+      { rootMargin: "1400px" },
     );
     observer.observe(el);
     return () => observer.disconnect();

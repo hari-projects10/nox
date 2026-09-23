@@ -47,6 +47,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${bodoni.variable}`}>
       <head>
+        {/* The demos pull fonts and three.js from these; opening the
+            connections up front removes a DNS + TLS round trip each from
+            the moment they are actually needed. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="" />
+
         {/* Runs before hydration on purpose. The browser restores the last
             scroll offset around the load event — later than any React effect
             — so opting out from a component is already too late and the page
