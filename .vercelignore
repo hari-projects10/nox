@@ -1,0 +1,10 @@
+# Design sources. The demos that ship live in public/demos; this folder is
+# the material they were generated from and is never served.
+designs
+
+# Local only
+.next
+node_modules
+
+# Untouched video masters, kept for comparison. Never deployed.
+video-originals

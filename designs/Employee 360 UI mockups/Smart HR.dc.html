@@ -1,0 +1,2015 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0E1A33;--t2:#3E4B66;--t3:#72809A;--t4:#A1ACBF;--blue:#2D6BEA;--blue-soft:#E7EFFD;--navy:#172B63;--green:#16A34A;--amber:#D98A0B;--red:#E0484C;--line:rgba(15,35,80,.08);--line-2:rgba(15,35,80,.13);--sh:0 1px 0 rgba(255,255,255,.75) inset,0 14px 34px -16px rgba(28,58,120,.22)}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--ink);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;background:#E8EFF9;font-feature-settings:'cv11','ss01'}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.bgfx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:radial-gradient(1100px 650px at 88% -8%,#C7DAFA 0%,transparent 60%),radial-gradient(900px 600px at -8% 18%,#D5E5FB 0%,transparent 55%),radial-gradient(900px 700px at 55% 115%,#D9E7F8 0%,transparent 60%),linear-gradient(180deg,#EFF4FB,#E5EDF8)}
+.bgfx i{position:absolute;border-radius:999px;filter:blur(70px);opacity:.6;animation:float 20s ease-in-out infinite}
+.bgfx i:nth-child(1){width:440px;height:440px;background:#B5CEF9;top:-120px;right:14%}
+.bgfx i:nth-child(2){width:380px;height:380px;background:#CBE6F7;bottom:-120px;left:24%;animation-delay:-10s}
+
+.shell{position:relative;z-index:1;display:grid;grid-template-columns:256px minmax(0,1fr);gap:20px;padding:16px;min-height:100vh;transition:grid-template-columns .38s cubic-bezier(.22,1,.36,1)}
+.shell.rail{grid-template-columns:78px minmax(0,1fr)}
+.side.rail{padding:16px 10px;align-items:stretch}
+.side.rail .nav-sub{display:none !important}
+.side.rail .nav-item svg~svg,.side.rail .nav-item .sp{display:none}
+.dotbadge{position:absolute;top:9px;right:11px;width:9px;height:9px;border-radius:999px;background:#F5A524;box-shadow:0 0 0 2px #fff}
+.side.dark .dotbadge{box-shadow:0 0 0 2px #22376F}
+.glass{background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.8);box-shadow:var(--sh);-webkit-backdrop-filter:blur(22px) saturate(160%);backdrop-filter:blur(22px) saturate(160%);border-radius:22px}
+.glass-2{background:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.95);box-shadow:0 14px 30px -18px rgba(28,58,120,.35);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:18px}
+.card{padding:20px;display:flex;flex-direction:column;min-width:0;transition:box-shadow .25s}
+.card:hover{box-shadow:0 1px 0 rgba(255,255,255,.75) inset,0 20px 44px -18px rgba(28,58,120,.3)}
+.card-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap;min-width:0}
+.card-h>div{min-width:0}
+.card-t{font-size:15.5px;font-weight:600;letter-spacing:-.015em;line-height:1.3}
+.card-s{font-size:12.5px;color:var(--t3);line-height:1.4}
+
+/* sidebar */
+.side{position:sticky;top:16px;height:calc(100vh - 32px);display:flex;flex-direction:column;padding:18px 14px;overflow:hidden}
+.side-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;margin:0 -4px;padding:0 4px 10px;scrollbar-width:thin;scrollbar-color:rgba(15,35,80,.18) transparent}
+.side-scroll::-webkit-scrollbar{width:6px}
+.side-scroll::-webkit-scrollbar-thumb{background:rgba(15,35,80,.16);border-radius:999px}
+.side.dark .side-scroll{scrollbar-color:rgba(255,255,255,.22) transparent}
+.side.dark .side-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2)}
+.brand{display:flex;align-items:center;gap:11px;padding:4px 8px 18px}
+.logo{position:relative;overflow:hidden;width:36px;height:36px;flex:none;border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;
+ background:radial-gradient(circle at 72% 18%,rgba(253,247,236,.85),transparent 55%),radial-gradient(circle at 18% 88%,rgba(159,196,232,.8),transparent 58%),#06070A;
+ box-shadow:0 10px 18px -8px rgba(6,7,10,.7),inset 0 0 0 1px rgba(255,255,255,.08)}
+.logo::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,transparent 36%,#06070A 38%);background-size:3.4px 3.4px;pointer-events:none}
+.logo svg{position:relative;z-index:1;filter:drop-shadow(0 1px 4px rgba(0,0,0,.6))}
+.brand-name{font-family:'Poppins',Inter,sans-serif;font-weight:500;letter-spacing:-.03em}
+.brand-name .sp{display:inline-block;vertical-align:.32em;margin-left:1px}
+.brand-name{font-size:17.5px;line-height:1.2}
+.brand-sub{font-size:12px;color:var(--t3);line-height:1.3}
+.brand-text{overflow:hidden;max-width:200px;white-space:nowrap;opacity:1;transition:max-width .34s cubic-bezier(.22,1,.36,1),opacity .2s ease .12s}
+.side.rail .brand-text{max-width:0;opacity:0;transition:max-width .3s cubic-bezier(.22,1,.36,1),opacity .12s ease}
+.ws{position:relative;margin-bottom:6px;max-height:64px;opacity:1;overflow:hidden;transition:max-height .34s cubic-bezier(.22,1,.36,1),opacity .2s ease .12s,margin-bottom .34s cubic-bezier(.22,1,.36,1)}
+.side.rail .ws{max-height:0;opacity:0;margin-bottom:0;transition:max-height .3s cubic-bezier(.22,1,.36,1),opacity .12s ease,margin-bottom .3s cubic-bezier(.22,1,.36,1)}
+.ws-btn{width:100%;display:flex;align-items:center;gap:10px;padding:8px 10px 8px 8px;border-radius:14px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.7);cursor:pointer;text-align:left;box-shadow:0 8px 18px -14px rgba(28,58,120,.4);transition:background .15s}
+.ws-btn:hover{background:#fff}
+.ws-av{width:32px;height:32px;flex:none;border-radius:10px;background:linear-gradient(145deg,#24408A,#101F4A);color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.side-label{padding:18px 12px 8px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--t4);max-height:38px;opacity:1;overflow:hidden;white-space:nowrap;transition:max-height .32s cubic-bezier(.22,1,.36,1),opacity .2s ease .12s,padding .32s cubic-bezier(.22,1,.36,1)}
+.side.rail .side-label{max-height:0;opacity:0;padding-top:0;padding-bottom:0;transition:max-height .28s cubic-bezier(.22,1,.36,1),opacity .12s ease,padding .28s cubic-bezier(.22,1,.36,1)}
+.nav{display:flex;flex-direction:column;gap:3px}
+.nav-item{position:relative;display:flex;align-items:center;gap:12px;width:100%;height:42px;padding:0 12px;border:1px solid transparent;border-radius:13px;background:transparent;color:var(--t2);font-size:14px;font-weight:500;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden;transition:background .15s,color .15s,box-shadow .15s,border-color .15s}
+.nav-item svg{flex:none;color:var(--t3);transition:color .15s}
+.nav-item:hover{background:rgba(255,255,255,.6);color:var(--ink)}
+.nav-item.on{background:#fff;border-color:#fff;color:var(--blue);box-shadow:0 10px 20px -12px rgba(28,58,120,.35)}
+.nav-item.on svg{color:var(--blue)}
+.nav-item .lbl{flex:1 1 auto;min-width:0;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:1;transition:max-width .32s cubic-bezier(.22,1,.36,1),opacity .2s ease .12s}
+.side.rail .nav-item .lbl{max-width:0;opacity:0;transition:max-width .26s cubic-bezier(.22,1,.36,1),opacity .1s ease}
+.chev{display:flex;padding:4px;margin:-4px -6px -4px 0;border-radius:8px;color:var(--t4);opacity:1;max-width:26px;overflow:hidden;transition:max-width .3s cubic-bezier(.22,1,.36,1),opacity .18s ease .12s,margin .3s cubic-bezier(.22,1,.36,1)}
+.side.rail .chev{max-width:0;opacity:0;margin:-4px 0 -4px 0;transition:max-width .24s cubic-bezier(.22,1,.36,1),opacity .1s ease,margin .24s cubic-bezier(.22,1,.36,1)}
+.nav-sub{margin:3px 0 6px 25px;padding-left:12px;border-left:1px solid var(--line-2);display:flex;flex-direction:column;gap:1px}
+.nav-sub .nav-item{height:32px;gap:9px;padding:0 8px;border-radius:9px;font-size:13px;color:var(--t3)}
+.nav-sub .nav-item.on{box-shadow:none;background:rgba(255,255,255,.8);color:var(--ink)}
+.count{min-width:22px;height:22px;padding:0 7px;border-radius:999px;background:rgba(45,107,234,.1);color:var(--blue);font-size:11.5px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;flex:none;opacity:1;max-width:40px;overflow:hidden;transition:max-width .3s cubic-bezier(.22,1,.36,1),opacity .18s ease .12s,padding .3s cubic-bezier(.22,1,.36,1),min-width .3s cubic-bezier(.22,1,.36,1)}
+.side.rail .count{max-width:0;min-width:0;padding:0;opacity:0;transition:max-width .24s cubic-bezier(.22,1,.36,1),opacity .1s ease,padding .24s cubic-bezier(.22,1,.36,1),min-width .24s cubic-bezier(.22,1,.36,1)}
+.count.warn{background:#FFE7C2;color:#9A5800}
+.count.plain{background:rgba(15,35,80,.06);color:var(--t3);font-weight:500}
+.promo{position:relative;overflow:hidden;margin-top:auto;border-radius:18px;padding:16px;color:#fff;background:linear-gradient(160deg,#5B8DF2 0%,#2D6BEA 45%,#172B63 100%);box-shadow:0 18px 30px -16px rgba(23,43,99,.8);max-height:220px;opacity:1;transition:max-height .34s cubic-bezier(.22,1,.36,1),opacity .2s ease .12s,padding .34s cubic-bezier(.22,1,.36,1),margin .34s cubic-bezier(.22,1,.36,1)}
+.side.rail .promo{max-height:0;opacity:0;padding:0;margin-top:0;transition:max-height .28s cubic-bezier(.22,1,.36,1),opacity .12s ease,padding .28s cubic-bezier(.22,1,.36,1),margin .28s cubic-bezier(.22,1,.36,1)}
+.promo::before{content:'';position:absolute;right:-40px;top:-40px;width:140px;height:140px;border-radius:999px;background:radial-gradient(circle,rgba(255,255,255,.35),transparent 70%)}
+.promo::after{content:'';position:absolute;left:-30px;bottom:-50px;width:120px;height:120px;border-radius:999px;border:18px solid rgba(255,255,255,.08)}
+.me{display:flex;align-items:center;gap:10px;padding:14px 8px 2px;margin-top:14px;border-top:1px solid var(--line-2)}
+.me>div{overflow:hidden;max-width:200px;white-space:nowrap;opacity:1;transition:max-width .32s cubic-bezier(.22,1,.36,1),opacity .2s ease .12s}
+.side.rail .me>div{max-width:0;opacity:0;transition:max-width .26s cubic-bezier(.22,1,.36,1),opacity .1s ease}
+.me>span:last-child{opacity:1;max-width:90px;overflow:hidden;transition:max-width .3s cubic-bezier(.22,1,.36,1),opacity .18s ease .12s}
+.side.rail .me>span:last-child{max-width:0;opacity:0;transition:max-width .24s cubic-bezier(.22,1,.36,1),opacity .1s ease}
+.av{position:relative;overflow:hidden;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-weight:600;flex:none;letter-spacing:.01em}
+.avimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+
+.side.dark{background:linear-gradient(180deg,rgba(26,46,98,.92),rgba(15,27,62,.96));border-color:rgba(255,255,255,.1);color:#E3EAF8;box-shadow:0 24px 50px -24px rgba(15,27,62,.7)}
+.side.dark .brand-sub,.side.dark .card-s{color:rgba(227,234,248,.6)}
+.side.dark .side-label{color:rgba(227,234,248,.42)}
+.side.dark .nav-item{color:rgba(227,234,248,.72)}
+.side.dark .nav-item svg{color:rgba(227,234,248,.5)}
+.side.dark .nav-item:hover{background:rgba(255,255,255,.07);color:#fff}
+.side.dark .nav-item.on{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.12);color:#fff;box-shadow:none}
+.side.dark .nav-item.on svg{color:#9CBBFF}
+.side.dark .count{background:rgba(255,255,255,.12);color:#fff}
+.side.dark .me{border-color:rgba(255,255,255,.1)}
+.status-box{padding:14px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;gap:10px;max-height:200px;opacity:1;overflow:hidden;transition:max-height .34s cubic-bezier(.22,1,.36,1),opacity .2s ease .12s,padding .34s cubic-bezier(.22,1,.36,1)}
+.side.rail .status-box{max-height:0;opacity:0;padding:0;transition:max-height .28s cubic-bezier(.22,1,.36,1),opacity .12s ease,padding .28s cubic-bezier(.22,1,.36,1)}
+
+/* main */
+.main{min-width:0;display:flex;flex-direction:column;gap:18px}
+.topbar{display:flex;align-items:center;gap:10px;min-height:48px;position:relative;z-index:20}
+.crumbs{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--t3);white-space:nowrap}
+.crumbs .cur{color:var(--ink);font-weight:600}
+.announce{display:flex;align-items:center;gap:10px;height:46px;padding:0 6px;border-radius:999px;background:rgba(255,255,255,.66);border:1px solid rgba(255,255,255,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 10px 24px -16px rgba(28,58,120,.35);flex:1;min-width:0;max-width:620px}
+.marq{flex:1;min-width:0;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+.mini{width:32px;height:32px;flex:none;border-radius:999px;border:none;background:rgba(15,35,80,.06);color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.mini:hover{background:rgba(15,35,80,.1)}
+.mini:disabled{opacity:.35;cursor:not-allowed}
+.search{position:relative;width:320px;max-width:100%}
+.search input{width:100%;height:46px;border-radius:999px;border:1px solid rgba(255,255,255,.85);background:rgba(255,255,255,.66);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);padding:0 64px 0 44px;font-size:14px;outline:none;box-shadow:0 10px 24px -16px rgba(28,58,120,.35);transition:background .2s,box-shadow .2s}
+.search input::placeholder{color:var(--t4)}
+.search input:focus{background:#fff;box-shadow:0 0 0 4px rgba(45,107,234,.14),0 10px 24px -16px rgba(28,58,120,.35)}
+.search .ic{position:absolute;left:17px;top:15px;color:var(--t3);pointer-events:none}
+.kbd{position:absolute;right:12px;top:12px;height:22px;padding:0 7px;border-radius:7px;background:rgba(15,35,80,.06);color:var(--t3);font-size:11px;font-weight:600;display:flex;align-items:center;pointer-events:none}
+.icon-btn{position:relative;width:46px;height:46px;flex:none;border-radius:999px;border:1px solid rgba(255,255,255,.85);background:rgba(255,255,255,.66);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);box-shadow:0 10px 24px -16px rgba(28,58,120,.35);transition:background .15s,color .15s}
+.icon-btn:hover{background:#fff;color:var(--ink)}
+.icon-btn .ping{position:absolute;top:11px;right:12px;width:8px;height:8px;border-radius:999px;background:var(--red);box-shadow:0 0 0 2px #fff}
+.menu{position:absolute;z-index:60;background:rgba(255,255,255,.96);border:1px solid rgba(255,255,255,1);border-radius:16px;box-shadow:0 24px 50px -20px rgba(28,58,120,.4),0 0 0 1px rgba(15,35,80,.04);padding:6px;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+.menu-item{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border:none;border-radius:10px;background:transparent;cursor:pointer;text-align:left;font-size:13.5px;transition:background .12s}
+.menu-item:hover{background:rgba(45,107,234,.07)}
+.menu-label{padding:8px 10px 4px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--t4)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:42px;padding:0 16px;border-radius:13px;border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.78);color:var(--ink);font-size:13.5px;font-weight:600;white-space:nowrap;cursor:pointer;box-shadow:0 10px 20px -14px rgba(28,58,120,.45);transition:background .15s,box-shadow .15s,transform .15s,color .15s}
+.btn:hover{background:#fff;transform:translateY(-1px)}
+.btn:active{transform:none}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-primary{background:linear-gradient(180deg,#3F7CF1,#2A62DB);border-color:rgba(42,98,219,.9);color:#fff;box-shadow:0 12px 22px -10px rgba(45,107,234,.75),inset 0 1px 0 rgba(255,255,255,.25)}
+.btn-primary:hover{background:linear-gradient(180deg,#4C87F4,#2D6BEA)}
+.btn-light{background:#fff;border-color:#fff;color:var(--navy);box-shadow:0 10px 22px -12px rgba(0,0,0,.45)}
+.btn-light:hover{background:#EEF3FF}
+.btn-sm{height:34px;padding:0 12px;font-size:13px;border-radius:11px}
+.link{border:none;background:none;padding:0;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.link:hover{text-decoration:underline}
+.pill{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;border:1px solid rgba(15,35,80,.06);background:rgba(255,255,255,.85);color:var(--t2);font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s}
+.pill:hover{background:#fff;color:var(--ink)}
+
+.tile{width:40px;height:40px;flex:none;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 10px 18px -10px var(--tsh,rgba(45,107,234,.8)),inset 0 1px 0 rgba(255,255,255,.3)}
+.tile.sm{width:32px;height:32px;border-radius:10px}
+.tile.xs{width:28px;height:28px;border-radius:9px}
+.tile.round{border-radius:999px}
+.t-blue{background:linear-gradient(145deg,#6D9DF6,#2D6BEA);--tsh:rgba(45,107,234,.8)}
+.t-green{background:linear-gradient(145deg,#4FD08A,#16A34A);--tsh:rgba(22,163,74,.7)}
+.t-amber{background:linear-gradient(145deg,#FCCB5F,#F29A0B);--tsh:rgba(242,154,11,.7)}
+.t-violet{background:linear-gradient(145deg,#A395FA,#6A55E8);--tsh:rgba(106,85,232,.7)}
+.t-sky{background:linear-gradient(145deg,#67D2F7,#0EA5E9);--tsh:rgba(14,165,233,.7)}
+.t-rose{background:linear-gradient(145deg,#F88FA4,#E5486A);--tsh:rgba(229,72,106,.7)}
+.t-navy{background:linear-gradient(145deg,#3A5AAE,#172B63);--tsh:rgba(23,43,99,.7)}
+.t-off{background:linear-gradient(145deg,#D5DBE5,#B5BECC);--tsh:rgba(120,130,150,.4)}
+
+.st{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;flex:none;line-height:1}
+.s-green{background:#E3F6EA;color:#137A3A;box-shadow:inset 0 0 0 1px rgba(19,122,58,.16)}
+.s-amber{background:#FFF1DA;color:#94570A;box-shadow:inset 0 0 0 1px rgba(148,87,10,.16)}
+.s-red{background:#FDE8E9;color:#BE2F34;box-shadow:inset 0 0 0 1px rgba(190,47,52,.16)}
+.s-blue{background:#E4EDFD;color:#2257C9;box-shadow:inset 0 0 0 1px rgba(34,87,201,.16)}
+.s-violet{background:#EFEAFD;color:#5B45C7;box-shadow:inset 0 0 0 1px rgba(91,69,199,.16)}
+.s-sky{background:#E1F3FB;color:#0B72A0;box-shadow:inset 0 0 0 1px rgba(11,114,160,.16)}
+.s-gray{background:rgba(15,35,80,.055);color:var(--t2);box-shadow:inset 0 0 0 1px rgba(15,35,80,.08)}
+.st svg{flex:none}
+.st .spin{animation:spin 1.6s linear infinite;transform-origin:50% 50%}
+.st.num{padding:0 10px}
+.s-glass{background:rgba(255,255,255,.14);color:#fff}
+.dot{width:6px;height:6px;border-radius:999px;background:currentColor;flex:none;position:relative}
+.dot.live::after{content:'';position:absolute;inset:0;border-radius:999px;background:currentColor;animation:ping 1.8s cubic-bezier(0,0,.2,1) infinite}
+
+.switch{position:relative;width:42px;height:24px;flex:none;border:none;border-radius:999px;background:rgba(15,35,80,.15);cursor:pointer;padding:0;transition:background .22s;box-shadow:inset 0 1px 2px rgba(0,0,0,.08)}
+.switch.on{background:linear-gradient(180deg,#3F7CF1,#2A62DB)}
+.switch span{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:999px;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.2);transition:transform .22s cubic-bezier(.3,.7,.4,1)}
+.switch.on span{transform:translateX(18px)}
+
+.seg{display:inline-flex;gap:2px;padding:4px;border-radius:13px;background:rgba(15,35,80,.055)}
+.seg button{height:30px;padding:0 12px;border:none;border-radius:9px;background:transparent;color:var(--t3);font-size:12.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;transition:background .15s,color .15s,box-shadow .15s}
+.seg button:hover{color:var(--ink)}
+.seg button.on{background:#fff;color:var(--blue);box-shadow:0 6px 12px -8px rgba(28,58,120,.45)}
+.seg button:disabled{opacity:.5;cursor:not-allowed}
+.seg.full{display:flex}.seg.full button{flex:1 1 0;min-width:0;padding:0 8px;overflow:hidden}
+.seg.wrap{display:flex;flex-wrap:wrap;gap:4px}.seg.wrap button{flex:0 1 auto;padding:0 12px}
+.seg.dark{background:rgba(255,255,255,.08)}
+.seg.dark button{color:rgba(227,234,248,.72)}
+.seg.dark button:hover{color:#fff}
+.seg.dark button.on{background:#fff;color:var(--navy)}
+
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(224px,1fr))}
+.kpi{position:relative;display:flex;flex-direction:column;gap:14px;padding:20px 22px;min-width:0}
+.kpi+.kpi::before{content:'';position:absolute;left:0;top:20px;bottom:20px;width:1px;background:var(--line-2)}
+.kpi-top{display:flex;align-items:center;gap:12px;min-width:0}
+.kpi-l{font-size:13px;font-weight:500;color:var(--t3);line-height:1.3}
+.kpi-v{font-size:25px;font-weight:600;letter-spacing:-.03em;line-height:1.15;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kpi-row{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;min-height:34px;flex-wrap:wrap;min-width:0}
+.delta{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--green);white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.delta.bad{color:var(--red)}.delta.muted{color:var(--t3)}
+.delta small{font-size:12px;font-weight:500;color:var(--t3);margin-left:2px}
+.kpi-spark{width:88px;height:34px;flex:0 1 88px;min-width:52px;margin-left:auto;overflow:hidden;border-radius:4px}
+
+/* dashboard grid */
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;align-items:stretch}
+.grid.two{grid-template-columns:repeat(auto-fit,minmax(330px,1fr))}
+.grid.two>*{grid-column:auto}
+.c3{grid-column:span 3}.c4{grid-column:span 4}.c5{grid-column:span 5}.c6{grid-column:span 6}.c7{grid-column:span 7}.c8{grid-column:span 8}.c9{grid-column:span 9}.c12{grid-column:span 12}
+.r2{grid-row:span 2}
+.fill{min-height:0}
+
+/* hero */
+.hero{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) 250px;gap:18px;padding:28px;min-height:318px}
+.hero::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(520px 320px at 62% 45%,rgba(91,141,242,.28),transparent 70%),linear-gradient(115deg,rgba(255,255,255,.65),rgba(255,255,255,0) 50%)}
+.hero-copy{position:relative;z-index:2;display:flex;flex-direction:column;gap:10px;min-width:0}
+.hello{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:var(--t2)}
+.hero h1{margin:0;font-size:36px;font-weight:600;letter-spacing:-.04em;line-height:1.1}
+.accent{background:linear-gradient(90deg,#2D6BEA,#5B8DF2 55%,#28B4F0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:2px 0 0;color:var(--t3);font-size:14.5px;max-width:430px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:16px}
+.week{display:inline-flex;align-items:center;gap:6px;height:42px;padding:0 5px;border-radius:13px;background:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.9);font-size:13px;font-weight:600;color:var(--t2);box-shadow:0 10px 20px -14px rgba(28,58,120,.45)}
+.hero-art{position:relative;z-index:1;min-height:262px}
+.orbit{position:absolute;left:50%;top:50%;border-radius:999px;border:1px dashed rgba(45,107,234,.3);transform:translate(-50%,-50%)}
+.o1{width:130px;height:130px}
+.o2{width:236px;height:236px;animation:spin 70s linear infinite}
+.o3{width:340px;height:340px;border-style:solid;border-color:rgba(45,107,234,.12)}
+.core{position:absolute;left:50%;top:50%;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:24px;overflow:hidden;color:#fff;display:flex;align-items:center;justify-content:center;
+ background:radial-gradient(circle at 74% 16%,rgba(253,247,236,.9),transparent 52%),radial-gradient(circle at 16% 88%,rgba(159,196,232,.85),transparent 56%),#06070A;
+ box-shadow:0 22px 40px -14px rgba(6,7,10,.8),inset 0 0 0 1px rgba(255,255,255,.1)}
+.core::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,transparent 36%,#06070A 38%);background-size:4px 4px;pointer-events:none}
+.core svg{position:relative;z-index:1}
+.core::after{content:'';position:absolute;inset:-10px;border-radius:32px;border:2px solid rgba(91,141,242,.4);animation:ringout 2.8s ease-out infinite}
+.orb-chip{position:absolute;display:flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;border-radius:999px;background:rgba(255,255,255,.88);border:1px solid #fff;box-shadow:0 12px 22px -14px rgba(28,58,120,.55);font-size:12.5px;font-weight:600;white-space:nowrap;transform:translate(-50%,-50%);animation:bob 6s ease-in-out infinite;transition:opacity .3s,filter .3s}
+.orb-chip.off{opacity:.55;filter:grayscale(1)}
+.orb-chip.busy{box-shadow:0 0 0 3px rgba(45,107,234,.25),0 12px 22px -14px rgba(28,58,120,.55)}
+.hero-side{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
+.hero-card{padding:16px;display:flex;flex-direction:column;gap:10px}
+.hc-row{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12.5px}
+.hc-row b{font-weight:600;color:var(--ink)}
+
+/* charts */
+.chart{position:relative}
+.chart svg{display:block;width:100%;overflow:visible}
+.tip{position:absolute;transform:translate(-50%,calc(-100% - 14px));background:linear-gradient(180deg,#2F6DEB,#2458C6);color:#fff;border-radius:10px;padding:6px 10px;font-size:12px;font-weight:600;white-space:nowrap;pointer-events:none;box-shadow:0 10px 20px -8px rgba(45,107,234,.7);transition:left .15s,top .15s;text-align:center;line-height:1.3}
+.tip small{display:block;font-size:11px;font-weight:500;opacity:.8}
+.tip::after{content:'';position:absolute;left:50%;bottom:-4px;width:8px;height:8px;margin-left:-4px;background:#2458C6;transform:rotate(45deg)}
+.tip.below{transform:translate(-50%,14px)}
+.tip.below::after{top:-4px;bottom:auto;background:#2F6DEB}
+.cdot{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:999px;background:#fff;border:3px solid var(--blue);box-shadow:0 0 0 4px rgba(45,107,234,.18);pointer-events:none;transition:left .15s,top .15s}
+.axis{display:flex;justify-content:space-between;font-size:11.5px;color:var(--t4);margin-top:8px;font-variant-numeric:tabular-nums}
+.hits{position:absolute;inset:0;display:flex}
+.hits div{flex:1;cursor:crosshair}
+.row-card{display:flex;align-items:center;gap:12px;padding:12px;border-radius:15px;background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.9);transition:background .15s;min-width:0}
+.row-card>div{min-width:0}
+.row-card .st{flex:none;margin-left:auto}
+.row-card:hover{background:rgba(255,255,255,.9)}
+.bar{height:6px;border-radius:999px;background:rgba(15,35,80,.07);overflow:hidden}
+.ring{flex:none;display:block}
+
+/* schedule */
+.sch-head{display:grid;grid-template-columns:48px repeat(7,minmax(0,1fr));gap:0;margin-bottom:8px}
+.sch-day{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border:none;background:transparent;border-radius:12px;cursor:pointer;transition:background .15s;color:var(--t3)}
+.sch-day:hover{background:rgba(255,255,255,.7)}
+.sch-day .dn{font-size:11.5px;font-weight:500}
+.sch-day .dd{font-size:15px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+.sch-day.today .dd{color:var(--blue)}
+.sch-day.sel{background:linear-gradient(180deg,#3F7CF1,#2A62DB);color:rgba(255,255,255,.8);box-shadow:0 10px 18px -10px rgba(45,107,234,.8)}
+.sch-day.sel .dd{color:#fff}
+.sch-body{position:relative;display:grid;grid-template-columns:48px minmax(0,1fr);height:250px}
+.sch-times{position:relative}
+.sch-times span{position:absolute;left:0;font-size:11px;color:var(--t4);transform:translateY(-50%);font-variant-numeric:tabular-nums}
+.sch-grid{position:relative;border-radius:14px;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(100%/7 - 1px),rgba(15,35,80,.06) calc(100%/7 - 1px),rgba(15,35,80,.06) calc(100%/7))}
+.sch-line{position:absolute;left:0;right:0;height:1px;background:rgba(15,35,80,.06)}
+.ev{position:absolute;display:flex;flex-direction:column;justify-content:center;gap:1px;padding:6px 8px;border-radius:10px;border:none;text-align:left;cursor:pointer;overflow:hidden;background:rgba(255,255,255,.92);box-shadow:0 8px 16px -12px rgba(28,58,120,.55);transition:transform .15s}
+.ev:hover{transform:translateY(-1px)}
+.ev .et{font-size:11.5px;font-weight:600;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev .ew{font-size:10.5px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev.hi{background:linear-gradient(180deg,#3F7CF1,#2A62DB);color:#fff;box-shadow:0 10px 18px -10px rgba(45,107,234,.8)}
+.ev.hi .ew{color:rgba(255,255,255,.8)}
+.now{position:absolute;left:0;right:0;height:2px;background:var(--red);border-radius:2px}
+.now::before{content:'';position:absolute;left:-4px;top:-3px;width:8px;height:8px;border-radius:999px;background:var(--red)}
+
+/* navy workflow */
+.navy{position:relative;overflow:hidden;background:linear-gradient(165deg,#2A4A9C 0%,#172B63 55%,#0F1D45 100%);border:1px solid rgba(255,255,255,.08);border-radius:22px;color:#fff;box-shadow:0 26px 48px -22px rgba(15,29,69,.75)}
+.navy::before{content:'';position:absolute;right:-70px;top:-70px;width:220px;height:220px;border-radius:999px;background:radial-gradient(circle,rgba(91,141,242,.5),transparent 70%);pointer-events:none}
+.navy .card-s{color:rgba(227,234,248,.62)}
+.frac{font-size:30px;font-weight:300;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums;color:rgba(255,255,255,.7)}
+.frac b{font-weight:600;color:#fff}
+.wf-list{position:relative;display:flex;flex-direction:column;gap:6px;margin:14px 0;flex:1}
+.wf-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);transition:background .25s,border-color .25s}
+.wf-row.run{background:rgba(91,141,242,.24);border-color:rgba(156,187,255,.5)}
+.wf-row.done{background:rgba(255,255,255,.09)}
+.wf-ic{width:32px;height:32px;flex:none;border-radius:10px;background:rgba(255,255,255,.1);color:#C9D8FF;display:flex;align-items:center;justify-content:center}
+.wf-a{display:block;font-size:13px;font-weight:600;line-height:1.3}
+.wf-d{display:block;font-size:11.5px;color:rgba(227,234,248,.66);line-height:1.4}
+.wf-mk{width:24px;height:24px;flex:none;border-radius:999px;border:1.5px solid rgba(255,255,255,.28);display:flex;align-items:center;justify-content:center;transition:all .25s}
+.wf-row.done .wf-mk{background:#5B8DF2;border-color:#5B8DF2}
+.wf-row.run .wf-mk{border-color:transparent}
+.spin{width:16px;height:16px;border-radius:999px;border:2px solid rgba(255,255,255,.22);border-top-color:#fff;animation:spin .8s linear infinite}
+.spin.blue{border-color:rgba(45,107,234,.2);border-top-color:var(--blue)}
+
+/* approvals */
+.ap-list{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;margin:0 -8px;padding:0 8px 10px;scrollbar-width:thin;-webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 26px),transparent);mask-image:linear-gradient(180deg,#000 calc(100% - 26px),transparent)}
+.ap{border-radius:16px;transition:background .15s}
+.ap+.ap{margin-top:4px}
+.ap:hover{background:rgba(255,255,255,.55)}
+.ap.open{background:rgba(255,255,255,.85);box-shadow:0 12px 24px -18px rgba(28,58,120,.5)}
+.ap-row{display:flex;gap:12px;align-items:flex-start;width:100%;padding:12px;border:none;background:transparent;text-align:left;cursor:pointer;border-radius:16px}
+.ap-name{font-size:14px;font-weight:600;line-height:1.35;letter-spacing:-.01em}
+.ap-sub{display:block;font-size:12.5px;color:var(--t2);line-height:1.45;margin-top:1px}
+.ap-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
+.ap-detail{padding:0 12px 14px 64px;display:flex;flex-direction:column;gap:10px;animation:rise .22s ease}
+.ap-detail p{margin:0;font-size:13px;color:var(--t2);line-height:1.55}
+.av-wrap{position:relative;flex:none}
+.av-badge{position:absolute;right:-9px;bottom:-9px;width:18px;height:18px;border-radius:999px;box-shadow:0 0 0 2px #fff}
+
+/* table */
+.tbl{display:flex;flex-direction:column;overflow-x:auto;margin:0 -8px}
+.tr{display:grid;align-items:center;gap:14px;min-width:560px;padding:11px 8px;border:none;border-top:1px solid var(--line);background:transparent;text-align:left;width:100%;font-size:13.5px;color:var(--t2);border-radius:0;transition:background .15s}
+button.tr{cursor:pointer}
+button.tr:hover{background:rgba(255,255,255,.55)}
+.tr.th{border-top:none;padding-top:0;padding-bottom:9px;font-size:12px;font-weight:500;color:var(--t3)}
+.perf{grid-template-columns:minmax(150px,1.5fr) minmax(74px,.8fr) 90px minmax(58px,.6fr) 104px;min-width:520px}
+.assist{grid-template-columns:minmax(230px,1.6fr) 90px 90px 230px 170px;min-width:860px;padding:14px 8px}
+.logr{grid-template-columns:64px 180px minmax(200px,1fr) 150px;min-width:640px;padding:13px 8px}
+.td-main{display:flex;align-items:center;gap:12px;color:var(--ink);font-weight:500;min-width:0}
+
+/* agents + kanban */
+.agents{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.agent{gap:16px}
+.agent.off{opacity:.72}
+.agent.focus{box-shadow:0 0 0 3px rgba(45,107,234,.35),var(--sh)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.95);font-size:12px;font-weight:500;color:var(--t2);white-space:nowrap}
+button.chip{cursor:pointer;transition:background .15s,color .15s}
+button.chip:hover{background:#fff;color:var(--ink)}
+button.chip.on{background:linear-gradient(180deg,#3F7CF1,#2A62DB);border-color:#2A62DB;color:#fff}
+button.chip:disabled{opacity:.5;cursor:not-allowed}
+.kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;align-items:start}
+.kcol{padding:12px;display:flex;flex-direction:column;gap:10px;min-height:300px}
+.kcol-h{display:flex;align-items:center;gap:8px;padding:4px 6px 6px;font-size:14px;font-weight:600}
+.kcard{background:rgba(255,255,255,.88);border:1px solid #fff;border-radius:16px;padding:14px;box-shadow:0 12px 22px -18px rgba(28,58,120,.6);display:flex;flex-direction:column;gap:12px}
+.kempty{border:1.5px dashed rgba(15,35,80,.12);border-radius:16px;padding:26px 12px;text-align:center;font-size:13px;color:var(--t4)}
+.banner{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:16px;background:rgba(255,240,214,.8);border:1px solid rgba(242,154,11,.25);color:#7A4600;font-size:13.5px;font-weight:500;animation:rise .25s ease}
+
+/* admin */
+.net{position:relative;border-radius:18px;overflow-x:auto;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(221,233,252,.55));border:1px solid rgba(255,255,255,.9)}
+.node{position:relative;width:50px;height:50px;border-radius:16px;display:flex;align-items:center;justify-content:center;color:#fff;transition:transform .25s,filter .25s,opacity .25s}
+.node.off{filter:grayscale(1);opacity:.5}
+.node.busy{transform:scale(1.12)}
+.node.busy::after{content:'';position:absolute;inset:-7px;border-radius:21px;border:2px solid rgba(45,107,234,.55);animation:ringout 1.6s ease-out infinite}
+.node-l{font-size:12.5px;font-weight:600;text-align:center;white-space:nowrap}
+.field{padding:16px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.field:first-of-type{border-top:none;padding-top:0}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:999px;outline:none;background:linear-gradient(90deg,#2D6BEA 0,#5B8DF2 var(--p),rgba(15,35,80,.1) var(--p));cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:999px;background:#fff;border:3px solid #2D6BEA;box-shadow:0 4px 10px -2px rgba(45,107,234,.6)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:999px;background:#fff;border:3px solid #2D6BEA}
+.select{height:42px;padding:0 38px 0 14px;border-radius:13px;border:1px solid rgba(255,255,255,.95);background:rgba(255,255,255,.85) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2372809A' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;-webkit-appearance:none;appearance:none;font-size:13.5px;font-weight:600;cursor:pointer;box-shadow:0 10px 20px -14px rgba(28,58,120,.45)}
+.pol{display:flex;align-items:center;gap:14px;padding:14px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.pol>div{min-width:180px}
+.pol .select{margin-left:auto}
+
+/* page header */
+.ph{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
+.ph h1{margin:0;font-size:32px;font-weight:600;letter-spacing:-.035em;line-height:1.15}
+.ph p{margin:6px 0 0;color:var(--t3);font-size:14.5px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.stack{display:flex;flex-direction:column;gap:16px}
+
+/* chat modal + toast */
+.overlay{position:fixed;inset:0;z-index:70;background:rgba(14,26,51,.28);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:fade .2s ease}
+.chat-fab{position:fixed;right:24px;bottom:24px;z-index:60;width:52px;height:52px;border-radius:999px;border:0;display:flex;align-items:center;justify-content:center;background:var(--ink);color:#fff;cursor:pointer;box-shadow:0 12px 28px -10px rgba(14,26,51,.55);transition:transform .15s,background .15s;animation:rise .25s ease}
+.chat-fab:hover{background:#1B2A4A;transform:translateY(-1px)}
+.chat-fab:focus-visible,.cm-icon:focus-visible,.cm-chip:focus-visible,.cm-send:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.chat-modal{position:fixed;z-index:71;top:50%;left:50%;transform:translate(-50%,-50%);width:min(860px,calc(100vw - 48px));height:min(720px,calc(100vh - 48px));display:flex;flex-direction:column;overflow:hidden;border-radius:16px;background:#fff;border:1px solid rgba(15,35,80,.08);box-shadow:0 32px 80px -24px rgba(14,26,51,.45);animation:cmIn .22s cubic-bezier(.2,.8,.2,1)}
+.chat-modal.wide{width:calc(100vw - 32px);height:calc(100vh - 32px)}
+.cm-head{display:flex;align-items:center;gap:12px;padding:14px 16px 14px 20px;border-bottom:1px solid var(--line)}
+.cm-head-t{flex:1;min-width:0}
+.cm-head-t b{display:block;font-size:14.5px;font-weight:600;color:var(--ink);line-height:1.3}
+.cm-head-t span{display:block;font-size:12.5px;color:var(--t3);line-height:1.4}
+.cm-mark{width:32px;height:32px;flex:none;border-radius:9px;background:var(--ink);display:flex;align-items:center;justify-content:center}
+.cm-mark.sm{width:28px;height:28px;border-radius:8px}
+.cm-icon{width:34px;height:34px;flex:none;border-radius:9px;border:0;background:transparent;color:var(--t3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,color .15s}
+.cm-icon:hover{background:#F1F4F9;color:var(--ink)}
+.cm-sep{width:1px;height:20px;background:var(--line-2);margin:0 2px}
+.cm-body{flex:1;overflow-y:auto;background:#FAFBFD}
+.cm-thread{max-width:720px;margin:0 auto;padding:28px 24px 12px;display:flex;flex-direction:column;gap:22px}
+.cm-row{display:flex;align-items:flex-start;gap:12px;animation:rise .2s ease}
+.cm-row.me{justify-content:flex-end}
+.cm-q{max-width:80%;padding:10px 14px;background:#EEF3FD;border-radius:12px 12px 4px 12px;font-size:14px;line-height:1.55;color:var(--ink);white-space:pre-wrap}
+.cm-a{flex:1;min-width:0;padding-top:4px;font-size:14px;line-height:1.65;color:var(--t2)}
+.cm-a-t{font-size:12px;font-weight:600;color:var(--t3);margin-bottom:4px}
+.cm-sugg-t{font-size:12px;font-weight:600;color:var(--t3);margin:16px 0 8px}
+.cm-sugg{display:flex;flex-wrap:wrap;gap:8px}
+.cm-chip{height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--line-2);background:#fff;color:var(--t2);font:inherit;font-size:13px;cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+.cm-chip:hover:not(:disabled){border-color:rgba(45,107,234,.45);background:#F5F8FF;color:var(--blue)}
+.cm-chip:disabled{opacity:.5;cursor:default}
+.typing{display:flex;gap:4px;padding:12px 2px}
+.typing span{width:6px;height:6px;border-radius:999px;background:var(--t4);animation:bounce 1.1s infinite}
+.typing span:nth-child(2){animation-delay:.16s}.typing span:nth-child(3){animation-delay:.32s}
+.cm-wf{border:1px solid var(--line-2);border-radius:12px;background:#fff;padding:14px 16px;box-shadow:0 10px 24px -18px rgba(28,58,120,.3)}
+.cm-wf-h{display:flex;align-items:center;gap:8px;margin-bottom:2px}
+.cm-wf-h b{font-size:13.5px;font-weight:700;color:var(--ink)}
+.cm-wf-pct{margin-left:auto;font-size:12.5px;font-weight:700;color:var(--blue);font-variant-numeric:tabular-nums}
+.cm-wf-meta{font-size:12px;color:var(--t3);margin-bottom:10px}
+.cm-wf-bar{height:4px;border-radius:999px;background:var(--line-2);overflow:hidden;margin-bottom:12px}
+.cm-wf-fill{height:100%;border-radius:999px;background:var(--blue);transition:width .4s ease}
+.cm-wf-steps{display:flex;flex-direction:column;gap:6px}
+.cm-wf-row{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:9px;font-size:13px;color:var(--t3);transition:background .2s,color .2s}
+.cm-wf-row.run{background:var(--blue-soft);color:var(--ink)}
+.cm-wf-row.done{color:var(--ink)}
+.cm-wf-mk{width:18px;height:18px;flex:none;border-radius:999px;border:1.5px solid var(--line-2);display:flex;align-items:center;justify-content:center}
+.cm-wf-row.done .cm-wf-mk{background:var(--blue);border-color:var(--blue);color:#fff}
+.cm-wf-row.run .cm-wf-mk{border-color:var(--blue)}
+.cm-spin{width:11px;height:11px;border-radius:999px;border:1.6px solid rgba(45,107,234,.25);border-top-color:var(--blue);animation:spin .8s linear infinite}
+.cm-wf-note{margin-top:10px;font-size:12px;color:var(--blue);font-weight:600}
+.cm-foot{padding:12px 24px 16px;background:#FAFBFD}
+.cm-foot-in{max-width:720px;margin:0 auto}
+.cm-composer{display:flex;align-items:flex-end;gap:8px;padding:8px 8px 8px 14px;border:1px solid var(--line-2);border-radius:12px;background:#fff;transition:border-color .15s,box-shadow .15s}
+.cm-composer:focus-within{border-color:rgba(45,107,234,.55);box-shadow:0 0 0 3px rgba(45,107,234,.14)}
+.cm-composer textarea{flex:1;min-width:0;min-height:36px;max-height:140px;padding:8px 0;resize:none;border:0;background:transparent;font:inherit;font-size:14px;line-height:1.45;color:var(--ink);outline:none;field-sizing:content}
+.cm-composer textarea::placeholder{color:var(--t4)}
+.cm-send{width:36px;height:36px;flex:none;border-radius:9px;border:0;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,opacity .15s}
+.cm-send:hover:not(:disabled){background:#2359C9}
+.cm-send:disabled{background:#C9D3E3;cursor:default}
+.cm-hint{margin-top:8px;text-align:center;font-size:11.5px;color:var(--t4)}
+@media (max-width:700px){.chat-modal{width:calc(100vw - 16px);height:calc(100vh - 16px)}.cm-thread{padding:20px 14px 10px}.cm-foot{padding:10px 14px 14px}.cm-q{max-width:90%}.cm-hint{display:none}}
+.toast{position:fixed;left:50%;bottom:26px;z-index:80;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:999px;background:rgba(14,26,51,.92);color:#fff;font-size:13.5px;font-weight:500;box-shadow:0 20px 40px -16px rgba(14,26,51,.6);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);animation:toast .3s cubic-bezier(.2,.8,.2,1);transform:translateX(-50%);white-space:nowrap;max-width:calc(100vw - 32px)}
+
+@keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(36px,28px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes ping{0%{transform:scale(1);opacity:.55}80%,100%{transform:scale(2.6);opacity:0}}
+@keyframes ringout{0%{transform:scale(.95);opacity:.7}100%{transform:scale(1.25);opacity:0}}
+@keyframes bob{0%,100%{margin-top:0}50%{margin-top:-6px}}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes cmIn{from{opacity:0;transform:translate(-50%,-48%) scale(.98)}to{opacity:1;transform:translate(-50%,-50%)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes slide{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+@keyframes toast{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:.45}40%{transform:translateY(-4px);opacity:1}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.rise{animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
+
+@media (max-height:900px){.promo{display:none}}
+@media (max-width:1360px){.ap-list{max-height:560px}
+ .grid{grid-template-columns:repeat(6,minmax(0,1fr))}
+ .c3{grid-column:span 3}.c4,.c5,.c6,.c7,.c8,.c9,.c12{grid-column:span 6}.r2{grid-row:auto}.fill{height:auto;min-height:0}
+ .ap-list{max-height:520px}
+ .hero{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+ .hero-side{grid-column:1/-1;flex-direction:row}.hero-side>*{flex:1}
+ .search{width:240px}
+}
+@media (max-width:1240px){.perf{grid-template-columns:minmax(140px,1.5fr) minmax(70px,.8fr) minmax(58px,.6fr) 104px;min-width:440px}.perf>*:nth-child(3){display:none}}
+@media (max-width:1200px){.announce{display:none}}
+@media (max-width:1100px){.kpi:nth-child(3)::before{display:none}}
+@media (max-width:900px){
+ .grid.two{grid-template-columns:minmax(0,1fr)}
+ .shell{grid-template-columns:minmax(0,1fr);padding:10px;gap:14px}
+ .shell{padding-top:74px}
+ .side{position:fixed;top:0;left:0;right:0;z-index:50;height:auto;border-radius:0 0 20px 20px;border-top:none;flex-direction:row;align-items:center;gap:4px;padding:10px 12px;overflow-x:auto;background:rgba(255,255,255,.94);box-shadow:0 16px 30px -22px rgba(28,58,120,.8)}
+ .side.dark{background:rgba(26,46,98,.96)}
+ .shell.rail{grid-template-columns:minmax(0,1fr)}
+ .side.rail{padding:8px}
+ .side.rail .nav-item{height:38px}
+ .side.rail .brand{flex-direction:row;padding:0 6px 0 0}
+ .brand{padding:0 6px 0 0}
+ .hide-m,.side-label,.nav-sub,.promo,.me,.ws,.brand-text,.status-box,.chev{display:none !important}
+ .nav{flex-direction:row}.nav-item{width:auto;height:38px}
+ .announce{display:none}.kbd{display:none}.search{width:auto;flex:1;min-width:0}.crumbs{display:none}
+ .hero{grid-template-columns:minmax(0,1fr);padding:22px}.hero-art{min-height:240px}.hero-side{flex-direction:column}
+}
+@media (max-width:700px){.orb-chip{display:none}.o2,.o1{opacity:.7}}
+@media (max-width:760px){.kpi+.kpi::before{display:none}}
+@media (max-width:640px){.icon-btn{width:40px;height:40px}.search input{height:40px;padding-left:38px}.search .ic{top:12px;left:14px}
+ .grid{grid-template-columns:minmax(0,1fr)}.c3{grid-column:auto}.c4,.c5,.c6,.c7,.c8,.c9,.c12{grid-column:auto}
+ .kpi::before{display:none}
+ .hero h1{font-size:28px}.ph h1{font-size:26px}.hide-s{display:none !important}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001ms !important;transition-duration:.001ms !important}}
+</style>
+</helmet>
+<div class="bgfx" aria-hidden="true"><i></i><i></i></div>
+
+<sc-if value="{{ isHR }}">
+<div class="{{ shellCls }}">
+  <aside class="{{ sideCls }}" onMouseEnter="{{ openSide }}" onMouseLeave="{{ closeSide }}">
+    <div class="brand">
+      <div class="logo"><svg width="19" height="19" viewBox="0 0 24 24" fill="#fff"><path d="M12 1.6c1.15 6.3 2.95 8.1 9.25 9.25-6.3 1.15-8.1 2.95-9.25 9.25-1.15-6.3-2.95-8.1-9.25-9.25 6.3-1.15 8.1-2.95 9.25-9.25z"></path><path d="M19.3 16.2c.45 2.45 1.15 3.15 3.6 3.6-2.45.45-3.15 1.15-3.6 3.6-.45-2.45-1.15-3.15-3.6-3.6 2.45-.45 3.15-1.15 3.6-3.6z" opacity=".9"></path></svg></div>
+      <div class="brand-text"><div class="brand-name">Smart HR<svg class="sp" width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.6c1.15 6.3 2.95 8.1 9.25 9.25-6.3 1.15-8.1 2.95-9.25 9.25-1.15-6.3-2.95-8.1-9.25-9.25 6.3-1.15 8.1-2.95 9.25-9.25z"></path></svg></div><div class="brand-sub">People Operations</div></div>
+    </div>
+    <div class="ws">
+      <button class="ws-btn" onClick="{{ toggleEntity }}" aria-expanded="{{ entityExpanded }}" aria-haspopup="listbox">
+        <span class="ws-av">{{ entityInitials }}</span>
+        <span style="flex:1;min-width:0"><span class="ell" style="display:block;font-size:13.5px;font-weight:600;line-height:1.3">{{ entityName }}</span><span class="card-s" style="display:block">{{ entityPeople }}</span></span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#72809A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m7 15 5 5 5-5 M7 9l5-5 5 5"></path></svg>
+      </button>
+      <sc-if value="{{ entityOpen }}">
+        <div class="menu" role="listbox" style="top:calc(100% + 6px);left:0;right:0;animation:rise .18s ease">
+          <div class="menu-label">Entities</div>
+          <sc-for list="{{ entities }}" as="en">
+            <button class="menu-item" role="option" aria-selected="{{ en.selected }}" onClick="{{ en.onClick }}">
+              <span class="ell" style="flex:1">{{ en.name }}</span>
+              <span class="card-s num">{{ en.count }}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2D6BEA" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="{{ en.checkStyle }}"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+
+    <div class="side-scroll">
+    <div class="side-label">Workspace</div>
+    <nav class="nav" aria-label="Sections">
+      <sc-for list="{{ sideNav }}" as="sn">
+        <button class="{{ sn.cls }}" onClick="{{ sn.onClick }}" aria-current="{{ sn.current }}" title="{{ sn.label }}">
+          <sc-if value="{{ sn.railDot }}"><span class="dotbadge"></span></sc-if>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="{{ sn.d }}"></path></svg>
+          <span class="lbl">{{ sn.label }}</span>
+          <sc-if value="{{ sn.badge }}"><span class="{{ sn.badgeCls }}">{{ sn.badge }}</span></sc-if>
+          <sc-if value="{{ sn.hasKids }}">
+            <span class="chev" onClick="{{ sn.onChevron }}" aria-label="{{ sn.chevAria }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{ sn.chevStyle }}"><path d="m6 9 6 6 6-6"></path></svg></span>
+          </sc-if>
+        </button>
+        <sc-if value="{{ sn.showKids }}">
+          <div class="nav-sub" style="animation:rise .2s ease">
+            <sc-for list="{{ sn.kids }}" as="kd">
+              <button class="{{ kd.cls }}" onClick="{{ kd.onClick }}">
+                <span style="{{ kd.dotStyle }}"></span>
+                <span class="lbl">{{ kd.label }}</span>
+                <span class="card-s num">{{ kd.count }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+      </sc-for>
+    </nav>
+
+    <div class="side-label">System</div>
+    <div class="nav">
+      <button class="nav-item" onClick="{{ openAdmin }}" title="Admin console">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8.2-8 9-4.5-.8-8-4-8-9V6z M9.5 12l1.8 1.8L15 10"></path></svg>
+        <span class="lbl">Admin console</span>
+        <svg class="hide-m" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7 M8 7h9v9"></path></svg>
+      </button>
+    </div>
+
+    </div>
+    <div style="height:18px;flex:none"></div>
+    <div class="promo">
+      <div style="position:relative;display:flex;flex-direction:column;gap:6px">
+        <span class="st s-glass" style="align-self:flex-start"><span class="dot live"></span>This week</span>
+        <div style="font-size:26px;font-weight:600;letter-spacing:-.03em;line-height:1.1;margin-top:4px">{{ railSaved }} saved</div>
+        <div style="font-size:12.5px;color:rgba(255,255,255,.78);line-height:1.45">{{ promoText }}</div>
+        <button class="btn btn-light btn-sm" onClick="{{ goAdminOverview }}" style="margin-top:8px;align-self:flex-start">View impact
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14 M13 6l6 6-6 6"></path></svg>
+        </button>
+      </div>
+    </div>
+    <div class="me">
+      <span class="av" style="width:36px;height:36px;font-size:13px;background:linear-gradient(145deg,#6A9AF6,#2D6BEA);color:#fff">ME<img class="avimg" src="{{ mePhoto }}" alt=""/></span>
+      <div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:600;line-height:1.3">Maya Ellison</div><div class="card-s ell">Head of People</div></div>
+      <span style="width:9px;height:9px;border-radius:999px;background:#16A34A;box-shadow:0 0 0 3px rgba(22,163,74,.18)" title="Online"></span>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <sc-if value="{{ isHome }}">
+        <div class="announce">
+          <span class="tile xs round t-blue"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z M15.5 8.5a5 5 0 0 1 0 7"></path></svg></span>
+          <div class="marq"><div style="{{ tickerStyle }}"><span style="padding-right:60px">{{ tickerText }}</span><span style="padding-right:60px">{{ tickerText }}</span></div></div>
+          <button class="mini" onClick="{{ toggleTicker }}" aria-label="{{ tickerAria }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="{{ tickerIcon }}"></path></svg></button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ notHome }}">
+        <nav class="crumbs" aria-label="Breadcrumb"><span>Smart HR</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg><span class="cur">{{ pageName }}</span></nav>
+      </sc-if>
+      <div style="flex:1"></div>
+      <div class="search">
+        <svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <input ref="{{ searchRef }}" value="{{ q }}" onInput="{{ onSearch }}" onFocus="{{ onSearchFocus }}" onBlur="{{ onSearchBlur }}" placeholder="Search anything…" aria-label="Search people, agents and candidates"/>
+        <span class="kbd">Ctrl K</span>
+        <sc-if value="{{ searchOpen }}">
+          <div class="menu" style="top:54px;left:0;right:0;min-width:280px;animation:rise .16s ease">
+            <sc-for list="{{ results }}" as="rs">
+              <button class="menu-item" onMouseDown="{{ rs.onPick }}">
+                <span class="av" style="{{ rs.avStyle }}">{{ rs.initials }}<sc-if value="{{ rs.photo }}"><img class="avimg" src="{{ rs.photo }}" alt=""/></sc-if></span>
+                <span style="flex:1;min-width:0"><span class="ell" style="display:block;font-weight:500">{{ rs.name }}</span><span class="card-s" style="display:block">{{ rs.kind }}</span></span>
+              </button>
+            </sc-for>
+            <sc-if value="{{ noResults }}"><div style="padding:14px 10px;font-size:13px;color:var(--t4)">No matches for “{{ q }}”</div></sc-if>
+          </div>
+        </sc-if>
+      </div>
+      <div style="position:relative">
+        <button class="icon-btn" onClick="{{ toggleBell }}" aria-label="Notifications" aria-expanded="{{ bellExpanded }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9 M13.73 21a2 2 0 0 1-3.46 0"></path></svg><sc-if value="{{ pending }}"><span class="ping"></span></sc-if></button>
+        <sc-if value="{{ bellOpen }}">
+          <div class="menu" style="top:54px;right:0;width:340px;max-width:calc(100vw - 32px);padding:8px;animation:rise .16s ease">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 8px 8px"><span class="card-t">Notifications</span><span class="{{ pendingCount.cls }}"><svg class="{{ pendingCount.icls }}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="{{ pendingCount.icon }}"></path></svg>{{ pendingCount.label }}</span></div>
+            <sc-for list="{{ bellItems }}" as="bi">
+              <div class="menu-item" style="cursor:default;align-items:flex-start">
+                <span class="{{ bi.tileCls }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ bi.d }}"></path></svg></span>
+                <span style="flex:1;min-width:0"><span style="display:block;font-size:13px;line-height:1.4">{{ bi.text }}</span><span class="card-s" style="display:block;margin-top:2px">{{ bi.meta }}</span></span>
+              </div>
+            </sc-for>
+            <button class="btn btn-sm" onClick="{{ goLog }}" style="width:100%;margin-top:6px">Open activity log</button>
+          </div>
+        </sc-if>
+      </div>
+      <span class="av hide-s" style="width:46px;height:46px;font-size:14px;background:linear-gradient(145deg,#6A9AF6,#2D6BEA);color:#fff;border:2px solid #fff;box-shadow:0 10px 20px -12px rgba(45,107,234,.8)" title="Maya Ellison">ME<img class="avimg" src="{{ mePhoto }}" alt="Maya Ellison"/></span>
+    </div>
+
+    <div style="{{ viewStyle }}">
+
+    <sc-if value="{{ isHome }}">
+      <div class="grid">
+
+        <section class="glass hero c12">
+          <div class="hero-copy">
+            <span class="hello">{{ helloText }}</span>
+            <h1>Your people operations<br/>are running <span class="accent">{{ heroWord }}</span></h1>
+            <p>{{ heroSub }}</p>
+            <div class="hero-actions">
+              <button class="btn btn-primary" onClick="{{ addJoiner }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14 M5 12h14"></path></svg>Add a joiner</button>
+              <button class="btn" type="button"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11 M7.5 10.5 12 15l4.5-4.5 M5 19h14"></path></svg>Export report</button>
+              <div class="week">
+                <button class="mini" onClick="{{ weekPrev }}" disabled="{{ weekPrevDis }}" aria-label="Previous week"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg></button>
+                <span class="num" style="padding:0 4px">{{ weekRange }}</span>
+                <button class="mini" onClick="{{ weekNext }}" disabled="{{ weekNextDis }}" aria-label="Next week"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg></button>
+              </div>
+            </div>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="orbit o3"></div><div class="orbit o2"></div><div class="orbit o1"></div>
+            <div class="core"><svg width="30" height="30" viewBox="0 0 24 24" fill="#fff" style="filter:drop-shadow(0 2px 6px rgba(0,0,0,.55))"><path d="M12 1.6c1.15 6.3 2.95 8.1 9.25 9.25-6.3 1.15-8.1 2.95-9.25 9.25-1.15-6.3-2.95-8.1-9.25-9.25 6.3-1.15 8.1-2.95 9.25-9.25z"></path><path d="M19.3 16.2c.45 2.45 1.15 3.15 3.6 3.6-2.45.45-3.15 1.15-3.6 3.6-.45-2.45-1.15-3.15-3.6-3.6 2.45-.45 3.15-1.15 3.6-3.6z" opacity=".9"></path></svg></div>
+            <sc-for list="{{ heroAgents }}" as="ha">
+              <div class="{{ ha.cls }}" style="{{ ha.style }}">
+                <span class="{{ ha.tileCls }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ ha.d }}"></path></svg></span>
+                <span>{{ ha.name }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div class="hero-side">
+            <div class="glass-2 hero-card">
+              <div class="hc-row"><span class="card-s">{{ todayLabel }}</span><span class="{{ pendingPill.cls }}"><svg class="{{ pendingPill.icls }}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="{{ pendingPill.icon }}"></path></svg>{{ pendingPill.label }}</span></div>
+              <div style="display:flex;align-items:baseline;gap:8px"><span class="kpi-v" style="font-size:30px">{{ pending }}</span><span class="card-s">decisions waiting</span></div>
+              <button class="link" onClick="{{ goApprovals }}" style="align-self:flex-start">Review approvals →</button>
+              <div style="height:1px;background:var(--line-2)"></div>
+              <div class="hc-row"><span class="card-s">Next up</span><b class="ell" style="max-width:150px">{{ nextEvent }}</b></div>
+            </div>
+            <div class="glass-2 hero-card" style="flex-direction:row;align-items:center;gap:14px">
+              <div style="position:relative;flex:none">
+                <svg class="ring" width="62" height="62" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="rgba(15,35,80,.08)" stroke-width="3.4"></circle><circle cx="18" cy="18" r="15" fill="none" stroke="url(#heroRing)" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="{{ heroRing }}" transform="rotate(-90 18 18)" style="transition:stroke-dasharray .6s ease"></circle><defs><linearGradient id="heroRing" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5B8DF2"></stop><stop offset="1" stop-color="#1C3F9E"></stop></linearGradient></defs></svg>
+                <span class="num" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">{{ autoPct }}</span>
+              </div>
+              <div style="min-width:0">
+                <div class="card-s">Handled by agents</div>
+                <div style="font-size:15px;font-weight:600;margin-top:2px"><span class="num">{{ running }}</span> active · <span class="num">{{ paused }}</span> paused</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="glass kpis c12">
+          <sc-for list="{{ kpis }}" as="k">
+            <div class="kpi">
+              <div class="kpi-top">
+                <span class="{{ k.tileCls }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ k.d }}"></path></svg></span>
+                <div style="min-width:0"><div class="kpi-l">{{ k.label }}</div><div class="kpi-v">{{ k.value }}</div></div>
+              </div>
+              <div class="kpi-row">
+                <span class="{{ k.deltaCls }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="{{ k.deltaIcon }}"></path></svg>{{ k.delta }}<small>{{ k.foot }}</small></span>
+                <svg class="kpi-spark" viewBox="0 0 88 34" preserveAspectRatio="none"><defs><linearGradient id="{{ k.gid }}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{{ k.color }}" stop-opacity=".3"></stop><stop offset="1" stop-color="{{ k.color }}" stop-opacity="0"></stop></linearGradient></defs><path d="{{ k.area }}" fill="{{ k.fill }}"></path><path d="{{ k.line }}" fill="none" stroke="{{ k.color }}" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"></path></svg>
+              </div>
+            </div>
+          </sc-for>
+        </section>
+
+        <section class="glass card c6">
+          <div class="card-h">
+            <div><div class="card-t">Automation activity</div><div class="card-s">{{ actSub }}</div></div>
+            <div class="seg"><sc-for list="{{ actSeg }}" as="as"><button class="{{ as.cls }}" onClick="{{ as.onClick }}">{{ as.label }}</button></sc-for></div>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+            <span class="kpi-v" style="font-size:30px">{{ actValue }}</span><span class="card-s">tasks</span>
+            <span class="delta"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7 M8 7h9v9"></path></svg>{{ actDelta }}<small>{{ actDeltaFoot }}</small></span>
+          </div>
+          <div style="display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;margin-top:18px;flex:1;min-height:210px">
+            <div style="display:flex;flex-direction:column;justify-content:space-between;font-size:11px;color:var(--t4);height:100%;padding-bottom:26px" class="num"><sc-for list="{{ actY }}" as="ay"><span>{{ ay }}</span></sc-for></div>
+            <div style="display:flex;flex-direction:column;min-width:0">
+              <div class="chart" style="flex:1;min-height:180px">
+                <svg viewBox="0 0 600 180" preserveAspectRatio="none" style="height:100%">
+                  <defs><linearGradient id="actFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2D6BEA" stop-opacity=".32"></stop><stop offset="1" stop-color="#2D6BEA" stop-opacity="0"></stop></linearGradient></defs>
+                  <line x1="0" x2="600" y1="1" y2="1" stroke="rgba(15,35,80,.07)" stroke-dasharray="4 6" vector-effect="non-scaling-stroke"></line>
+                  <line x1="0" x2="600" y1="90" y2="90" stroke="rgba(15,35,80,.07)" stroke-dasharray="4 6" vector-effect="non-scaling-stroke"></line>
+                  <line x1="0" x2="600" y1="179" y2="179" stroke="rgba(15,35,80,.1)" vector-effect="non-scaling-stroke"></line>
+                  <line x1="{{ actX }}" x2="{{ actX }}" y1="0" y2="180" stroke="rgba(45,107,234,.35)" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"></line>
+                  <path d="{{ actArea }}" fill="url(#actFill)"></path>
+                  <path d="{{ actLine }}" fill="none" stroke="#2D6BEA" stroke-width="2.5" stroke-linecap="round" vector-effect="non-scaling-stroke"></path>
+                </svg>
+                <span class="cdot" style="{{ actDotStyle }}"></span>
+                <div class="{{ actTipCls }}" style="{{ actTipStyle }}">{{ actTip }}<small>{{ actTipSub }}</small></div>
+                <div class="hits" onMouseLeave="{{ actLeave }}"><sc-for list="{{ actHits }}" as="ah"><div onMouseEnter="{{ ah.onEnter }}" onClick="{{ ah.onEnter }}"></div></sc-for></div>
+              </div>
+              <div class="axis"><sc-for list="{{ actXLabels }}" as="ax"><span>{{ ax }}</span></sc-for></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="glass card c3">
+          <div class="card-h">
+            <div><div class="card-t">Workload by area</div><div class="card-s">Tasks handled today</div></div>
+            <button class="pill" onClick="{{ goAgents }}">Agents<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg></button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;flex:1;justify-content:space-between">
+            <sc-for list="{{ workRows }}" as="wr">
+              <div class="row-card" style="flex-direction:column;align-items:stretch;gap:10px">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <span class="{{ wr.tileCls }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ wr.d }}"></path></svg></span>
+                  <div style="flex:1;min-width:0"><div class="card-s">{{ wr.label }}</div><div style="font-size:17px;font-weight:600;letter-spacing:-.02em" class="num">{{ wr.value }} <span class="card-s" style="font-weight:500">tasks</span></div></div>
+                  <span class="card-s num" style="font-weight:600">{{ wr.pct }}</span>
+                </div>
+                <div class="bar"><div style="{{ wr.barStyle }}"></div></div>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <section class="glass card c3">
+          <div class="card-h">
+            <div><div class="card-t">Performance &amp; health</div><div class="card-s">Live across all agents</div></div>
+            <button class="pill" onClick="{{ goAdminOverview }}">View all<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg></button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;flex:1;justify-content:space-between">
+            <sc-for list="{{ healthRows }}" as="hr">
+              <div class="row-card">
+                <div style="position:relative;flex:none">
+                  <svg class="ring" width="48" height="48" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="rgba(15,35,80,.08)" stroke-width="3.2"></circle><circle cx="18" cy="18" r="15" fill="none" stroke="{{ hr.color }}" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="{{ hr.dash }}" transform="rotate(-90 18 18)" style="transition:stroke-dasharray .6s ease"></circle></svg>
+                  <span class="num" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700">{{ hr.value }}</span>
+                </div>
+                <div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:600;line-height:1.3;overflow-wrap:anywhere">{{ hr.label }}</div><div class="card-s" style="overflow-wrap:anywhere">{{ hr.note }}</div></div>
+                <span class="{{ hr.pill.cls }}"><svg class="{{ hr.pill.icls }}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="{{ hr.pill.icon }}"></path></svg>{{ hr.pill.label }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <section class="glass card c6">
+          <div class="card-h" style="align-items:center">
+            <div><div class="card-t">Schedule</div><div class="card-s num">{{ schRange }}</div></div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <button class="pill" onClick="{{ schToday }}">Today</button>
+              <button class="mini" onClick="{{ schPrev }}" aria-label="Previous week in schedule"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg></button>
+              <button class="mini" onClick="{{ schNext }}" aria-label="Next week in schedule"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg></button>
+            </div>
+          </div>
+          <div class="sch-head">
+            <span></span>
+            <sc-for list="{{ schDays }}" as="sd">
+              <button class="{{ sd.cls }}" onClick="{{ sd.onClick }}" aria-pressed="{{ sd.pressed }}"><span class="dn">{{ sd.dn }}</span><span class="dd">{{ sd.dd }}</span></button>
+            </sc-for>
+          </div>
+          <div class="sch-body">
+            <div class="sch-times"><sc-for list="{{ schHours }}" as="sh"><span style="{{ sh.style }}">{{ sh.label }}</span></sc-for></div>
+            <div class="sch-grid">
+              <sc-for list="{{ schHours }}" as="sl"><span class="sch-line" style="{{ sl.lineStyle }}"></span></sc-for>
+              <sc-if value="{{ schNowOn }}"><span class="now" style="{{ schNowStyle }}"></span></sc-if>
+              <sc-for list="{{ schEvents }}" as="se">
+                <button class="{{ se.cls }}" style="{{ se.style }}" onClick="{{ se.onClick }}" title="{{ se.titleAttr }}"><span class="et">{{ se.title }}</span><span class="ew num">{{ se.time }} · {{ se.who }}</span></button>
+              </sc-for>
+            </div>
+          </div>
+          <div class="card-s" style="margin-top:12px;display:flex;align-items:center;gap:8px"><span class="dot" style="color:var(--blue)"></span>{{ schSummary }}</div>
+        </section>
+
+        <section class="navy card c3 r2" ref="{{ wfRef }}">
+          <div class="card-h" style="position:relative;margin-bottom:12px">
+            <div><div class="card-t">Run a workflow</div><div class="card-s">{{ wfMeta }}</div></div>
+            <div class="frac"><b>{{ doneN }}</b>/{{ stepsN }}</div>
+          </div>
+          <div class="seg dark wrap" style="position:relative">
+            <sc-for list="{{ wfSeg }}" as="ws"><button class="{{ ws.cls }}" onClick="{{ ws.onClick }}" disabled="{{ ws.disabled }}">{{ ws.label }}</button></sc-for>
+          </div>
+          <div class="wf-list">
+            <sc-for list="{{ steps }}" as="s">
+              <div class="{{ s.cls }}">
+                <span class="wf-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{ s.d }}"></path></svg></span>
+                <span style="flex:1;min-width:0"><span class="wf-a">{{ s.agent }}</span><span class="wf-d">{{ s.text }}</span></span>
+                <span class="wf-mk">
+                  <sc-if value="{{ s.isRun }}"><span class="spin"></span></sc-if>
+                  <sc-if value="{{ s.isDone }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg></sc-if>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="position:relative;display:flex;flex-direction:column;gap:10px">
+            <div style="height:6px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden"><div style="{{ progressStyle }}"></div></div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-light" onClick="{{ onRun }}" disabled="{{ runDisabled }}">{{ runLabel }}</button>
+              <span style="{{ wfFootStyle }}">{{ wfFoot }}</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="glass card c3 r2" ref="{{ apRef }}">
+          <div class="card-h" style="margin-bottom:12px">
+            <div><div class="card-t">Approvals</div><div class="card-s">Needs your decision</div></div>
+            <span class="{{ pendingCount.cls }}"><svg class="{{ pendingCount.icls }}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="{{ pendingCount.icon }}"></path></svg>{{ pendingCount.label }}</span>
+          </div>
+          <div class="seg full" role="tablist" style="margin-bottom:10px">
+            <sc-for list="{{ inboxTabs }}" as="it"><button class="{{ it.cls }}" role="tab" aria-selected="{{ it.selected }}" onClick="{{ it.onClick }}">{{ it.label }}<span class="count plain" style="height:18px;min-width:18px;padding:0 5px;font-size:11px">{{ it.count }}</span></button></sc-for>
+          </div>
+          <div class="ap-list">
+            <sc-for list="{{ inboxRows }}" as="ib">
+              <div class="{{ ib.cls }}">
+                <button class="ap-row" onClick="{{ ib.onSelect }}" aria-expanded="{{ ib.expandedAria }}">
+                  <span class="av-wrap">
+                    <span class="av" style="{{ ib.avStyle }}">{{ ib.initials }}<sc-if value="{{ ib.photo }}"><img class="avimg" src="{{ ib.photo }}" alt=""/></sc-if></span>
+                    <span class="{{ ib.agentTile }}" title="{{ ib.agentName }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ ib.agentIcon }}"></path></svg></span>
+                  </span>
+                  <span style="flex:1;min-width:0">
+                    <span class="ap-name">{{ ib.name }}</span>
+                    <span class="ap-sub">{{ ib.sub }}</span>
+                    <span class="ap-meta">
+                      <span class="{{ ib.badge.cls }}"><svg class="{{ ib.badge.icls }}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="{{ ib.badge.icon }}"></path></svg>{{ ib.badge.label }}</span>
+                      <span class="card-s num" style="white-space:nowrap">{{ ib.when }}</span>
+                    </span>
+                  </span>
+                </button>
+                <sc-if value="{{ ib.expanded }}">
+                  <div class="ap-detail">
+                    <sc-if value="{{ ib.tag }}"><span class="st s-amber" style="align-self:flex-start"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4 M12 17h.01 M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path></svg>{{ ib.tag }}</span></sc-if>
+                    <p>{{ ib.detail }}</p>
+                    <div class="card-s">Handled by {{ ib.agentName }}</div>
+                    <sc-if value="{{ ib.open }}">
+                      <div style="display:flex;gap:8px">
+                        <button class="btn btn-sm" style="flex:1" onClick="{{ ib.onDecline }}">Decline</button>
+                        <button class="btn btn-sm btn-primary" style="flex:1" onClick="{{ ib.onApprove }}">Approve</button>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ ib.settledText }}"><span class="{{ ib.settled.cls }}" style="align-self:flex-start;height:28px"><svg class="{{ ib.settled.icls }}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="{{ ib.settled.icon }}"></path></svg>{{ ib.settledText }}</span></sc-if>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+            <sc-if value="{{ inboxEmpty }}"><div class="kempty">Nothing here right now</div></sc-if>
+          </div>
+        </section>
+
+        <section class="glass card c6">
+          <div class="card-h" style="align-items:center">
+            <div><div class="card-t">Agent performance</div><div class="card-s">Updates live · click a row to open the agent</div></div>
+            <button class="pill" onClick="{{ goAgents }}">View all<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg></button>
+          </div>
+          <div class="tbl">
+            <div class="tr th perf"><span>Agent</span><span>Handled today</span><span>Trend</span><span>Accuracy</span><span>Status</span></div>
+            <sc-for list="{{ perfRows }}" as="pr">
+              <button class="tr perf" onClick="{{ pr.onClick }}">
+                <span class="td-main"><span class="{{ pr.tileCls }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ pr.d }}"></path></svg></span><span class="ell">{{ pr.name }}</span></span>
+                <span class="num" style="color:var(--ink);font-weight:500">{{ pr.tasks }}</span>
+                <svg width="90" height="26" viewBox="0 0 90 26" preserveAspectRatio="none"><path d="{{ pr.line }}" fill="none" stroke="{{ pr.color }}" stroke-width="1.8" stroke-linecap="round" vector-effect="non-scaling-stroke"></path></svg>
+                <span class="num">{{ pr.accuracy }}</span>
+                <span><span class="{{ pr.pill.cls }}"><svg class="{{ pr.pill.icls }}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="{{ pr.pill.icon }}"></path></svg>{{ pr.pill.label }}</span></span>
+              </button>
+            </sc-for>
+          </div>
+        </section>
+
+        <section class="glass card c6">
+          <div class="card-h" style="align-items:center">
+            <div><div class="card-t">Hiring</div><div class="card-s">{{ applicantsText }}</div></div>
+            <div style="text-align:right"><div class="kpi-v" style="font-size:28px">{{ matchPct }}</div><div class="card-s">matched above {{ fit }}</div></div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:flex-end">
+            <sc-for list="{{ stageBars }}" as="sb">
+              <div style="{{ sb.wrapStyle }}">
+                <span class="card-s num" style="font-weight:600">{{ sb.count }}</span>
+                <div style="{{ sb.barStyle }}"></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:14px;margin:10px 0 14px">
+            <sc-for list="{{ stageBars }}" as="sl"><span class="card-s" style="display:inline-flex;align-items:center;gap:6px"><span style="{{ sl.dotStyle }}"></span>{{ sl.label }}</span></sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
+            <sc-for list="{{ topCands }}" as="tc">
+              <div class="row-card" style="padding:10px">
+                <span class="av" style="{{ tc.avStyle }}">{{ tc.initials }}<sc-if value="{{ tc.photo }}"><img class="avimg" src="{{ tc.photo }}" alt=""/></sc-if></span>
+                <div style="min-width:0;flex:1"><div class="ell" style="font-size:13px;font-weight:600">{{ tc.name }}</div><div class="card-s ell">{{ tc.role }}</div></div>
+                <span class="st s-green num">{{ tc.score }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <button class="btn btn-sm" onClick="{{ goHiring }}" style="margin-top:14px;align-self:flex-start">Open pipeline<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14 M13 6l6 6-6 6"></path></svg></button>
+        </section>
+
+        <section class="glass card c6">
+          <div class="card-h" style="align-items:center">
+            <div><div class="card-t">Handled for you today</div><div class="card-s">Finished by agents without anyone stepping in</div></div>
+            <button class="pill" onClick="{{ goLog }}">Activity log<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg></button>
+          </div>
+          <div style="display:flex;flex-direction:column">
+            <sc-for list="{{ handled }}" as="hd">
+              <div style="display:flex;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--line)">
+                <span class="{{ hd.tileCls }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ hd.d }}"></path></svg></span>
+                <div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:500;line-height:1.4">{{ hd.text }}</div><div class="card-s">{{ hd.by }}</div></div>
+                <span class="st s-gray num">{{ hd.time }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAgents }}">
+      <div class="stack">
+        <div class="ph">
+          <div><h1>{{ pageTitle }}</h1><p>{{ pageSub }}</p></div>
+          <div class="actions"><button class="btn" onClick="{{ toggleAll }}">{{ toggleAllLabel }}</button><button class="btn btn-primary" onClick="{{ openChat }}">Ask an agent</button></div>
+        </div>
+        <section class="glass kpis">
+          <sc-for list="{{ kpis }}" as="k">
+            <div class="kpi">
+              <div class="kpi-top"><span class="{{ k.tileCls }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ k.d }}"></path></svg></span><div style="min-width:0"><div class="kpi-l">{{ k.label }}</div><div class="kpi-v">{{ k.value }}</div></div></div>
+              <div class="kpi-row">
+                <span class="{{ k.deltaCls }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="{{ k.deltaIcon }}"></path></svg>{{ k.delta }}<small>{{ k.foot }}</small></span>
+                <svg class="kpi-spark" viewBox="0 0 88 34" preserveAspectRatio="none"><defs><linearGradient id="{{ k.gid }}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{{ k.color }}" stop-opacity=".3"></stop><stop offset="1" stop-color="{{ k.color }}" stop-opacity="0"></stop></linearGradient></defs><path d="{{ k.area }}" fill="{{ k.fill }}"></path><path d="{{ k.line }}" fill="none" stroke="{{ k.color }}" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"></path></svg>
+              </div>
+            </div>
+          </sc-for>
+        </section>
+        <div class="agents">
+          <sc-for list="{{ agentCards }}" as="a">
+            <article class="{{ a.cls }}" ref="{{ a.ref }}">
+              <div style="display:flex;align-items:flex-start;gap:12px">
+                <span class="{{ a.tileCls }}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{ a.d }}"></path></svg></span>
+                <div style="flex:1;min-width:0"><div class="card-t">{{ a.title }}</div><div class="card-s">{{ a.role }}</div></div>
+                <button class="{{ a.swCls }}" role="switch" aria-checked="{{ a.checked }}" aria-label="{{ a.aria }}" onClick="{{ a.onToggle }}"><span></span></button>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+                <div><div class="kpi-v" style="font-size:32px">{{ a.tasks }}</div><div class="card-s">handled today</div></div>
+                <div style="position:relative;flex:none">
+                  <svg class="ring" width="58" height="58" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="rgba(15,35,80,.08)" stroke-width="3"></circle><circle cx="18" cy="18" r="15" fill="none" stroke="{{ a.color }}" stroke-width="3" stroke-linecap="round" stroke-dasharray="{{ a.dash }}" transform="rotate(-90 18 18)"></circle></svg>
+                  <span class="num" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;font-weight:700;line-height:1.1">{{ a.accuracy }}<span style="font-size:8.5px;font-weight:500;color:var(--t3)">accuracy</span></span>
+                </div>
+              </div>
+              <svg viewBox="0 0 300 64" preserveAspectRatio="none" style="width:100%;height:64px;display:block;overflow:visible"><defs><linearGradient id="{{ a.gid }}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{{ a.color }}" stop-opacity=".28"></stop><stop offset="1" stop-color="{{ a.color }}" stop-opacity="0"></stop></linearGradient></defs><path d="{{ a.area }}" fill="{{ a.fill }}"></path><path d="{{ a.line }}" fill="none" stroke="{{ a.color }}" stroke-width="2.2" stroke-linecap="round" vector-effect="non-scaling-stroke"></path></svg>
+              <div class="chips"><sc-for list="{{ a.skills }}" as="sk"><span class="chip">{{ sk }}</span></sc-for></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:14px;border-top:1px solid var(--line)">
+                <span class="{{ a.pill.cls }}"><svg class="{{ a.pill.icls }}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="{{ a.pill.icon }}"></path></svg>{{ a.pill.label }}</span>
+                <span class="card-s">{{ a.foot }}</span>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isHiring }}">
+      <div class="stack">
+        <div class="ph">
+          <div><h1>{{ pageTitle }}</h1><p>{{ pageSub }}</p></div>
+          <div class="actions"><sc-for list="{{ pipeActions }}" as="pa"><button class="{{ pa.cls }}" onClick="{{ pa.onClick }}" disabled="{{ pa.disabled }}">{{ pa.label }}</button></sc-for></div>
+        </div>
+        <section class="glass kpis">
+          <sc-for list="{{ kpis }}" as="k">
+            <div class="kpi">
+              <div class="kpi-top"><span class="{{ k.tileCls }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ k.d }}"></path></svg></span><div style="min-width:0;flex:1"><div class="kpi-l">{{ k.label }}</div><div class="kpi-v">{{ k.value }}</div></div><sc-if value="{{ k.action }}"><button class="pill" onClick="{{ k.onAction }}">{{ k.action }}</button></sc-if></div>
+              <div class="kpi-row">
+                <span class="{{ k.deltaCls }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="{{ k.deltaIcon }}"></path></svg>{{ k.delta }}<small>{{ k.foot }}</small></span>
+                <svg class="kpi-spark" viewBox="0 0 88 34" preserveAspectRatio="none"><defs><linearGradient id="{{ k.gid }}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{{ k.color }}" stop-opacity=".3"></stop><stop offset="1" stop-color="{{ k.color }}" stop-opacity="0"></stop></linearGradient></defs><path d="{{ k.area }}" fill="{{ k.fill }}"></path><path d="{{ k.line }}" fill="none" stroke="{{ k.color }}" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"></path></svg>
+              </div>
+            </div>
+          </sc-for>
+        </section>
+        <div class="kanban">
+          <sc-for list="{{ columns }}" as="col">
+            <div class="glass kcol">
+              <div class="kcol-h"><span style="{{ col.dotStyle }}"></span><span style="flex:1">{{ col.label }}</span><span class="count plain">{{ col.count }}</span></div>
+              <sc-for list="{{ col.cards }}" as="cd">
+                <div class="kcard" ref="{{ cd.ref }}">
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <span class="av" style="{{ cd.avStyle }}">{{ cd.initials }}<sc-if value="{{ cd.photo }}"><img class="avimg" src="{{ cd.photo }}" alt=""/></sc-if></span>
+                    <div style="min-width:0;flex:1"><div class="ell" style="font-size:14px;font-weight:600">{{ cd.name }}</div><div class="card-s ell">{{ cd.role }}</div></div>
+                  </div>
+                  <div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><span class="card-s">AI fit</span><span class="{{ cd.scoreCls }}">{{ cd.score }}</span></div>
+                    <div class="bar"><div style="{{ cd.barStyle }}"></div></div>
+                  </div>
+                </div>
+              </sc-for>
+              <sc-if value="{{ col.empty }}"><div class="kempty">No candidates yet</div></sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ declineNote }}">
+          <div class="banner"><span class="tile xs round t-amber"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z M4 7l8 6 8-6"></path></svg></span>{{ declineNote }}</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isPeople }}">
+      <div class="stack">
+        <div class="ph"><div><h1>{{ pageTitle }}</h1><p>{{ pageSub }}</p></div></div>
+        <section class="glass" style="padding:14px">
+          <div style="background:#FBFBF9;border-radius:16px;padding:12px;overflow:hidden">
+            <dc-import name="Employee360Board" hint-size="100%,1100px"></dc-import>
+          </div>
+        </section>
+      </div>
+    </sc-if>
+
+    </div>
+  </main>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAdmin }}">
+<div class="{{ shellCls }}">
+  <aside class="{{ sideClsDark }}" onMouseEnter="{{ openSide }}" onMouseLeave="{{ closeSide }}">
+    <div class="brand">
+      <div class="logo"><svg width="19" height="19" viewBox="0 0 24 24" fill="#fff"><path d="M12 1.6c1.15 6.3 2.95 8.1 9.25 9.25-6.3 1.15-8.1 2.95-9.25 9.25-1.15-6.3-2.95-8.1-9.25-9.25 6.3-1.15 8.1-2.95 9.25-9.25z"></path><path d="M19.3 16.2c.45 2.45 1.15 3.15 3.6 3.6-2.45.45-3.15 1.15-3.6 3.6-.45-2.45-1.15-3.15-3.6-3.6 2.45-.45 3.15-1.15 3.6-3.6z" opacity=".9"></path></svg></div>
+      <div class="brand-text"><div class="brand-name" style="color:#fff">Smart HR<svg class="sp" width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.6c1.15 6.3 2.95 8.1 9.25 9.25-6.3 1.15-8.1 2.95-9.25 9.25-1.15-6.3-2.95-8.1-9.25-9.25 6.3-1.15 8.1-2.95 9.25-9.25z"></path></svg></div><div class="brand-sub">Admin console</div></div>
+    </div>
+    <div class="status-box">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <span style="display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff"><span class="dot live" style="color:#6EE7A0"></span>System status</span>
+        <span class="num" style="font-size:12px;color:rgba(227,234,248,.7)">{{ runningShort }}</span>
+      </div>
+      <div style="height:6px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden"><div style="{{ runBarStyle }}"></div></div>
+      <div style="font-size:12px;color:rgba(227,234,248,.62);line-height:1.45">Escalations go to {{ escalate }}</div>
+    </div>
+    <div class="side-scroll">
+    <div class="side-label">Manage</div>
+    <nav class="nav" aria-label="Admin sections">
+      <sc-for list="{{ adminNav }}" as="an">
+        <button class="{{ an.cls }}" onClick="{{ an.onClick }}" aria-current="{{ an.current }}" title="{{ an.label }}">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="{{ an.d }}"></path></svg>
+          <span class="lbl">{{ an.label }}</span>
+          <sc-if value="{{ an.badge }}"><span class="count">{{ an.badge }}</span></sc-if>
+        </button>
+      </sc-for>
+    </nav>
+    <div class="side-label">Workspace</div>
+    <div class="nav">
+      <button class="nav-item" onClick="{{ backToHR }}" title="Back to HR workspace">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5 M11 18l-6-6 6-6"></path></svg>
+        <span class="lbl">Back to HR workspace</span>
+      </button>
+    </div>
+    </div>
+    <div style="flex:1"></div>
+    <div class="me">
+      <span class="av" style="width:36px;height:36px;font-size:13px;background:#fff;color:#172B63">ME<img class="avimg" src="{{ mePhoto }}" alt=""/></span>
+      <div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:600;line-height:1.3;color:#fff">Maya Ellison</div><div class="card-s">Administrator</div></div>
+      <span class="st s-glass" style="height:22px;font-size:10.5px;letter-spacing:.06em">ADMIN</span>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <nav class="crumbs" aria-label="Breadcrumb"><span>Admin console</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg><span class="cur">{{ adminTabName }}</span></nav>
+      <div style="flex:1"></div>
+      <span class="{{ runPill.cls }} hide-s" style="height:34px;padding:0 14px 0 12px"><svg class="{{ runPill.icls }}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="{{ runPill.icon }}"></path></svg>{{ runPill.label }}</span>
+      <button class="btn" onClick="{{ backToHR }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5 M11 18l-6-6 6-6"></path></svg><span class="hide-s">Back to workspace</span></button>
+    </div>
+
+    <div style="{{ viewStyle }}">
+      <div class="stack">
+        <div class="ph"><div><h1>{{ adminTabName }}</h1><p>{{ adminTabSub }}</p></div></div>
+
+        <sc-if value="{{ isAdOverview }}">
+          <div class="stack">
+            <section class="glass kpis">
+              <sc-for list="{{ kpis }}" as="k">
+                <div class="kpi">
+                  <div class="kpi-top"><span class="{{ k.tileCls }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ k.d }}"></path></svg></span><div style="min-width:0"><div class="kpi-l">{{ k.label }}</div><div class="kpi-v">{{ k.value }}</div></div></div>
+                  <div class="kpi-row">
+                    <span class="{{ k.deltaCls }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="{{ k.deltaIcon }}"></path></svg>{{ k.delta }}<small>{{ k.foot }}</small></span>
+                    <svg class="kpi-spark" viewBox="0 0 88 34" preserveAspectRatio="none"><defs><linearGradient id="{{ k.gid }}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{{ k.color }}" stop-opacity=".3"></stop><stop offset="1" stop-color="{{ k.color }}" stop-opacity="0"></stop></linearGradient></defs><path d="{{ k.area }}" fill="{{ k.fill }}"></path><path d="{{ k.line }}" fill="none" stroke="{{ k.color }}" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"></path></svg>
+                  </div>
+                </div>
+              </sc-for>
+            </section>
+            <section class="glass card">
+              <div class="card-h" style="align-items:center">
+                <div><div class="card-t">Agent network</div><div class="card-s">Every request goes through the orchestrator to the right agent</div></div>
+                <span class="st s-blue">{{ networkNote }}</span>
+              </div>
+              <div class="net">
+                <div style="position:relative;width:680px;height:386px;margin:0 auto">
+                  <svg viewBox="0 0 680 386" width="680" height="386" style="position:absolute;inset:0">
+                    <sc-for list="{{ links }}" as="ln"><line x1="340" y1="190" x2="{{ ln.x }}" y2="{{ ln.y }}" stroke="{{ ln.stroke }}" stroke-width="{{ ln.w }}" stroke-dasharray="{{ ln.dash }}" stroke-linecap="round"></line></sc-for>
+                    <sc-for list="{{ dots }}" as="dt"><circle r="4" fill="#2D6BEA"><animateMotion dur="{{ dt.dur }}" begin="{{ dt.begin }}" repeatCount="indefinite" path="{{ dt.path }}"></animateMotion></circle></sc-for>
+                  </svg>
+                  <div style="position:absolute;left:340px;top:190px;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:8px;width:140px">
+                    <div class="core" style="position:relative;left:auto;top:auto;margin:0"><svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M12 1.6c1.15 6.3 2.95 8.1 9.25 9.25-6.3 1.15-8.1 2.95-9.25 9.25-1.15-6.3-2.95-8.1-9.25-9.25 6.3-1.15 8.1-2.95 9.25-9.25z"></path><path d="M19.3 16.2c.45 2.45 1.15 3.15 3.6 3.6-2.45.45-3.15 1.15-3.6 3.6-.45-2.45-1.15-3.15-3.6-3.6 2.45-.45 3.15-1.15 3.6-3.6z" opacity=".9"></path></svg></div>
+                    <span class="node-l">Orchestrator</span>
+                  </div>
+                  <sc-for list="{{ nodes }}" as="nd">
+                    <div style="{{ nd.wrapStyle }}">
+                      <div class="{{ nd.cls }}"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{ nd.d }}"></path></svg></div>
+                      <span class="node-l" style="{{ nd.labelStyle }}">{{ nd.name }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </section>
+            <div class="grid two">
+              <section class="glass card c-auto">
+                <div class="card-h" style="align-items:center"><div><div class="card-t">Escalations today</div><div class="card-s">Handed to a person</div></div><button class="pill" onClick="{{ goLog }}">View log</button></div>
+                <sc-for list="{{ escalations }}" as="es">
+                  <div style="display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line)">
+                    <span class="{{ es.tileCls }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ es.d }}"></path></svg></span>
+                    <div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:500">{{ es.action }}</div><div class="card-s">{{ es.agent }}</div></div>
+                    <span class="st s-amber num">{{ es.time }}</span>
+                  </div>
+                </sc-for>
+              </section>
+              <section class="glass card c-auto">
+                <div class="card-h" style="align-items:center"><div><div class="card-t">Current rules</div><div class="card-s">What agents may do on their own</div></div><button class="pill" onClick="{{ goRules }}">Edit</button></div>
+                <sc-for list="{{ ruleSummary }}" as="ru">
+                  <div style="display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid var(--line)">
+                    <span style="font-size:13.5px;color:var(--t2)">{{ ru.label }}</span><span class="st s-blue num">{{ ru.value }}</span>
+                  </div>
+                </sc-for>
+              </section>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isAdAssistants }}">
+          <section class="glass card">
+            <div class="tbl">
+              <div class="tr th assist"><span>Assistant</span><span>Handled</span><span>Accuracy</span><span>Approval required</span><span>Status</span></div>
+              <sc-for list="{{ rows }}" as="r">
+                <div class="tr assist">
+                  <span class="td-main"><span class="{{ r.tileCls }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ r.d }}"></path></svg></span><span style="min-width:0"><span style="display:block;font-weight:600">{{ r.name }}</span><span class="card-s" style="display:block">{{ r.role }}</span></span></span>
+                  <span class="num" style="color:var(--ink);font-weight:500">{{ r.handled }}</span>
+                  <span class="num">{{ r.accuracy }}</span>
+                  <span style="display:flex;align-items:center;gap:10px"><button class="{{ r.gateCls }}" role="switch" aria-checked="{{ r.gateChecked }}" aria-label="{{ r.gateAria }}" onClick="{{ r.onGate }}"><span></span></button><span style="font-size:13px">{{ r.gateLabel }}</span></span>
+                  <span style="display:flex;align-items:center;gap:10px;justify-content:space-between"><span class="{{ r.pill.cls }}"><svg class="{{ r.pill.icls }}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="{{ r.pill.icon }}"></path></svg>{{ r.pill.label }}</span><button class="{{ r.swCls }}" role="switch" aria-checked="{{ r.checked }}" aria-label="{{ r.aria }}" onClick="{{ r.onToggle }}"><span></span></button></span>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+        </sc-if>
+
+        <sc-if value="{{ isAdRules }}">
+          <div class="grid two" style="align-items:start">
+            <section class="glass card c-auto">
+              <div class="card-h"><div><div class="card-t">Automatic limits</div><div class="card-s">Anything outside these comes to a person</div></div></div>
+              <sc-for list="{{ limits }}" as="lm">
+                <div class="field">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font-size:14px;font-weight:600">{{ lm.label }}</span><span class="st s-blue num">{{ lm.text }}</span></div>
+                  <div class="card-s">{{ lm.help }}</div>
+                  <input type="range" min="{{ lm.min }}" max="{{ lm.max }}" step="{{ lm.step }}" value="{{ lm.value }}" onInput="{{ lm.onInput }}" aria-label="{{ lm.label }}" style="{{ lm.rangeStyle }}"/>
+                </div>
+              </sc-for>
+            </section>
+            <section class="glass card c-auto">
+              <div class="card-h" style="margin-bottom:4px"><div><div class="card-t">Policies</div><div class="card-s">Applies to every agent, every entity</div></div></div>
+              <sc-for list="{{ policies }}" as="p">
+                <div class="pol">
+                  <div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">{{ p.label }}</div><div class="card-s">{{ p.note }}</div></div>
+                  <button class="{{ p.swCls }}" role="switch" aria-checked="{{ p.checked }}" aria-label="{{ p.label }}" onClick="{{ p.onToggle }}"><span></span></button>
+                </div>
+              </sc-for>
+              <div class="pol">
+                <div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">Escalate to</div><div class="card-s">Who gets anything the agents stop on</div></div>
+                <select class="select" value="{{ escalate }}" onChange="{{ onEscalate }}" aria-label="Escalate to">
+                  <option value="Head of People">Head of People</option>
+                  <option value="HR Business Partner">HR Business Partner</option>
+                  <option value="Entity HR Lead">Entity HR Lead</option>
+                </select>
+              </div>
+            </section>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isAdLog }}">
+          <section class="glass card">
+            <div class="chips" style="margin-bottom:14px"><sc-for list="{{ logFilters }}" as="f"><button class="{{ f.cls }}" onClick="{{ f.onClick }}">{{ f.label }}</button></sc-for></div>
+            <div class="tbl">
+              <div class="tr th logr"><span>Time</span><span>Agent</span><span>Action</span><span>Outcome</span></div>
+              <sc-for list="{{ log }}" as="l">
+                <div class="tr logr">
+                  <span class="num card-s" style="font-size:13px">{{ l.time }}</span>
+                  <span class="td-main"><span class="{{ l.tileCls }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ l.d }}"></path></svg></span><span class="ell">{{ l.agent }}</span></span>
+                  <span style="color:var(--t2)">{{ l.action }}</span>
+                  <span><span class="{{ l.pill.cls }}"><svg class="{{ l.pill.icls }}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="{{ l.pill.icon }}"></path></svg>{{ l.pill.label }}</span></span>
+                </div>
+              </sc-for>
+              <sc-if value="{{ logEmpty }}"><div class="kempty">No entries for this agent today</div></sc-if>
+            </div>
+          </section>
+        </sc-if>
+      </div>
+    </div>
+  </main>
+</div>
+</sc-if>
+
+<sc-if value="{{ fabShow }}">
+  <button class="chat-fab" onClick="{{ openChat }}" aria-label="Ask Smart HR" title="Ask Smart HR"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"></path></svg></button>
+</sc-if>
+
+<sc-if value="{{ chatOpen }}">
+  <div class="overlay" onClick="{{ closeChat }}"></div>
+  <section class="{{ chatCls }}" role="dialog" aria-modal="true" aria-labelledby="cm-title">
+    <header class="cm-head">
+      <span class="cm-mark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M12 1.6c1.15 6.3 2.95 8.1 9.25 9.25-6.3 1.15-8.1 2.95-9.25 9.25-1.15-6.3-2.95-8.1-9.25-9.25 6.3-1.15 8.1-2.95 9.25-9.25z"></path></svg></span>
+      <div class="cm-head-t"><b id="cm-title">Ask Smart HR</b><span>Routes your question to the right agent</span></div>
+      <button class="cm-icon" onClick="{{ clearChat }}" aria-label="New conversation" title="New conversation"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9 M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg></button>
+      <button class="cm-icon" onClick="{{ toggleChatWide }}" aria-label="{{ chatWideLabel }}" title="{{ chatWideLabel }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ chatWideIcon }}"></path></svg></button>
+      <span class="cm-sep"></span>
+      <button class="cm-icon" onClick="{{ closeChat }}" aria-label="Close" title="Close"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 6l12 12 M18 6 6 18"></path></svg></button>
+    </header>
+    <div class="cm-body" ref="{{ scrollRef }}">
+      <div class="cm-thread">
+        <sc-for list="{{ msgs }}" as="m">
+          <sc-if value="{{ m.isMe }}">
+            <div class="cm-row me"><div class="cm-q">{{ m.text }}</div></div>
+          </sc-if>
+          <sc-if value="{{ m.isBot }}">
+            <div class="cm-row bot">
+              <span class="cm-mark sm" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M12 1.6c1.15 6.3 2.95 8.1 9.25 9.25-6.3 1.15-8.1 2.95-9.25 9.25-1.15-6.3-2.95-8.1-9.25-9.25 6.3-1.15 8.1-2.95 9.25-9.25z"></path></svg></span>
+              <div class="cm-a">
+                <sc-if value="{{ m.route }}"><div class="cm-a-t">{{ m.route }}</div></sc-if>
+                <div>{{ m.text }}</div>
+                <sc-if value="{{ m.showChips }}">
+                  <div class="cm-sugg-t">Suggested questions</div>
+                  <div class="cm-sugg"><sc-for list="{{ chips }}" as="c"><button class="cm-chip" onClick="{{ c.onClick }}" disabled="{{ c.disabled }}">{{ c.label }}</button></sc-for></div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-if>
+        </sc-for>
+        <sc-if value="{{ thinking }}"><div class="cm-row bot"><span class="cm-mark sm" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M12 1.6c1.15 6.3 2.95 8.1 9.25 9.25-6.3 1.15-8.1 2.95-9.25 9.25-1.15-6.3-2.95-8.1-9.25-9.25 6.3-1.15 8.1-2.95 9.25-9.25z"></path></svg></span><div class="typing" aria-label="Thinking"><span></span><span></span><span></span></div></div></sc-if>
+        <sc-if value="{{ chatWf }}">
+          <div class="cm-row bot">
+            <span class="cm-mark sm" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M12 1.6c1.15 6.3 2.95 8.1 9.25 9.25-6.3 1.15-8.1 2.95-9.25 9.25-1.15-6.3-2.95-8.1-9.25-9.25 6.3-1.15 8.1-2.95 9.25-9.25z"></path></svg></span>
+            <div class="cm-a" style="flex:1">
+              <div class="cm-wf">
+                <div class="cm-wf-h"><b>{{ chatWf.label }}</b><span class="cm-wf-pct">{{ chatWf.pct }}%</span></div>
+                <div class="cm-wf-meta">{{ chatWf.meta }}</div>
+                <div class="cm-wf-bar"><div class="cm-wf-fill" style="width:{{ chatWf.pct }}%"></div></div>
+                <div class="cm-wf-steps">
+                  <sc-for list="{{ chatWf.steps }}" as="ws">
+                    <div class="{{ ws.cls }}">
+                      <span class="cm-wf-mk">
+                        <sc-if value="{{ ws.run }}"><span class="cm-spin"></span></sc-if>
+                        <sc-if value="{{ ws.done }}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg></sc-if>
+                      </span>
+                      {{ ws.text }}
+                    </div>
+                  </sc-for>
+                </div>
+                <sc-if value="{{ chatWf.note }}"><div class="cm-wf-note">{{ chatWf.note }}</div></sc-if>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+    <div class="cm-foot">
+      <div class="cm-foot-in">
+        <form class="cm-composer" onSubmit="{{ onSubmit }}">
+          <textarea value="{{ input }}" onInput="{{ onInput }}" onKeyDown="{{ onComposerKey }}" disabled="{{ inputDisabled }}" placeholder="Ask about leave, pay, access or policy" aria-label="Message" rows="1"></textarea>
+          <button type="submit" class="cm-send" disabled="{{ sendDisabled }}" aria-label="Send" title="Send"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5 M5 12l7-7 7 7"></path></svg></button>
+        </form>
+        <div class="cm-hint">Enter to send · Shift + Enter for a new line</div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ toast }}">
+  <div class="toast" role="status"><span class="tile xs round t-green"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg></span>{{ toast }}</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;agents&quot;,&quot;hiring&quot;,&quot;people&quot;,&quot;admin&quot;],&quot;default&quot;:&quot;home&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Demo state&quot;}}">
+const BLUE='#2D6BEA',NAVY='#172B63',GREEN='#16A34A',AMBER_C='#D98A0B',RED='#E0484C',VIOLET='#6A55E8',SKY='#0EA5E9',ROSE='#E5486A';
+const SLATE=BLUE,AMBER=AMBER_C,ON=GREEN;
+const PLATES=[['#E4EDFD','#2257C9'],['#E3F6EA','#137A3A'],['#FFF0D6','#955400'],['#EFEAFD','#5B45C7'],['#FDE8EE','#B33065'],['#E2F4FB','#0B7CA6']];
+const hashIdx=s=>{let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h%PLATES.length;};
+const initials=n=>n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+const fmtN=n=>n.toLocaleString('en-US');
+const AGV={
+ hiring:{tile:'t-blue',color:BLUE,short:'Hiring'},
+ joining:{tile:'t-sky',color:SKY,short:'Joining'},
+ pay:{tile:'t-green',color:GREEN,short:'Pay'},
+ leave:{tile:'t-amber',color:AMBER_C,short:'Leave'},
+ helpdesk:{tile:'t-violet',color:VIOLET,short:'Questions'},
+ compliance:{tile:'t-rose',color:ROSE,short:'Compliance'}};
+const ICON={
+ bolt:'M13 2 4 14h7l-1 8 9-12h-7z',
+ check:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z M8.5 12.5l2.5 2.5 4.5-5',
+ clock:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z M12 7v5l3 2',
+ hourglass:'M6 2h12 M6 22h12 M8 2v4l4 4 4-4V2 M8 22v-4l4-4 4 4v4',
+ users:'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M22 21v-2a4 4 0 0 0-3-3.87',
+ target:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12z M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z',
+ pause:'M9 5v14 M15 5v14',
+ play:'M8 5v14l11-7z',
+ spark:'M12 3v3 M12 18v3 M3 12h3 M18 12h3 M5.6 5.6l2.1 2.1 M16.3 16.3l2.1 2.1 M18.4 5.6l-2.1 2.1 M7.7 16.3l-2.1 2.1',
+ flag:'M4 22V4 M4 4h13l-2 4 2 4H4',
+ gauge:'M12 20a8 8 0 1 0-8-8 M12 12l5-3',
+ doc:'M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z M14 3v5h5 M9 13h6 M9 17h4'};
+const UP='M7 17 17 7 M8 7h9v9',DOWN='M17 7 7 17 M16 17H7V8';
+const RC=2*Math.PI*15;
+const dash=p=>(Math.max(0,Math.min(100,p))/100*RC).toFixed(1)+' '+RC.toFixed(1);
+const pts=(vals,w,h,pad)=>{pad=pad===undefined?3:pad;const mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals),r=(mx-mn)||1;
+ return vals.map((v,i)=>[vals.length===1?w/2:i/(vals.length-1)*w,h-pad-(v-mn)/r*(h-pad*2)]);};
+const smooth=p=>{if(!p.length)return '';let d='M'+p[0][0].toFixed(1)+' '+p[0][1].toFixed(1);
+ for(let i=0;i<p.length-1;i++){const p0=p[i-1]||p[i],p1=p[i],p2=p[i+1],p3=p[i+2]||p2;
+  d+=' C'+(p1[0]+(p2[0]-p0[0])/6).toFixed(1)+' '+(p1[1]+(p2[1]-p0[1])/6).toFixed(1)+' '+(p2[0]-(p3[0]-p1[0])/6).toFixed(1)+' '+(p2[1]-(p3[1]-p1[1])/6).toFixed(1)+' '+p2[0].toFixed(1)+' '+p2[1].toFixed(1);}
+ return d;};
+const areaOf=(p,h)=>p.length?smooth(p)+' L'+p[p.length-1][0].toFixed(1)+' '+h+' L'+p[0][0].toFixed(1)+' '+h+' Z':'';
+const PHOTOS={'Maya Ellison':'maya-ellison','Clara Jensen':'clara-jensen','Mateo Duarte':'mateo-duarte','Victor Lang':'victor-lang','Anika Roy':'anika-roy','Felix Braun':'felix-braun','Noah Pierce':'noah-pierce','Zara Mbeki':'zara-mbeki','Hana Sato':'hana-sato','Luca Ferrari':'luca-ferrari','Greta Olsen':'greta-olsen','Dev Malhotra':'dev-malhotra','Ines Carvalho':'ines-carvalho','Adrian Castellanos Vega':'adrian-castellanos','Nora Castillo Reyes':'nora-castillo'};
+const photoOf=n=>PHOTOS[n]?('people/'+PHOTOS[n]+'.jpg'):'';
+const SIC={
+ waiting:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z M12 7v5l3 2',
+ pending:'M12 9v4 M12 17h.01 M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z',
+ running:'M12 3a9 9 0 0 1 6.4 2.6 M21 12a9 9 0 0 1-2.6 6.4 M12 21a9 9 0 0 1-6.4-2.6 M3 12a9 9 0 0 1 2.6-6.4',
+ ok:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z M8 12.4l2.6 2.6 5.2-5.6',
+ bad:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z M9 9l6 6 M15 9l-6 6',
+ paused:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z M10 9.5v5 M14 9.5v5',
+ sent:'M22 2 11 13 M22 2l-7 20-4-9-9-4 20-7z',
+ review:'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M21 21l-4.3-4.3 M11 8v3l2 1.4',
+ auto:'M13 2 4 14h7l-1 8 9-12h-7z',
+ person:'M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2 M9.5 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M17 11l2 2 4-4',
+ up:'M7 17 17 7 M8 7h9v9'};
+const STATUS={
+ waiting:['s-amber','waiting',0],pending:['s-amber','pending',0],action:['s-amber','pending',0],
+ running:['s-green','running',1],progress:['s-blue','running',1],
+ ok:['s-green','ok',0],approved:['s-green','ok',0],auto:['s-green','auto',0],clear:['s-green','ok',0],
+ bad:['s-red','bad',0],declined:['s-red','bad',0],
+ paused:['s-gray','paused',0],expired:['s-gray','waiting',0],
+ submitted:['s-violet','sent',0],review:['s-sky','review',0],
+ person:['s-blue','person',0],escalated:['s-amber','up',0]};
+const pill=(kind,label)=>{const s=STATUS[kind]||STATUS.waiting;return {cls:'st '+s[0],icon:SIC[s[1]],icls:s[2]?'spin':'',label};};
+const AG=[
+ {id:'hiring',name:'Hiring',role:'Screens and ranks applicants',handled:214,accuracy:'96%',skills:['Resume parsing','Skill matching','Outreach'],d:'M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8 M2 20a7 7 0 0 1 11-5.6 M16.5 14a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7 M21.5 22l-2.3-2.3'},
+ {id:'joining',name:'Joining',role:'Sets up everything for day one',handled:58,accuracy:'99%',skills:['IT provisioning','Documents','Buddy match'],d:'M3 8h18v12H3z M8 8V5h8v3 M9.5 14l2 2 3.5-3.5'},
+ {id:'pay',name:'Pay & expenses',role:'Runs payroll, bonuses and claims',handled:342,accuracy:'99.8%',skills:['Payroll','Claims','Payslips'],d:'M3 6h18v12H3z M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6 M6 9h.01 M18 15h.01'},
+ {id:'leave',name:'Leave & attendance',role:'Approves time off, tracks presence',handled:187,accuracy:'98%',skills:['Policy rules','Coverage check','Calendars'],d:'M8 2v4 M16 2v4 M3 10h18 M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z'},
+ {id:'helpdesk',name:'Employee questions',role:'Answers people 24/7',handled:421,accuracy:'94%',skills:['Policy Q&A','Ticket triage','Hand-off'],d:'M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z M8.5 9h7 M8.5 12.5h4'},
+ {id:'compliance',name:'Compliance',role:'Checks documents and regulations',handled:62,accuracy:'99.5%',skills:['Right-to-work','Data privacy','Audit trail'],d:'M12 3l8 3v6c0 5-3.5 8.2-8 9-4.5-.8-8-4-8-9V6z M9 12l2.2 2.2L15 10.4'}];
+const A=id=>AG.find(a=>a.id===id);
+const NAV=[
+ {id:'home',label:'Dashboard',d:'M4 4h7v7H4z M13 4h7v4h-7z M13 11h7v9h-7z M4 14h7v6H4z'},
+ {id:'agents',label:'Services',d:'M12 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4 M4 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4 M20 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4 M12 7v4 M12 11 5.5 16 M12 11l6.5 5'},
+ {id:'hiring',label:'Hiring',d:'M4 4h4v16H4z M10 4h4v11h-4z M16 4h4v6h-4z'},
+ {id:'people',label:'People',d:'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M22 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75'}];
+const ADMIN_NAV=[
+ {id:'overview',label:'Overview',sub:'How Smart HR is running right now, across every agent.',d:'M4 4h7v7H4z M13 4h7v4h-7z M13 11h7v9h-7z M4 14h7v6H4z'},
+ {id:'assistants',label:'Assistants',sub:'Turn agents on or off, and choose which need approval for every action.',d:'M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8 M2 20a7 7 0 0 1 14 0 M17 8v6 M20 11h-6'},
+ {id:'rules',label:'Limits & policies',sub:'Anything outside these limits comes to a person.',d:'M4 6h10 M18 6h2 M4 12h4 M12 12h8 M4 18h12 M20 18h0 M16 4v4 M10 10v4 M18 16v4'},
+ {id:'log',label:'Activity log',sub:'Every action, with who or what signed it off.',d:'M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z M14 3v5h5 M9 13h6 M9 17h4'}];
+const ENTITIES=[{name:'Northbay Group',people:248},{name:'Northbay Property',people:132},{name:'Northbay Education',people:74},{name:'Northbay Capital',people:42}];
+const INBOX=[
+ {id:'i1',agent:'leave',person:'Clara Jensen',sub:'Annual leave · 12 days, 20 – 31 October',tag:'Outside policy',when:'18 min ago',
+  approved:'Approved · Clara notified',declined:'Declined · reason requested'},
+ {id:'i2',agent:'compliance',person:'Mateo Duarte',sub:'Contractor start on Monday · NDA missing',tag:'Missing document',when:'42 min ago',
+  detail:'Signed NDA is missing. Everything else cleared. A decision today keeps Monday’s start on track.',
+  approved:'Approved · start confirmed',declined:'Declined · start on hold'},
+ {id:'i3',agent:'pay',person:'Victor Lang',sub:'Off-cycle final settlement · $6,200',tag:'Above limit',when:'1 h ago',
+  detail:'Final settlement including gratuity. Figures reconciled against attendance and leave balance.',
+  approved:'Approved · queued for payment',declined:'Declined · sent back for review'}];
+const HISTORY=[
+ {id:'h1',agent:'leave',when:'Today, 09:12',person:'Anika Roy',sub:'Annual leave · 3 days, full team coverage',status:'Auto-approved',tone:'ok',detail:'Approved automatically by Leave & attendance — full team coverage.'},
+ {id:'h2',agent:'pay',when:'Today, 08:31',person:'Felix Braun',sub:'Travel claim · $680, receipts matched',status:'Auto-approved',tone:'ok',detail:'Reimbursed automatically by Pay & expenses — receipts matched.'},
+ {id:'h3',agent:'hiring',when:'Today, 08:54',person:'Noah Pierce',sub:'Backend Engineer application · AI fit 71',status:'Declined',tone:'bad',detail:'Below the shortlist limit. A personal decline email was sent.'}];
+const HANDLED=[
+ {agent:'leave',text:'Approved 3 days off for Anika Roy — full team coverage',time:'09:12'},
+ {agent:'hiring',text:'Screened 42 applicants for Backend Engineer, 9 shortlisted',time:'08:54'},
+ {agent:'pay',text:'Reimbursed $680 travel claim for Felix Braun',time:'08:31'},
+ {agent:'joining',text:'Laptop, email and access ready for 2 joiners on Monday',time:'08:05'},
+ {agent:'helpdesk',text:'Answered 14 policy questions, 1 sent to you',time:'07:48'}];
+const WEEKS=[
+ {range:'31 Aug – 4 Sep',joiners:2,leave:9,leaveAuto:6,roles:12,offer:1,flags:0,saved:'22 h',questions:98},
+ {range:'7 – 11 Sep',joiners:3,leave:5,leaveAuto:5,roles:12,offer:3,flags:2,saved:'24 h',questions:104},
+ {range:'14 – 18 Sep',joiners:4,leave:7,leaveAuto:3,roles:11,offer:2,flags:1,saved:'26 h',questions:112}];
+const LOG=[
+ {time:'09:12',agent:'leave',action:'Approved 3 days annual leave for Anika Roy',outcome:'Automatic'},
+ {time:'09:04',agent:'pay',action:'Released September payslips for 248 employees',outcome:'Approved by you'},
+ {time:'08:57',agent:'compliance',action:'Flagged missing NDA for contractor Mateo Duarte',outcome:'Escalated'},
+ {time:'08:54',agent:'hiring',action:'Shortlisted 9 of 42 applicants above the fit limit',outcome:'Automatic'},
+ {time:'08:31',agent:'pay',action:'Reimbursed $680 travel claim for Felix Braun',outcome:'Automatic'},
+ {time:'08:12',agent:'joining',action:'Provisioned email, Slack and Jira for 2 joiners',outcome:'Automatic'},
+ {time:'07:58',agent:'leave',action:'Logged a 3-day unexplained absence and notified the manager',outcome:'Escalated'},
+ {time:'07:48',agent:'helpdesk',action:'Answered 14 policy questions, 1 handed to a person',outcome:'Automatic'}];
+const POL=[
+ {id:'salary',label:'Hide salary figures by default',note:'Reveal needs a reason, and it is logged.'},
+ {id:'sign',label:'People sign off every contract change',note:'Agents prepare, a person signs.'},
+ {id:'decline',label:'Send decline emails automatically',note:'Only below the shortlist limit.'},
+ {id:'audit',label:'Keep a full audit trail for 7 years',note:'Required for group audit.'}];
+const CHAT_HELLO={who:'bot',text:'Hi Maya. Ask me anything about your people and I will route it to the right agent.'};
+const CHIPS=['Can I take leave next week?','When is payroll released?','Give Anika access to Figma','Run the onboarding workflow for Anika'];
+const WF_VERB=/\b(run|start|kick off|kickoff|process|execute|trigger|launch)\b/i;
+const WF_MATCH=[{id:'onboard',re:/\bonboard(ing)?\b|\bnew hire\b/i},{id:'payrun',re:/\bpayroll\b|\bpay run\b/i},{id:'offboard',re:/\boffboard(ing)?\b/i}];
+const matchWorkflow=q=>{if(!WF_VERB.test(q))return null;const hit=WF_MATCH.find(w=>w.re.test(q));return hit?hit.id:null;};
+const ROUTES=[
+ {k:['leave','vacation','holiday','time off','pto'],agent:'leave',text:'Clara has 14.5 days left this year. Oct 20–24 has full coverage and no clashing deadlines. I can book it, or send it to you first.'},
+ {k:['pay','payroll','salary','payslip','expense','bonus','claim'],agent:'pay',text:'September payroll is reconciled: 248 employees, 4 bonus adjustments, released on the 28th. Two claims above your limit are waiting in your inbox.'},
+ {k:['access','laptop','account','figma','tool','login'],agent:'joining',text:'Figma and Linear are pre-approved for Design, so I have raised the request for Anika. Access lands within 5 minutes and I will confirm here.'},
+ {k:['policy','remote','benefit','parental','insurance','wfh'],agent:'helpdesk',text:'Remote work is up to 3 days a week within your tax jurisdiction, with manager sign-off beyond that. Parental leave is 20 weeks fully paid and transferable.'}];
+const FALLBACK={agent:'helpdesk',text:'I can help with leave, pay and claims, access and joining, or any people policy. Tell me which and I will take it from there.'};
+const POS=[[80,52],[330,26],[580,52],[580,288],[330,314],[80,288]];
+const WF=[
+ {id:'onboard',label:'Onboard new hire',meta:'Anika Roy · Senior Engineer',hours:'6 hours',steps:[
+  ['hiring','Signed offer verified, employee record created'],
+  ['compliance','Right-to-work and background check cleared'],
+  ['joining','Laptop ordered; email, Slack and GitHub set up'],
+  ['pay','Added to payroll, bank and tax details collected'],
+  ['leave','Leave policy and holiday calendar assigned'],
+  ['helpdesk','Welcome pack and day-one schedule sent']]},
+ {id:'payrun',label:'Run monthly payroll',meta:'September · 248 employees',hours:'9 hours',steps:[
+  ['leave','Attendance and unpaid leave reconciled'],
+  ['pay','Gross-to-net calculated, 4 bonus adjustments'],
+  ['compliance','Statutory filings and bank file validated'],
+  ['pay','Payslips generated and bank file released'],
+  ['helpdesk','Payslip notifications sent, 12 questions answered']]},
+ {id:'offboard',label:'Offboard employee',meta:'Victor Lang · Sales Lead',hours:'5 hours',steps:[
+  ['leave','Final leave balance calculated and encashed'],
+  ['pay','Final settlement prepared, gratuity included'],
+  ['joining','Devices recalled, all system access removed'],
+  ['compliance','Exit documents archived under retention policy'],
+  ['helpdesk','Exit interview booked, alumni access issued']]}];
+const CANDS=[
+ {id:'amara',name:'Zara Mbeki',role:'Product Designer',score:94,col:'applied'},
+ {id:'liam',name:'Noah Pierce',role:'Backend Engineer',score:71,col:'applied'},
+ {id:'mei',name:'Hana Sato',role:'Data Scientist',score:89,col:'applied'},
+ {id:'diego',name:'Luca Ferrari',role:'Product Designer',score:62,col:'applied'},
+ {id:'hannah',name:'Greta Olsen',role:'Backend Engineer',score:91,col:'applied'},
+ {id:'ravi',name:'Dev Malhotra',role:'Data Scientist',score:83,col:'applied'},
+ {id:'sofia',name:'Ines Carvalho',role:'Engineering Manager',score:96,col:'interview'}];
+const COLS=[['applied','Applied'],['short','AI shortlisted'],['interview','Interview'],['offer','Offer']];
+const APPLICANTS=Array.from({length:120},(_,i)=>40+((i*37+11)%59));
+const PEOPLE=['Adrian Castellanos Vega','Nora Castillo Reyes','Clara Jensen','Mateo Duarte','Victor Lang','Anika Roy','Felix Braun'];
+const HOURS=[3,2,1,1,2,4,9,18,34,46,41,37,33,39,44,40,36,28,22,16,11,8,5,4];
+const RES=[68,63,57,52,49,45,42];
+const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const TODAY={y:2026,m:8,d:17};
+const EVENTS={
+ '2026-09-17':[{time:'11:30',title:'Interview · Ines Carvalho',who:'Hiring',tone:SLATE},{time:'15:00',title:'Leave review · Clara Jensen',who:'Leave & attendance',tone:AMBER}],
+ '2026-09-18':[{time:'10:00',title:'Contractor start check',who:'Compliance',tone:ON}],
+ '2026-09-21':[{time:'09:00',title:'Anika Roy joins',who:'Joining',tone:ON},{time:'14:00',title:'Buddy intro · Platform team',who:'Joining',tone:SLATE}],
+ '2026-09-23':[{time:'09:00',title:'Second joiner · Design',who:'Joining',tone:ON}],
+ '2026-09-25':[{time:'16:00',title:'Payroll cut-off',who:'Pay & expenses',tone:AMBER}],
+ '2026-09-28':[{time:'08:00',title:'September payroll released',who:'Pay & expenses',tone:SLATE}],
+ '2026-10-01':[{time:'10:00',title:'Q4 leave planning',who:'Leave & attendance',tone:SLATE}]};
+const dkey=(y,m,d)=>y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+const TICKER='September payroll releases on the 28th  ·  Anika Roy and one Design joiner start next week  ·  Open enrolment for 2027 medical cover closes 30 September  ·  New remote-work policy is live for all entities';
+const ACT_WEEK=[980,1105,1190,1240,1175,860,1284];
+const ACT_WEEK_L=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const KS={tasks:[820,900,870,960,1010,1080,1150,1210],auto:[88,90,89,92,93,95,94,96],res:[68,63,57,52,49,45,42],saved:[14,16,18,17,21,23,24,26],acc:[96,96.4,97,97.2,97.5,97.4,97.7],cands:[3,4,5,5,6,7,7]};
+
+class Component extends DCLogic {
+  state={view:'home',enter:true,chatOpen:false,
+    enabled:{},gate:{},settled:{},sel:'i1',
+    leaveDays:5,fit:80,payCap:2500,escalate:'Head of People',
+    pol:{salary:true,sign:true,decline:true,audit:true},
+    logFilter:'all',
+    msgs:[CHAT_HELLO],
+    thinking:false,input:'',chatWfId:'',
+    tasks:{},load:{},
+    wf:'onboard',stepIdx:-1,wfRunning:false,doneN:0,wfNote:'',
+    cands:CANDS.map(c=>({...c})),busyPipe:false,declined:0,
+    week:2,hour:-1,actMode:'today',calY:2026,calM:8,calSel:17,
+    q:'',searchFocus:false,bellOpen:false,tickerPaused:false,toast:'',sideOpen:false,
+    adminTab:'overview',inboxFilter:'all',agentsOpen:false,entity:0,entityOpen:false,focusAgent:''};
+  constructor(p){
+    super(p);
+    AG.forEach(a=>{this.state.enabled[a.id]=true;this.state.gate[a.id]=['pay','compliance'].includes(a.id);
+      this.state.tasks[a.id]=a.handled;
+      this.state.load[a.id]=Array.from({length:18},(_,i)=>40+Math.round(28*Math.sin(i/2+a.name.length)+Math.random()*16));});
+    this.cardEls={};this.agentEls={};this.timeouts=[];
+  }
+  componentDidMount(){
+    const v=this.props.startView==='hr'?'home':this.props.startView;
+    if(v&&v!==this.state.view&&(v==='admin'||NAV.some(n=>n.id===v)))this.setState({view:v});
+    this._key=e=>{
+      if(e.key==='Escape')this.setState({chatOpen:false,bellOpen:false,searchFocus:false,entityOpen:false});
+      if((e.ctrlKey||e.metaKey)&&(e.key==='k'||e.key==='K')){e.preventDefault();if(this.searchEl)this.searchEl.focus();}
+    };
+    window.addEventListener('keydown',this._key);
+    this._tick=setInterval(()=>this.setState(s=>{
+      const load={},tasks={...s.tasks};
+      AG.forEach(a=>{
+        const on=s.enabled[a.id],prev=s.load[a.id];
+        load[a.id]=on?[...prev.slice(1),Math.max(12,Math.min(96,prev[prev.length-1]+Math.round((Math.random()-.45)*26)))]:prev;
+        if(on&&Math.random()<.6)tasks[a.id]=tasks[a.id]+1;
+      });
+      return {load,tasks};
+    }),1800);
+  }
+  componentWillUnmount(){window.removeEventListener('keydown',this._key);clearInterval(this._tick);this.timeouts.forEach(clearTimeout);}
+  componentDidUpdate(prev){
+    if(this._rects){
+      const old=this._rects;this._rects=null;
+      Object.keys(this.cardEls).forEach(id=>{
+        const el=this.cardEls[id],o=old[id];
+        if(!el||!o)return;
+        const n=el.getBoundingClientRect(),dx=o.left-n.left,dy=o.top-n.top;
+        if(!dx&&!dy)return;
+        el.style.transition='none';el.style.transform='translate('+dx+'px,'+dy+'px)';
+        requestAnimationFrame(()=>{el.style.transition='transform .42s cubic-bezier(.2,.8,.2,1)';el.style.transform='';});
+      });
+    }
+    const b=this.scrollBox;
+    if(b&&(prev.msgs!==this.state.msgs||prev.thinking!==this.state.thinking))b.scrollTop=b.scrollHeight;
+  }
+  later(fn,ms){const t=setTimeout(fn,ms);this.timeouts.push(t);return t;}
+  go(v,tab){
+    const patch={bellOpen:false,entityOpen:false};
+    if(tab)patch.adminTab=tab;
+    if(v===this.state.view&&(!tab||tab===this.state.adminTab)){this.setState(patch);return;}
+    this.setState({...patch,view:v,enter:false},()=>requestAnimationFrame(()=>this.setState({enter:true})));
+    try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){}
+  }
+  focusAgent(id){
+    this.go('agents');
+    this.setState({focusAgent:id});
+    this.later(()=>{const el=this.agentEls[id];if(el&&el.scrollIntoView)el.scrollIntoView({behavior:'smooth',block:'center'});},320);
+    clearTimeout(this._focusT);this._focusT=this.later(()=>this.setState({focusAgent:''}),2600);
+  }
+  notify(msg){clearTimeout(this._toastT);this.setState({toast:msg});this._toastT=this.later(()=>this.setState({toast:''}),2800);}
+  capture(){this._rects={};Object.keys(this.cardEls).forEach(id=>{const el=this.cardEls[id];if(el)this._rects[id]=el.getBoundingClientRect();});}
+  scrollTo(el){if(el&&el.scrollIntoView)el.scrollIntoView({behavior:'smooth',block:'center'});}
+  runWorkflow(onDone){
+    if(this.state.wfRunning)return false;
+    const wf=WF.find(w=>w.id===this.state.wf);
+    this.setState({wfRunning:true,stepIdx:0,doneN:0,wfNote:''});
+    const tick=i=>this.later(()=>{
+      const last=i===wf.steps.length-1;
+      this.setState({doneN:i+1,stepIdx:last?-1:i+1,wfRunning:!last,
+        wfNote:last?('Done in '+(wf.steps.length*1.3).toFixed(1)+' s — usually '+wf.hours+' of manual work.'):''});
+      if(!last)tick(i+1);else if(onDone)onDone();
+    },1300);
+    tick(0);
+    return true;
+  }
+  screen(){
+    this.setState({busyPipe:true,declined:0});
+    const step=()=>{
+      const next=this.state.cands.find(c=>c.col==='applied');
+      if(!next){this.setState({busyPipe:false});return;}
+      const pass=next.score>=this.state.fit;
+      this.capture();
+      this.setState(s=>({
+        cands:pass?s.cands.map(c=>c.id===next.id?{...c,col:'short'}:c):s.cands.filter(c=>c.id!==next.id),
+        declined:pass?s.declined:s.declined+1}));
+      this.later(step,550);
+    };
+    this.later(step,250);
+  }
+  advance(from,to,filter){
+    const n=this.state.cands.filter(c=>c.col===from&&filter(c)).length;
+    if(!n){this.notify('No shortlisted candidates at 88 or above yet');return;}
+    this.capture();
+    this.setState(s=>({cands:s.cands.map(c=>(c.col===from&&filter(c))?{...c,col:to}:c)}));
+    this.notify('Interviews scheduled for '+n+' candidate'+(n>1?'s':''));
+  }
+  offer(){
+    const pool=this.state.cands.filter(c=>c.col==='interview');
+    if(!pool.length){this.notify('No one is at interview stage');return;}
+    const top=pool.reduce((a,b)=>b.score>a.score?b:a);
+    this.capture();
+    this.setState(s=>({cands:s.cands.map(c=>c.id===top.id?{...c,col:'offer'}:c)}));
+    this.notify('Offer sent to '+top.name);
+  }
+  send(text){
+    const q=text.trim();if(!q||this.state.thinking||this.state.chatWfId)return;
+    const wfId=matchWorkflow(q);
+    if(wfId){
+      this.setState(s=>({msgs:[...s.msgs,{who:'me',text:q}],input:''}));
+      if(this.state.wfRunning){
+        this.setState(s=>({msgs:[...s.msgs,{who:'bot',text:'Another workflow is already running — give it a moment and ask again.'}]}));
+        return;
+      }
+      this.setState({wf:wfId,chatWfId:wfId});
+      this.runWorkflow(()=>{
+        const wf=WF.find(w=>w.id===wfId);
+        this.setState(s=>({chatWfId:'',msgs:[...s.msgs,{who:'bot',
+          text:wf.label+' is complete — done in '+(wf.steps.length*1.3).toFixed(1)+'s, usually '+wf.hours+' of manual work.',
+          route:'Ran the '+wf.label+' workflow'}]}));
+      });
+      return;
+    }
+    const hit=ROUTES.find(r=>r.k.some(k=>q.toLowerCase().includes(k)))||FALLBACK;
+    this.setState(s=>({msgs:[...s.msgs,{who:'me',text:q}],input:'',thinking:true}));
+    this.later(()=>this.setState(s=>({thinking:false,msgs:[...s.msgs,{who:'bot',text:hit.text,route:'Routed to '+A(hit.agent).name}]})),1100);
+  }
+  exportReport(){
+    const st=this.state,w=WEEKS[st.week];
+    const rows=[['Smart HR weekly report',w.range],[],['Metric','Value'],
+      ['New joiners',w.joiners],['Leave requests',w.leave],['Leave approved automatically',w.leaveAuto],['Open roles',w.roles],['Attendance flags',w.flags],['Questions answered',w.questions],['Time saved',w.saved],[],
+      ['Agent','Handled today','Accuracy','Status']];
+    AG.forEach(a=>rows.push([a.name,st.tasks[a.id],a.accuracy,st.enabled[a.id]?'Running':'Paused']));
+    rows.push([],['Time','Agent','Action','Outcome']);
+    LOG.forEach(l=>rows.push([l.time,A(l.agent).name,l.action,l.outcome]));
+    const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+    try{
+      const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+      const a=document.createElement('a');a.href=url;a.download='smart-hr-report-'+w.range.replace(/[^0-9A-Za-z]+/g,'-')+'.csv';
+      document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    }catch(e){}
+    this.notify('Report exported · '+w.range);
+  }
+  shiftWeek(days){
+    const d=new Date(this.state.calY,this.state.calM,this.state.calSel+days);
+    this.setState({calY:d.getFullYear(),calM:d.getMonth(),calSel:d.getDate()});
+  }
+
+  renderVals(){
+    const st=this.state,v=st.view;
+    const pending=INBOX.filter(i=>!st.settled[i.id]).length;
+    const running=AG.filter(a=>st.enabled[a.id]).length;
+    const paused=6-running;
+    const total=AG.reduce((n,a)=>n+st.tasks[a.id],0);
+    const week=WEEKS[st.week];
+    const wf=WF.find(w=>w.id===st.wf);
+    const runningAgent=st.wfRunning&&st.stepIdx>=0?wf.steps[st.stepIdx][0]:null;
+    const humanPct=4+paused*9;
+    const autoPct=100-humanPct;
+    const byCol={};COLS.forEach(([k])=>byCol[k]=st.cands.filter(c=>c.col===k));
+    const hiringOn=st.enabled.hiring;
+    const av=(name,size)=>{const p=PLATES[hashIdx(name)];return {width:size+'px',height:size+'px',background:p[0],color:p[1],fontSize:Math.round(size*.36)+'px'};};
+    const kpi=o=>{const p=pts(o.data,88,34,4);return {label:o.label,value:o.value,d:o.d,tileCls:'tile '+(o.tile||'t-blue'),
+      delta:o.delta||'',deltaIcon:o.down?DOWN:UP,deltaCls:'delta'+(o.bad?' bad':'')+(o.delta?'':' muted'),foot:o.foot||'',
+      action:o.action||'',onAction:o.onAction,gid:o.gid,color:o.color||BLUE,fill:'url(#'+o.gid+')',line:smooth(p),area:areaOf(p,34)};};
+    const stCls={ok:'st s-green',warn:'st s-amber',bad:'st s-red',info:'st s-blue',gray:'st s-gray'};
+    const outcomeCls={'Automatic':'st s-green','Approved by you':'st s-blue','Escalated':'st s-amber'};
+    const ent=ENTITIES[st.entity];
+    const adTab=ADMIN_NAV.find(n=>n.id===st.adminTab)||ADMIN_NAV[0];
+    const meta={
+      home:['Dashboard','Dashboard',''],
+      agents:['Services','Agent services','Six specialists working in the background. Pause one and its work routes to a person.'],
+      hiring:['Hiring','Hiring pipeline',hiringOn?('The Hiring agent screens, ranks and advances candidates against a shortlist limit of '+st.fit+'.'):'The Hiring agent is paused, so AI screening is off until it runs again.'],
+      people:['People','Employee record','One page per person, kept current by every agent.'],
+      admin:['Admin console','Admin console','']}[v]||['','',''];
+
+    // hero
+    const heroPos=[[20,16],[54,8],[86,40],[80,84],[40,92],[12,58]];
+    const heroAgents=AG.map((a,i)=>{const on=st.enabled[a.id],vz=AGV[a.id],busy=runningAgent===a.id;
+      return {name:vz.short,d:a.d,tileCls:'tile xs round '+(on?vz.tile:'t-off'),
+        cls:'orb-chip'+(on?'':' off')+(busy?' busy':''),
+        style:{left:heroPos[i][0]+'%',top:heroPos[i][1]+'%',animationDelay:(i*.8).toFixed(1)+'s'}};});
+    const evKeys=Object.keys(EVENTS).sort();
+    const todayKey=dkey(TODAY.y,TODAY.m,TODAY.d);
+    const nextKey=evKeys.find(k=>k>=todayKey)||evKeys[0];
+    const nextEv=EVENTS[nextKey][0];
+
+    // activity chart
+    const isToday=st.actMode==='today';
+    const aVals=isToday?HOURS:ACT_WEEK;
+    const aIdx=st.hour>=0&&st.hour<aVals.length?st.hour:(isToday?9:6);
+    const aPts=pts(aVals,600,178,6);
+    const aMax=Math.max.apply(null,aVals);
+    const actLabel=isToday?(String(aIdx).padStart(2,'0')+':00'):ACT_WEEK_L[aIdx];
+
+    // workload
+    const groups=[
+      {label:'Pay & leave',value:st.tasks.pay+st.tasks.leave,color:GREEN,tile:'t-green',d:AG[2].d},
+      {label:'Hiring & joining',value:st.tasks.hiring+st.tasks.joining,color:BLUE,tile:'t-blue',d:AG[0].d},
+      {label:'Questions & compliance',value:st.tasks.helpdesk+st.tasks.compliance,color:VIOLET,tile:'t-violet',d:AG[4].d}];
+
+    // schedule week
+    const selDate=new Date(st.calY,st.calM,st.calSel);
+    const monday=new Date(st.calY,st.calM,st.calSel-((selDate.getDay()+6)%7));
+    const schDays=Array.from({length:7},(_,i)=>{const d=new Date(monday.getFullYear(),monday.getMonth(),monday.getDate()+i);
+      const isSel=d.getDate()===st.calSel&&d.getMonth()===st.calM&&d.getFullYear()===st.calY;
+      const isToday=d.getFullYear()===TODAY.y&&d.getMonth()===TODAY.m&&d.getDate()===TODAY.d;
+      return {date:d,key:dkey(d.getFullYear(),d.getMonth(),d.getDate()),dn:DAYS[i].slice(0,3),dd:d.getDate(),
+        pressed:isSel?'true':'false',cls:'sch-day'+(isSel?' sel':'')+(isToday?' today':''),
+        onClick:()=>this.setState({calY:d.getFullYear(),calM:d.getMonth(),calSel:d.getDate()})};});
+    const lastDay=schDays[6].date;
+    const schRange=monday.getDate()+' '+MONTHS[monday.getMonth()].slice(0,3)+' – '+lastDay.getDate()+' '+MONTHS[lastDay.getMonth()].slice(0,3)+' '+lastDay.getFullYear();
+    const H0=8,HN=10,SCH_H=250;
+    const schHours=Array.from({length:6},(_,i)=>{const top=i*(SCH_H/HN)*2;
+      return {label:String(H0+i*2).padStart(2,'0')+':00',style:{top:top+'px'},lineStyle:{top:top+'px'}};});
+    const schEvents=[];
+    schDays.forEach((day,i)=>{(EVENTS[day.key]||[]).forEach((e,j)=>{
+      const hm=e.time.split(':').map(Number);
+      const top=Math.max(0,Math.min(HN,hm[0]+hm[1]/60-H0))/HN*SCH_H;
+      const sel=day.pressed==='true';
+      schEvents.push({title:e.title,who:e.who,time:e.time,titleAttr:e.time+' · '+e.title+' · '+e.who,
+        cls:'ev'+(sel?' hi':''),onClick:day.onClick,
+        style:{left:'calc('+i+' * (100% / 7) + 3px)',width:'calc(100% / 7 - 6px)',top:(top+j*2)+'px',height:'44px',
+          borderLeft:sel?'none':('3px solid '+e.tone)}});});});
+    const selEvents=EVENTS[dkey(st.calY,st.calM,st.calSel)]||[];
+    const inWeek=schDays.reduce((n,d)=>n+((EVENTS[d.key]||[]).length),0);
+
+    // hiring
+    const matched=APPLICANTS.filter(s=>s>=st.fit).length;
+    const stageDef=[['applied','Applied',BLUE],['short','Shortlisted',NAVY],['interview','Interview','#7FA6F5'],['offer','Offer',GREEN]];
+    const stageTotal=Math.max(1,st.cands.length);
+
+    // search
+    const q=st.q.trim().toLowerCase();
+    const pool=[...PEOPLE.map(n=>({name:n,kind:'Employee',page:'people'})),
+      ...CANDS.map(c=>({name:c.name,kind:'Candidate · '+c.role,page:'hiring'})),
+      ...AG.map(a=>({name:a.name,kind:'Agent',page:'agents',agent:a.id}))];
+    const results=q?pool.filter(r=>r.name.toLowerCase().includes(q)).slice(0,6):[];
+
+    // inbox
+    const BADGE={waiting:'st s-amber',ok:'st s-green',bad:'st s-red'};
+    const allRows=[...INBOX.map(it=>{const s=st.settled[it.id];
+        return {id:it.id,agent:it.agent,name:it.person,sub:it.sub,when:it.when,tag:it.tag,
+          detail:it.id==='i1'?('Balance covers it and the team has coverage, but it is longer than the '+st.leaveDays+'-day limit you set for automatic approval.'):it.detail,
+          open:!s,status:s?(s==='ok'?'Approved':'Declined'):'Waiting',tone:s?(s==='ok'?'ok':'bad'):'waiting',
+          settledText:s?(s==='ok'?it.approved:it.declined):'',
+          onApprove:e=>{e.stopPropagation();this.setState(x=>({settled:{...x.settled,[it.id]:'ok'}}));this.notify('Approved · '+it.person);},
+          onDecline:e=>{e.stopPropagation();this.setState(x=>({settled:{...x.settled,[it.id]:'no'}}));this.notify('Declined · '+it.person);}};}),
+      ...HISTORY.map(h=>({id:h.id,agent:h.agent,name:h.person,sub:h.sub,when:h.when.replace('Today, ',''),tag:'',detail:h.detail,open:false,status:h.status,tone:h.tone,settledText:''}))];
+    const counts={all:allRows.length,waiting:allRows.filter(r=>r.tone==='waiting').length,done:allRows.filter(r=>r.tone!=='waiting').length};
+    const inboxRows=allRows.filter(r=>st.inboxFilter==='all'||(st.inboxFilter==='waiting'?r.tone==='waiting':r.tone!=='waiting'));
+    const logRows=LOG.filter(l=>st.logFilter==='all'||l.agent===st.logFilter);
+    const allRunning=running===6;
+
+    const kpiSets={
+      home:[
+        kpi({label:'Tasks automated today',value:fmtN(total),d:ICON.bolt,tile:'t-blue',gid:'k1',color:BLUE,delta:'+12.5%',foot:'vs yesterday',data:KS.tasks.concat([total])}),
+        kpi({label:'Resolved by agents',value:autoPct+'%',d:ICON.check,tile:'t-green',gid:'k2',color:GREEN,delta:allRunning?'+2.1%':'−'+(paused*9)+'%',bad:!allRunning,down:!allRunning,foot:running+' of 6 running',data:KS.auto.concat([autoPct])}),
+        kpi({label:'Avg. resolution time',value:'42 sec',d:ICON.clock,tile:'t-violet',gid:'k3',color:VIOLET,delta:'−38%',down:true,foot:'vs last week',data:KS.res.slice().reverse()}),
+        kpi({label:'Time saved this week',value:week.saved,d:ICON.hourglass,tile:'t-amber',gid:'k4',color:AMBER_C,delta:'+8.3%',foot:'across your team',data:KS.saved})],
+      agents:[
+        kpi({label:'Agents running',value:running+' of 6',d:ICON.spark,tile:'t-blue',gid:'k1',color:BLUE,delta:'',foot:paused?(paused+' paused'):'all healthy',data:KS.auto}),
+        kpi({label:'Tasks handled today',value:fmtN(total),d:ICON.bolt,tile:'t-green',gid:'k2',color:GREEN,delta:'+12.5%',foot:'vs yesterday',data:KS.tasks.concat([total])}),
+        kpi({label:'Average accuracy',value:'97.7%',d:ICON.target,tile:'t-violet',gid:'k3',color:VIOLET,delta:'+0.3%',foot:'last 7 days',data:KS.acc}),
+        kpi({label:'Routed to a person',value:humanPct+'%',d:ICON.users,tile:'t-amber',gid:'k4',color:AMBER_C,delta:allRunning?'−2.1%':'+'+(paused*9)+'%',down:allRunning,bad:!allRunning,foot:'of all requests',data:KS.res})],
+      hiring:[
+        kpi({label:'Candidates in pipeline',value:st.cands.length,d:ICON.users,tile:'t-blue',gid:'k1',color:BLUE,delta:'',foot:byCol.applied.length+' waiting to be screened',data:KS.cands}),
+        kpi({label:'Shortlist limit',value:st.fit+' / 100',d:ICON.target,tile:'t-violet',gid:'k2',color:VIOLET,delta:'',foot:matched+' of 120 applicants match',action:'Change',onAction:()=>this.go('admin','rules'),data:[70,72,75,78,80,80,st.fit]}),
+        kpi({label:'At interview',value:byCol.interview.length,d:ICON.clock,tile:'t-sky',gid:'k3',color:SKY,delta:'',foot:'scheduled by the Hiring agent',data:[1,1,2,2,3,3,Math.max(1,byCol.interview.length)]}),
+        kpi({label:'Offers out',value:byCol.offer.length,d:ICON.check,tile:'t-green',gid:'k4',color:GREEN,delta:'',foot:week.offer+' at offer stage this week',data:[0,1,1,2,2,2,Math.max(1,byCol.offer.length)]})],
+      admin:[
+        kpi({label:'Tasks automated today',value:fmtN(total),d:ICON.bolt,tile:'t-blue',gid:'k1',color:BLUE,delta:'+12.5%',foot:'across '+running+' agents',data:KS.tasks.concat([total])}),
+        kpi({label:'Avg. resolution time',value:'42 sec',d:ICON.clock,tile:'t-violet',gid:'k2',color:VIOLET,delta:'−38%',down:true,foot:'down from 3.2 hours',data:KS.res.slice().reverse()}),
+        kpi({label:'Hours saved this month',value:'318 h',d:ICON.hourglass,tile:'t-green',gid:'k3',color:GREEN,delta:'+9.4%',foot:'equivalent to 2 FTE',data:KS.saved}),
+        kpi({label:'Human escalations',value:'3',d:ICON.flag,tile:'t-amber',gid:'k4',color:AMBER_C,delta:'−1',down:true,foot:'0.4% of all requests',data:[7,6,6,5,4,4,3]})]};
+
+    return {
+      isHR:v!=='admin',isAdmin:v==='admin',
+      shellCls:'shell'+(st.sideOpen?'':' rail'),
+      sideCls:'glass side'+(st.sideOpen?'':' rail'),
+      sideClsDark:'glass side dark'+(st.sideOpen?'':' rail'),
+      openSide:()=>{if(!this.state.sideOpen)this.setState({sideOpen:true});},
+      closeSide:()=>{if(this.state.sideOpen)this.setState({sideOpen:false,entityOpen:false,agentsOpen:false});},
+      isHome:v==='home',notHome:v!=='home',isAgents:v==='agents',isHiring:v==='hiring',isPeople:v==='people',
+      pageName:meta[0],pageTitle:meta[1],pageSub:meta[2],
+      viewStyle:{opacity:st.enter?1:0,transform:st.enter?'none':'translateY(10px)',transition:'opacity .3s ease,transform .3s ease'},
+      kpis:kpiSets[v==='admin'?'admin':v]||kpiSets.home,
+
+      sideNav:NAV.map(n=>{const act=n.id===v,isAg=n.id==='agents';
+        const badge=n.id==='home'&&pending?String(pending):(n.id==='hiring'?String(byCol.applied.length+byCol.short.length):'');
+        return {label:n.label,d:n.d,current:act?'page':undefined,badge,badgeCls:'count'+(n.id==='home'?' warn':''),railDot:!st.sideOpen&&!!badge,
+          cls:'nav-item'+(act?' on':''),
+          hasKids:isAg,showKids:isAg&&st.agentsOpen,chevAria:st.agentsOpen?'Collapse agents':'Expand agents',
+          onChevron:e=>{e.stopPropagation();this.setState(s=>({agentsOpen:!s.agentsOpen}));},
+          chevStyle:{transform:st.agentsOpen?'rotate(180deg)':'none',transition:'transform .2s'},
+          onClick:()=>{if(isAg)this.setState({agentsOpen:true});this.go(n.id);},
+          kids:isAg?AG.map(a=>{const on=st.enabled[a.id];
+            return {label:a.name,count:fmtN(st.tasks[a.id]),cls:'nav-item'+(st.focusAgent===a.id?' on':''),
+              onClick:()=>this.focusAgent(a.id),
+              dotStyle:{width:'7px',height:'7px',flex:'none',borderRadius:'999px',background:on?GREEN:'#C6CEDA'}};}):[]};}),
+      entityName:ent.name,entityPeople:ent.people+' people · Enterprise',entityInitials:initials(ent.name),
+      entityOpen:st.entityOpen,entityExpanded:st.entityOpen?'true':'false',
+      toggleEntity:()=>this.setState(s=>({entityOpen:!s.entityOpen})),
+      entities:ENTITIES.map((e,i)=>({name:e.name,count:e.people,selected:i===st.entity?'true':'false',
+        checkStyle:{flex:'none',opacity:i===st.entity?1:0},
+        onClick:()=>{this.setState({entity:i,entityOpen:false});if(i!==st.entity)this.notify('Switched to '+e.name);}})),
+      openAdmin:()=>this.go('admin','overview'),
+      goAdminOverview:()=>this.go('admin','overview'),
+      goAgents:()=>this.go('agents'),goHiring:()=>this.go('hiring'),
+      goLog:()=>this.go('admin','log'),goRules:()=>this.go('admin','rules'),
+      railSaved:week.saved,promoText:'Agents handled '+fmtN(total)+' tasks and answered '+week.questions+' questions.',
+
+      searchRef:el=>{this.searchEl=el;},
+      q:st.q,onSearch:e=>this.setState({q:e.target.value,searchFocus:true}),
+      onSearchFocus:()=>this.setState({searchFocus:true,bellOpen:false}),onSearchBlur:()=>this.setState({searchFocus:false}),
+      searchOpen:st.searchFocus&&!!q,noResults:!!q&&results.length===0,
+      mePhoto:photoOf('Maya Ellison'),
+      results:results.map(r=>({name:r.name,kind:r.kind,initials:initials(r.name),avStyle:av(r.name,34),photo:photoOf(r.name),
+        onPick:e=>{e.preventDefault();this.setState({q:'',searchFocus:false});if(r.agent)this.focusAgent(r.agent);else this.go(r.page);this.notify('Opened '+r.name);}})),
+      pending,pendingText:pending?(pending+' waiting'):'All clear',pendingShort:pending?'Action needed':'All clear',
+      pendingCls:'st '+(pending?'s-amber':'s-green'),
+      pendingPill:pill(pending?'action':'clear',pending?'Action needed':'All clear'),
+      pendingCount:pill(pending?'waiting':'clear',pending?(pending+' waiting'):'All clear'),
+      runPill:pill(running===6?'running':'pending',running+' of 6 agents running'),
+      toggleBell:()=>this.setState(s=>({bellOpen:!s.bellOpen})),bellOpen:st.bellOpen,bellExpanded:st.bellOpen?'true':'false',
+      bellItems:LOG.slice(0,4).map(l=>({text:l.action,meta:A(l.agent).name+' · '+l.time+' · '+l.outcome,
+        tileCls:'tile xs round '+AGV[l.agent].tile,d:A(l.agent).d})),
+
+      helloText:'Good morning, Maya 👋',
+      heroWord:paused===0?'smoothly':'with gaps',
+      heroSub:'Smart HR handled '+fmtN(total)+' tasks today'+(pending?(' · '+pending+' need'+(pending===1?'s':'')+' your decision'):' · nothing is waiting on you')+'.',
+      heroAgents,
+      heroRing:dash(autoPct),autoPct:autoPct+'%',running,paused,
+      todayLabel:DAYS[3]+', '+TODAY.d+' '+MONTHS[TODAY.m],
+      nextEvent:nextEv.time+' · '+nextEv.title,
+      goApprovals:()=>this.scrollTo(this.apEl),
+      apRef:el=>{this.apEl=el;},
+      addJoiner:()=>{this.setState({wf:'onboard',doneN:0,stepIdx:-1,wfNote:''});this.scrollTo(this.wfEl);this.notify('Onboarding workflow ready — press Run workflow');},
+      exportReport:()=>this.exportReport(),
+      weekRange:week.range,
+      weekPrev:()=>this.setState(s=>({week:Math.max(0,s.week-1)})),weekNext:()=>this.setState(s=>({week:Math.min(WEEKS.length-1,s.week+1)})),
+      weekPrevDis:st.week===0,weekNextDis:st.week===WEEKS.length-1,
+      tickerText:TICKER,tickerStyle:{display:'inline-flex',whiteSpace:'nowrap',fontSize:'13px',color:'#3E4B66',animation:'marquee 44s linear infinite',animationPlayState:st.tickerPaused?'paused':'running'},
+      toggleTicker:()=>this.setState(s=>({tickerPaused:!s.tickerPaused})),
+      tickerAria:st.tickerPaused?'Play announcements':'Pause announcements',
+      tickerIcon:st.tickerPaused?ICON.play:ICON.pause,
+
+      actSeg:[['today','Today'],['week','This week']].map(([id,label])=>({label,cls:st.actMode===id?'on':'',
+        onClick:()=>this.setState({actMode:id,hour:-1})})),
+      actSub:isToday?'Tasks completed per hour':'Tasks completed per day',
+      actValue:fmtN(isToday?total:aVals.reduce((a,b)=>a+b,0)),
+      actDelta:'+12.5%',actDeltaFoot:isToday?'vs yesterday':'vs last week',
+      actLine:smooth(aPts),actArea:areaOf(aPts,178),
+      actY:[fmtN(Math.round(aMax)),fmtN(Math.round(aMax/2)),'0'],
+      actXLabels:isToday?['00:00','06:00','12:00','18:00','23:00']:ACT_WEEK_L,
+      actHits:aVals.map((n,i)=>({onEnter:()=>this.setState({hour:i})})),
+      actLeave:()=>this.setState({hour:-1}),
+      actX:aPts[aIdx][0].toFixed(1),
+      actDotStyle:{left:(aPts[aIdx][0]/600*100)+'%',top:(aPts[aIdx][1]/180*100)+'%'},
+      actTipStyle:{left:(aPts[aIdx][0]/600*100)+'%',top:(aPts[aIdx][1]/180*100)+'%'},
+      actTip:fmtN(aVals[aIdx])+' tasks',actTipSub:actLabel,
+      actTipCls:'tip'+(aPts[aIdx][1]<52?' below':''),
+
+      totalTasks:fmtN(total),
+      workRows:groups.map(g=>({label:g.label,value:fmtN(g.value),d:g.d,tileCls:'tile sm '+g.tile,
+        pct:Math.round(g.value/total*100)+'%',
+        barStyle:{height:'6px',borderRadius:'999px',width:(g.value/total*100)+'%',background:g.color,transition:'width .5s ease'}})),
+      healthRows:[
+        {label:'Automation rate',value:autoPct+'%',pct:autoPct,note:'Requests finished without a person',color:BLUE,state:autoPct>=90?'Excellent':'Watch',ok:autoPct>=90},
+        {label:'Answer accuracy',value:'97.7%',pct:97.7,note:'Sampled across all agents',color:GREEN,state:'Excellent',ok:true},
+        {label:'Approvals on time',value:(pending?92:100)+'%',pct:pending?92:100,note:pending?(pending+' waiting on you now'):'Nothing waiting',color:pending?AMBER_C:GREEN,state:pending?'Good':'Clear',ok:!pending}
+      ].map(h=>({label:h.label,value:h.value,note:h.note,color:h.color,dash:dash(h.pct),state:h.state,
+        pill:pill(h.ok?'ok':'action',h.state)})),
+
+      schRange,schDays,schHours,schEvents,
+      schPrev:()=>this.shiftWeek(-7),schNext:()=>this.shiftWeek(7),
+      schToday:()=>this.setState({calY:TODAY.y,calM:TODAY.m,calSel:TODAY.d}),
+      schNowOn:schDays.some(d=>d.cls.includes('today')),
+      schNowStyle:{top:Math.max(0,Math.min(SCH_H,(11.5-H0)/HN*SCH_H))+'px'},
+      schSummary:selEvents.length?(selEvents.length+' event'+(selEvents.length>1?'s':'')+' on '+DAYS[(selDate.getDay()+6)%7]+', '+st.calSel+' '+MONTHS[st.calM]+' · '+inWeek+' this week'):('Nothing on '+DAYS[(selDate.getDay()+6)%7]+' · '+inWeek+' event'+(inWeek===1?'':'s')+' this week'),
+
+      wfRef:el=>{this.wfEl=el;},
+      wfMeta:wf.meta,doneN:st.doneN,stepsN:wf.steps.length,
+      wfSeg:WF.map(w=>({label:w.label,disabled:st.wfRunning&&w.id!==st.wf,cls:w.id===st.wf?'on':'',
+        onClick:()=>this.setState({wf:w.id,doneN:0,stepIdx:-1,wfNote:''})})),
+      steps:wf.steps.map((s,i)=>{const done=i<st.doneN,run=st.wfRunning&&i===st.stepIdx;
+        return {agent:A(s[0]).name,text:s[1],d:A(s[0]).d,isDone:done,isRun:run,
+          cls:'wf-row'+(done?' done':'')+(run?' run':'')};}),
+      progressStyle:{height:'6px',borderRadius:'999px',background:'linear-gradient(90deg,#7FAAF8,#fff)',width:(st.doneN/wf.steps.length*100)+'%',transition:'width .45s ease'},
+      onRun:()=>this.runWorkflow(),runDisabled:st.wfRunning,
+      runLabel:st.wfRunning?'Running…':(st.doneN?'Run again':'Run workflow'),
+      wfFoot:st.wfNote||('Usually '+wf.hours+' of manual work'),
+      wfFootStyle:{flex:1,minWidth:'130px',fontSize:'12px',lineHeight:1.4,color:st.wfNote?'#9FE8BE':'rgba(227,234,248,.66)',fontWeight:st.wfNote?600:400},
+
+      inboxTabs:[['all','All'],['waiting','Waiting'],['done','Done']].map(([id,label])=>({label,count:counts[id],
+        selected:st.inboxFilter===id?'true':'false',cls:st.inboxFilter===id?'on':'',
+        onClick:()=>this.setState({inboxFilter:id})})),
+      inboxEmpty:inboxRows.length===0,
+      inboxRows:inboxRows.map(r=>{const exp=st.sel===r.id,ag=A(r.agent);
+        return {...r,initials:initials(r.name),photo:photoOf(r.name),expanded:exp,expandedAria:exp?'true':'false',
+          cls:'ap'+(exp?' open':''),avStyle:{...av(r.name,40),fontSize:'13px'},
+          agentName:ag.name,agentIcon:ag.d,agentTile:'av-badge tile xs round '+AGV[r.agent].tile,
+          isWaiting:r.tone==='waiting',isOk:r.tone==='ok',isBad:r.tone==='bad',
+          badge:pill(r.tone==='waiting'?'waiting':(r.tone==='ok'?(r.status==='Auto-approved'?'auto':'approved'):'declined'),r.status),
+          settled:pill(r.tone==='ok'?'approved':'declined',r.settledText),
+          onSelect:()=>this.setState(x=>({sel:x.sel===r.id?'':r.id}))};}),
+
+      perfRows:AG.map(a=>{const on=st.enabled[a.id],p=pts(st.load[a.id].slice(-10),90,24,3);
+        return {name:a.name,d:a.d,tasks:fmtN(st.tasks[a.id]),accuracy:a.accuracy,
+          tileCls:'tile xs '+(on?AGV[a.id].tile:'t-off'),color:on?AGV[a.id].color:'#C6CEDA',line:smooth(p),
+          status:on?'Running':'Paused',pill:pill(on?'running':'paused',on?'Running':'Paused'),
+          onClick:()=>this.focusAgent(a.id)};}),
+      handled:HANDLED.map(h=>({text:h.text,by:A(h.agent).name,time:h.time,d:A(h.agent).d,tileCls:'tile sm '+AGV[h.agent].tile})),
+
+      applicantsText:APPLICANTS.length+' applicants screened this month',
+      matchPct:Math.round(matched/APPLICANTS.length*100)+'%',fit:st.fit,
+      stageBars:stageDef.map(([key,label,color])=>{const n=byCol[key].length;
+        return {label,count:n,
+          wrapStyle:{flex:Math.max(.6,n),display:'flex',flexDirection:'column',gap:'6px',minWidth:0},
+          dotStyle:{width:'8px',height:'8px',borderRadius:'999px',background:color,flex:'none'},
+          barStyle:{height:'34px',borderRadius:'11px',background:color,opacity:n?1:.28,transition:'flex .4s ease,opacity .3s ease'}};}),
+      topCands:st.cands.slice().sort((x,y)=>y.score-x.score).slice(0,3).map(c=>({name:c.name,role:c.role,score:c.score,
+        initials:initials(c.name),photo:photoOf(c.name),avStyle:{...av(c.name,34),fontSize:'12px'}})),
+
+      toggleAllLabel:allRunning?'Pause all agents':'Resume all agents',
+      toggleAll:()=>{const on=!allRunning;this.setState(()=>{const e={};AG.forEach(a=>e[a.id]=on);return {enabled:e};});
+        this.notify(on?'All agents running':'All agents paused — work comes to a person');},
+      agentCards:AG.map(a=>{const on=st.enabled[a.id],vz=AGV[a.id],p=pts(st.load[a.id],300,60,6);
+        return {title:a.name,role:a.role,d:a.d,skills:a.skills,tasks:fmtN(st.tasks[a.id]),accuracy:a.accuracy,
+          cls:'glass card agent'+(on?'':' off')+(st.focusAgent===a.id?' focus':''),
+          ref:el=>{if(el)this.agentEls[a.id]=el;else delete this.agentEls[a.id];},
+          tileCls:'tile '+(on?vz.tile:'t-off'),color:on?vz.color:'#C6CEDA',
+          gid:'ag-'+a.id,fill:'url(#ag-'+a.id+')',line:smooth(p),area:areaOf(p,60),
+          dash:dash(parseFloat(a.accuracy)),
+          checked:on?'true':'false',aria:a.name+' agent running',swCls:'switch'+(on?' on':''),
+          onToggle:()=>this.setState(x=>({enabled:{...x.enabled,[a.id]:!x.enabled[a.id]}})),
+          status:on?'Running':'Paused',pill:pill(on?'running':'paused',on?'Running':'Paused'),
+          foot:on?'Escalates above your limits':'Work routes to a person'};}),
+
+      pipeActions:[
+        {label:'Run AI screening',fn:()=>this.screen(),off:!hiringOn||!byCol.applied.length,primary:true},
+        {label:'Schedule interviews',fn:()=>this.advance('short','interview',c=>c.score>=88)},
+        {label:'Send offer',fn:()=>this.offer()}
+      ].map(b=>{const dis=st.busyPipe||!!b.off;return {label:b.label,disabled:dis,onClick:b.fn,cls:'btn'+(b.primary?' btn-primary':'')};}),
+      columns:COLS.map(([key,label])=>{const color=(stageDef.find(s=>s[0]===key)||[])[2]||BLUE;
+        return {label,count:byCol[key].length,empty:byCol[key].length===0,
+          dotStyle:{width:'8px',height:'8px',borderRadius:'999px',background:color,flex:'none'},
+          cards:byCol[key].map(c=>{const ok=c.score>=st.fit;
+            return {name:c.name,role:c.role,score:c.score,initials:initials(c.name),photo:photoOf(c.name),
+              ref:el=>{if(el)this.cardEls[c.id]=el;else delete this.cardEls[c.id];},
+              avStyle:{...av(c.name,36),fontSize:'13px'},
+              scoreCls:'st num '+(ok?'s-green':'s-amber'),
+              barStyle:{height:'6px',borderRadius:'999px',width:c.score+'%',background:ok?GREEN:AMBER_C,transition:'width .4s ease'}};})};}),
+      declineNote:st.declined?(st.declined+' candidate'+(st.declined>1?'s':'')+' below the shortlist limit '+(st.pol.decline?(st.declined>1?'each ':'')+'received a personal decline email.':(st.declined>1?'were':'was')+' set aside. Decline emails are off in Admin console.')):'',
+
+      adminNav:ADMIN_NAV.map(n=>({label:n.label,d:n.d,current:n.id===st.adminTab?'page':undefined,
+        cls:'nav-item'+(n.id===st.adminTab?' on':''),
+        badge:n.id==='assistants'?String(running):(n.id==='log'?String(LOG.length):''),
+        onClick:()=>this.go('admin',n.id)})),
+      adminTabName:adTab.label,adminTabSub:adTab.sub,
+      isAdOverview:st.adminTab==='overview',isAdAssistants:st.adminTab==='assistants',isAdRules:st.adminTab==='rules',isAdLog:st.adminTab==='log',
+      backToHR:()=>this.go('home'),
+      runningText:running+' of 6 agents running',runningShort:running+' / 6 agents',
+      runBarStyle:{height:'6px',borderRadius:'999px',background:'linear-gradient(90deg,#6EE7A0,#A7F3C6)',width:(running/6*100)+'%',transition:'width .4s ease'},
+      networkNote:runningAgent?('Routing to '+A(runningAgent).name):('Idle · '+running+' of 6 agents active'),
+      links:AG.map((a,i)=>{const p=POS[i],on=st.enabled[a.id],busy=runningAgent===a.id;
+        return {x:p[0]+10,y:p[1]+22,stroke:busy?BLUE:'#C2D3EE',w:busy?2.6:1.4,dash:on?'0':'5 7'};}),
+      dots:AG.filter(a=>st.enabled[a.id]).map((a,i)=>{const p=POS[AG.indexOf(a)],busy=runningAgent===a.id;
+        return {path:'M340,190 L'+(p[0]+10)+','+(p[1]+22),dur:(busy?1.1:2.8)+'s',begin:'-'+(i*0.45).toFixed(2)+'s'};}),
+      nodes:AG.map((a,i)=>{const p=POS[i],on=st.enabled[a.id],busy=runningAgent===a.id;
+        return {name:a.name,d:a.d,
+          cls:'node '+(on?AGV[a.id].tile:'t-off')+(on?'':' off')+(busy?' busy':''),
+          labelStyle:{color:on?'var(--t2)':'var(--t4)'},
+          wrapStyle:{position:'absolute',left:(p[0]+10)+'px',top:(p[1]+22)+'px',transform:'translate(-50%,-50%)',display:'flex',flexDirection:'column',alignItems:'center',gap:'8px',width:'140px'}};}),
+      escalations:LOG.filter(l=>l.outcome==='Escalated').map(l=>({time:l.time,action:l.action,agent:A(l.agent).name,
+        tileCls:'tile sm '+AGV[l.agent].tile,d:A(l.agent).d})),
+      ruleSummary:[
+        ['Approve leave up to',st.leaveDays===0?'Manual':st.leaveDays+' days'],
+        ['Shortlist candidates above',st.fit+' / 100'],
+        ['Release payroll under',st.payCap===0?'Manual':'$'+fmtN(st.payCap)],
+        ['Agents needing approval',AG.filter(a=>st.gate[a.id]).length+' of 6']
+      ].map(([label,value])=>({label,value})),
+      rows:AG.map(a=>{const on=st.enabled[a.id],gate=st.gate[a.id];
+        return {name:a.name,role:a.role,d:a.d,tileCls:'tile sm '+(on?AGV[a.id].tile:'t-off'),
+          handled:fmtN(st.tasks[a.id]),accuracy:a.accuracy,
+          checked:on?'true':'false',aria:a.name+' agent running',swCls:'switch'+(on?' on':''),
+          onToggle:()=>this.setState(x=>({enabled:{...x.enabled,[a.id]:!x.enabled[a.id]}})),
+          gateChecked:gate?'true':'false',gateAria:a.name+' needs approval for every action',gateCls:'switch'+(gate?' on':''),
+          onGate:()=>this.setState(x=>({gate:{...x.gate,[a.id]:!x.gate[a.id]}})),
+          gateLabel:gate?'Every action':'Above limits only',
+          status:on?'Running':'Paused',pill:pill(on?'running':'paused',on?'Running':'Paused')};}),
+      limits:[
+        {label:'Approve leave up to',help:'Longer requests come to you.',min:'0',max:'10',step:'1',value:st.leaveDays,
+          text:st.leaveDays===0?'Nothing automatic':st.leaveDays+' days',pct:st.leaveDays/10*100,
+          onInput:e=>this.setState({leaveDays:+e.target.value})},
+        {label:'Shortlist candidates above',help:'Applicants below this score are declined.',min:'50',max:'95',step:'1',value:st.fit,
+          text:st.fit+' / 100',pct:(st.fit-50)/45*100,onInput:e=>this.setState({fit:+e.target.value})},
+        {label:'Release payroll changes under',help:'Bigger changes need your sign-off.',min:'0',max:'5000',step:'250',value:st.payCap,
+          text:st.payCap===0?'Nothing automatic':'$'+fmtN(st.payCap),pct:st.payCap/5000*100,
+          onInput:e=>this.setState({payCap:+e.target.value})}
+      ].map(l=>({...l,rangeStyle:{'--p':l.pct+'%'}})),
+      policies:POL.map(p=>({label:p.label,note:p.note,checked:st.pol[p.id]?'true':'false',swCls:'switch'+(st.pol[p.id]?' on':''),
+        onToggle:()=>this.setState(x=>({pol:{...x.pol,[p.id]:!x.pol[p.id]}}))})),
+      escalate:st.escalate,onEscalate:e=>this.setState({escalate:e.target.value}),
+      logFilters:[{id:'all',label:'All'},...AG.map(a=>({id:a.id,label:a.name}))].map(f=>({label:f.label,
+        cls:'chip'+(f.id===st.logFilter?' on':''),onClick:()=>this.setState({logFilter:f.id})})),
+      log:logRows.map(l=>({time:l.time,agent:A(l.agent).name,action:l.action,outcome:l.outcome,
+        tileCls:'tile xs '+AGV[l.agent].tile,d:A(l.agent).d,
+        pill:pill(l.outcome==='Automatic'?'auto':(l.outcome==='Escalated'?'escalated':'person'),l.outcome)})),
+      logEmpty:logRows.length===0,
+
+      chatOpen:st.chatOpen,fabShow:!st.chatOpen,openChat:()=>this.setState({chatOpen:true,bellOpen:false}),
+      closeChat:()=>this.setState({chatOpen:false,chatWide:false}),
+      chatCls:'chat-modal'+(st.chatWide?' wide':''),
+      toggleChatWide:()=>this.setState(s=>({chatWide:!s.chatWide})),
+      chatWideLabel:st.chatWide?'Exit full screen':'Full screen',
+      chatWideIcon:st.chatWide?'M4 14h6v6 M20 10h-6V4 M14 10l7-7 M3 21l7-7':'M15 3h6v6 M9 21H3v-6 M21 3l-7 7 M3 21l7-7',
+      clearChat:()=>this.setState({msgs:[CHAT_HELLO],input:'',thinking:false,chatWfId:''}),
+      onComposerKey:e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.send(st.input);}},
+      msgs:st.msgs.map((m,i)=>({text:m.text,route:m.route,isMe:m.who==='me',isBot:m.who!=='me',
+        showChips:m.who!=='me'&&i===st.msgs.length-1&&!st.thinking&&!st.chatWfId})),
+      thinking:st.thinking,input:st.input,
+      inputDisabled:st.thinking||!!st.chatWfId,
+      chatWf:(()=>{
+        if(!st.chatWfId)return null;
+        const cwf=WF.find(w=>w.id===st.chatWfId);
+        return {label:cwf.label,meta:cwf.meta,pct:Math.round(st.doneN/cwf.steps.length*100),
+          note:st.wfNote,
+          steps:cwf.steps.map((sp,i)=>{const done=i<st.doneN,run=st.wfRunning&&i===st.stepIdx;
+            return {text:sp[1],done,run,cls:'cm-wf-row'+(done?' done':'')+(run?' run':'')};})};
+      })(),
+      scrollRef:el=>{this.scrollBox=el;},
+      onInput:e=>this.setState({input:e.target.value}),
+      onSubmit:e=>{e.preventDefault();this.send(st.input);},
+      sendDisabled:st.thinking||!!st.chatWfId||!st.input.trim(),
+      chips:CHIPS.map(c=>({label:c,disabled:st.thinking,onClick:()=>this.send(c)})),
+      toast:st.toast
+    };
+  }
+}
+</script>
+</body>
+</html>

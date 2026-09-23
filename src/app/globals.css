@@ -1,26 +1,123 @@
 @import "tailwindcss";
 
+/* ------------------------------------------------------------------
+   Raw tokens
+------------------------------------------------------------------ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --canvas: #f9f9f9;
+  --ink: #0b0b0f;
+  --headline: #111111;
+  --ink-soft: #43434f;
+  --ink-muted: #8c8c9a;
+  --hairline: rgb(11 11 15 / 0.08);
+
+  /* Aurora field */
+  --aurora-slate: #e2e8f0;
+  --aurora-indigo: #e0e7ff;
+  --aurora-violet: #f3e8ff;
 }
 
+/* ------------------------------------------------------------------
+   Tailwind theme
+------------------------------------------------------------------ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-canvas: var(--canvas);
+  --color-ink: var(--ink);
+  --color-headline: var(--headline);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-muted: var(--ink-muted);
+  --color-hairline: var(--hairline);
+
+  --color-aurora-slate: var(--aurora-slate);
+  --color-aurora-indigo: var(--aurora-indigo);
+  --color-aurora-violet: var(--aurora-violet);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-bodoni), "Didot", "Bodoni 72", Georgia, serif;
+
+  /* Signature easings for the whole site */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ------------------------------------------------------------------
+   Base
+------------------------------------------------------------------ */
+@layer base {
+  html {
+    color-scheme: light;
+    background-color: var(--canvas);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* No background-color here on purpose: body's background paints above
+     negative z-index layers (the aurora field, the curtain footer) and
+     would hide them. html carries the canvas colour instead, which is
+     propagated behind everything. */
+  body {
+    color: var(--ink);
+    font-family: var(--font-sans), sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display), sans-serif;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background-color: var(--ink);
+    color: var(--canvas);
+  }
+
+  /* No native scrollbar. Its track is transparent, so the canvas colour
+     showed through it and read as a pale gap down the right edge of every
+     full-bleed dark section. Lenis carries the scroll feel regardless. */
+  html {
+    scrollbar-width: none;
+  }
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ------------------------------------------------------------------
+   Lenis (from lenis/dist/lenis.css, inlined to keep import order clean)
+------------------------------------------------------------------ */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+.lenis.lenis-autoToggle {
+  transition-property: overflow;
+  transition-duration: 1ms;
+  transition-behavior: allow-discrete;
 }

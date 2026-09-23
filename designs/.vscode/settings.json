@@ -1,0 +1,5 @@
+{
+  // Claude Design templates use {{ bindings }} inside style="..." attributes,
+  // which VS Code's inline-CSS validator reports as errors. They are valid for the design runtime.
+  "html.validate.styles": false
+}
