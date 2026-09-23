@@ -93,6 +93,21 @@ export function Capabilities() {
   const prefersReducedMotion = useReducedMotion();
   const motionOff = Boolean(prefersReducedMotion);
 
+  /* The hero's clip is above the fold and these are not, so they wait for
+     the page to finish loading before claiming any bandwidth. Buffering all
+     of them from the first byte left the hero with nothing to stream. */
+  const [warm, setWarm] = useState(false);
+
+  useEffect(() => {
+    if (document.readyState === "complete") {
+      setWarm(true);
+      return;
+    }
+    const onLoad = () => setWarm(true);
+    window.addEventListener("load", onLoad);
+    return () => window.removeEventListener("load", onLoad);
+  }, []);
+
   const stage = useRef<HTMLDivElement>(null);
   const videos = useRef<(HTMLVideoElement | null)[]>([]);
   const isInView = useInView(stage, { amount: 0.2 });
@@ -185,9 +200,11 @@ export function Capabilities() {
                   muted
                   loop
                   playsInline
-                  /* Buffer the showing clip and the one queued next only. */
+                  /* Buffer the showing clip and the one queued next only,
+                     and only once the page above has finished loading. */
                   preload={
-                    i === activeIndex || i === (activeIndex + 1) % capabilities.length
+                    warm &&
+                    (i === activeIndex || i === (activeIndex + 1) % capabilities.length)
                       ? "auto"
                       : "metadata"
                   }
