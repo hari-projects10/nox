@@ -28,6 +28,14 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        /* The model and runtime are write-once and heavy; only the demo
+           markup should ever need revalidating. */
+        source: "/demos/:path*.:ext(glb|jpg|jpeg|png|svg|woff2)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      {
         source: "/demos/:path*",
         headers: [
           {
