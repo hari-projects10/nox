@@ -16,6 +16,8 @@ import { Lock, X } from "lucide-react";
 import { EASE_OUT_EXPO } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
+import { DemoBrief, type Brief } from "./demo-brief";
+
 const noopSubscribe = () => () => {};
 
 type DemoModalProps = {
@@ -32,19 +34,28 @@ type DemoModalProps = {
    * entirely, for a product that already draws its own device.
    */
   shell?: "browser" | "bare";
+  /** Case-study brief shown beside the product where the screen allows. */
+  brief?: Brief;
   children: ReactNode;
 };
 
 const CHROME = 48; /* h-12 title bar */
 const MIN_WIDTH = 560; /* below this the title bar gets cramped */
 const MIN_SCALE = 0.42; /* matches IframeDemo: pan rather than shrink further */
+const BRIEF_WIDTH = 340;
+const BRIEF_GAP = 56;
+/* Below this a console window and a brief cannot share the screen well. */
+const BRIEF_MIN_VIEWPORT = 1180;
 
 /** Window size that exactly contains the demo at the largest scale that fits. */
 function useWindowBox(
   design: { width: number; height: number } | undefined,
   shell: "browser" | "bare",
+  withBrief: boolean,
 ) {
-  const [box, setBox] = useState<{ width: number; height: number } | null>(null);
+  const [box, setBox] = useState<{ width: number; height: number; brief: boolean } | null>(
+    null,
+  );
 
   useEffect(() => {
     if (!design) return;
@@ -56,22 +67,29 @@ function useWindowBox(
 
     const measure = () => {
       const pad = window.innerWidth >= 768 ? 48 : 16; /* p-6 / p-2, both sides */
-      const availWidth = window.innerWidth - pad;
+      /* A console gives up width to the brief beside it; a device keeps its
+         place in the middle and the brief takes the free space to its right. */
+      const brief =
+        withBrief && shell === "browser" && window.innerWidth >= BRIEF_MIN_VIEWPORT;
+      const availWidth = window.innerWidth - pad - (brief ? BRIEF_WIDTH + BRIEF_GAP : 0);
       const availHeight = window.innerHeight - pad;
       const scale = Math.max(
         Math.min(availWidth / design.width, (availHeight - chrome) / design.height, 1),
         MIN_SCALE,
       );
+      const width = Math.min(Math.max(design.width * scale, minWidth), availWidth);
+      const beside = (window.innerWidth - width) / 2 - BRIEF_GAP - pad / 2;
       setBox({
-        width: Math.min(Math.max(design.width * scale, minWidth), availWidth),
+        width,
         height: Math.min(design.height * scale + chrome, availHeight),
+        brief: brief || (withBrief && shell === "bare" && beside >= 300),
       });
     };
 
     measure();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
-  }, [design, shell]);
+  }, [design, shell, withBrief]);
 
   return box;
 }
@@ -90,10 +108,12 @@ export function DemoModal({
   accent,
   design,
   shell = "browser",
+  brief,
   children,
 }: DemoModalProps) {
   const isClient = useSyncExternalStore(noopSubscribe, () => true, () => false);
-  const box = useWindowBox(design, shell);
+  const box = useWindowBox(design, shell, Boolean(brief));
+  const showBrief = Boolean(brief && box?.brief);
   /* Chrome density follows the window, not the viewport — the window hugs
      its demo, so it can be far narrower than the screen. */
   const width = box?.width ?? (isClient ? window.innerWidth : 1480);
@@ -129,7 +149,10 @@ export function DemoModal({
   return createPortal(
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-[800] flex items-center justify-center p-2 md:p-6">
+        <div
+          className="fixed inset-0 z-[800] flex items-center justify-center p-2 md:p-6"
+          style={{ gap: showBrief && shell === "browser" ? BRIEF_GAP : undefined }}
+        >
           <motion.div
             aria-hidden="true"
             className="absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_0%,rgba(20,20,28,0.62),rgba(6,6,10,0.86))] backdrop-blur-md"
@@ -220,6 +243,23 @@ export function DemoModal({
             {/* ---- Product ---- */}
             <div className="relative min-h-0 flex-1">{children}</div>
           </motion.div>
+
+          {/* ---- Brief: beside a console, or in the free space right of a device ---- */}
+          {showBrief && brief && (
+            <div
+              className={cn(
+                "relative shrink-0",
+                shell === "bare" && "absolute top-1/2 -translate-y-1/2",
+              )}
+              style={{
+                width: BRIEF_WIDTH,
+                ...(shell === "bare" &&
+                  box && { left: `calc(50% + ${box.width / 2 + BRIEF_GAP}px)` }),
+              }}
+            >
+              <DemoBrief name={name} accent={accent} brief={brief} />
+            </div>
+          )}
 
           {/* A bare shell has no title bar, so close lives over the backdrop,
               clear of the device. */}
