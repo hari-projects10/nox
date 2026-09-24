@@ -7,7 +7,7 @@ import { Labs } from "@/components/sections/labs";
 export default function Home() {
   return (
     <main>
-      <IntroSnap target="#services-stage" />
+      <IntroSnap targets={["#services-stage", "#work"]} />
 
       <Hero />
 
