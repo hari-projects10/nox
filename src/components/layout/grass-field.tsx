@@ -469,7 +469,8 @@ function plantGround(from: number, to: number) {
 
 /* ---- WebGL ---- */
 
-function link(gl: WebGL2RenderingContext, vertex: string, fragment: string) {
+/** Hands a program to the driver to compile, without waiting on the result. */
+function compile(gl: WebGL2RenderingContext, vertex: string, fragment: string) {
   const program = gl.createProgram();
   const shaders = (
     [
@@ -484,7 +485,36 @@ function link(gl: WebGL2RenderingContext, vertex: string, fragment: string) {
     return shader;
   });
   gl.linkProgram(program);
+  return { program, shaders };
+}
 
+/**
+ * Resolves once the driver has finished compiling, checking once a frame,
+ * so the work runs off the main thread instead of freezing the page.
+ * Without the extension, the first status query below simply blocks.
+ */
+function compiled(gl: WebGL2RenderingContext, programs: WebGLProgram[]) {
+  const parallel = gl.getExtension("KHR_parallel_shader_compile");
+  if (!parallel) return Promise.resolve();
+  return new Promise<void>((resolve) => {
+    const poll = () => {
+      const done = programs.every(
+        (program) =>
+          gl.isContextLost() ||
+          gl.getProgramParameter(program, parallel.COMPLETION_STATUS_KHR),
+      );
+      if (done) resolve();
+      else requestAnimationFrame(poll);
+    };
+    poll();
+  });
+}
+
+/** The linked program, or null (with the reason logged in development). */
+function finish(
+  gl: WebGL2RenderingContext,
+  { program, shaders }: ReturnType<typeof compile>,
+) {
   const linked = gl.getProgramParameter(program, gl.LINK_STATUS) as boolean;
   if (!linked && process.env.NODE_ENV !== "production") {
     console.error(
@@ -513,14 +543,16 @@ function isSoftwareRenderer(gl: WebGL2RenderingContext) {
 }
 
 /**
- * Brings the field to life on `canvas`, sized to `host`. Returns a disposer,
- * or null where it cannot run well (the painted fallback then stays).
+ * Brings the field to life on `canvas`, sized to `host`. Resolves to a
+ * disposer, or null where it cannot run well (the painting then stays) or
+ * when `cancelled` turns true while the shaders compile.
  */
-function startField(
+async function startField(
   canvas: HTMLCanvasElement,
   host: HTMLElement,
   still: boolean,
   setLive: (live: boolean) => void,
+  cancelled: () => boolean,
 ) {
   const gl = canvas.getContext("webgl2", {
     alpha: true,
@@ -531,10 +563,20 @@ function startField(
   });
   if (!gl || isSoftwareRenderer(gl)) return null;
 
-  const weatherProgram = link(gl, WEATHER_VERTEX, WEATHER_FRAGMENT);
-  const bladeProgram = link(gl, BLADE_VERTEX, BLADE_FRAGMENT);
-  const groundProgram = link(gl, GROUND_VERTEX, GROUND_FRAGMENT);
-  if (!weatherProgram || !bladeProgram || !groundProgram) return null;
+  const pending = [
+    compile(gl, WEATHER_VERTEX, WEATHER_FRAGMENT),
+    compile(gl, BLADE_VERTEX, BLADE_FRAGMENT),
+    compile(gl, GROUND_VERTEX, GROUND_FRAGMENT),
+  ];
+  await compiled(
+    gl,
+    pending.map(({ program }) => program),
+  );
+  const [weatherProgram, bladeProgram, groundProgram] = pending.map((p) => finish(gl, p));
+  if (cancelled() || gl.isContextLost() || !weatherProgram || !bladeProgram || !groundProgram) {
+    [weatherProgram, bladeProgram, groundProgram].forEach((program) => gl.deleteProgram(program));
+    return null;
+  }
 
   const weather = {
     time: gl.getUniformLocation(weatherProgram, "uTime"),
@@ -788,10 +830,14 @@ function startField(
   });
   resize.observe(host);
 
-  const onScreen = new IntersectionObserver(([entry]) => {
-    if (entry?.isIntersecting) run();
-    else pause();
-  });
+  // Already moving by the time it scrolls into view.
+  const onScreen = new IntersectionObserver(
+    ([entry]) => {
+      if (entry?.isIntersecting) run();
+      else pause();
+    },
+    { rootMargin: "25% 0px" },
+  );
   onScreen.observe(host);
 
   const onLost = (event: Event) => {
@@ -819,7 +865,8 @@ function startField(
  * Live grass for the footer hills: every blade is real geometry, bent by
  * gusts that roll across the field in perspective.
  *
- * The painted `fallback` holds the place until the first frame is drawn,
+ * The painted `fallback` holds the place until the first frame is drawn
+ * (normally long before the footer is reached),
  * and stays for good where WebGL 2 is unavailable or the context is lost.
  * With reduced motion the field renders a single still frame.
  */
@@ -837,26 +884,24 @@ export function GrassField({ still, fallback }: { still: boolean; fallback: Reac
     let idle = 0;
     const hasIdle = "requestIdleCallback" in window;
 
-    // Built as the footer approaches, when the browser has a moment spare,
-    // so compiling shaders never lands in the middle of a scroll.
-    const approach = new IntersectionObserver(
-      (entries) => {
-        if (!entries.some((entry) => entry.isIntersecting)) return;
-        approach.disconnect();
-        const start = () => {
-          if (!cancelled) dispose = startField(canvas, host, still, setLive);
-        };
-        idle = hasIdle
-          ? window.requestIdleCallback(start, { timeout: 800 })
-          : window.setTimeout(start, 120);
-      },
-      { rootMargin: "100% 0px" },
-    );
-    approach.observe(host);
+    // Built in the background once the page has loaded and gone quiet, so
+    // the field is already drawn and moving before anyone scrolls down to it.
+    const start = async () => {
+      const field = await startField(canvas, host, still, setLive, () => cancelled);
+      if (cancelled) field?.();
+      else dispose = field;
+    };
+    const schedule = () => {
+      idle = hasIdle
+        ? window.requestIdleCallback(() => void start(), { timeout: 2000 })
+        : window.setTimeout(() => void start(), 300);
+    };
+    if (document.readyState === "complete") schedule();
+    else window.addEventListener("load", schedule, { once: true });
 
     return () => {
       cancelled = true;
-      approach.disconnect();
+      window.removeEventListener("load", schedule);
       if (hasIdle) window.cancelIdleCallback(idle);
       else window.clearTimeout(idle);
       dispose?.();

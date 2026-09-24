@@ -25,6 +25,8 @@ type Tool = {
   alt: string;
   /** How the processed layer is composited for this tool. */
   process: "grade" | "reframe" | "isolate";
+  /** A pre-rendered result, where the effect cannot be faked in CSS. */
+  processed?: string;
 };
 
 const tools: Tool[] = [
@@ -72,6 +74,10 @@ const tools: Tool[] = [
     image: "/images/depth-isolate.jpg",
     alt: "Close-up portrait used to demonstrate subject and background separation",
     process: "isolate",
+    /* Rendered offline from a matte of the subject: the wall is defocused
+       with her masked out, so no hair colour bleeds into the blur, and she
+       is laid back over it sharp, from forehead to shoulders. */
+    processed: "/images/depth-isolate-after.jpg",
   },
 ];
 
@@ -84,37 +90,23 @@ const REFRAME: CSSProperties = {
   transform: "scale(1.08) rotate(-2deg)",
   filter: "brightness(1.03) contrast(1.04)",
 };
-/* Scaled up so the blur samples past the frame instead of feathering the
-   border into transparency. */
-const BACKGROUND_BLUR: CSSProperties = {
-  filter: "blur(14px) saturate(0.72) brightness(1.06)",
-  transform: "scale(1.06)",
-};
-/* Tight enough to read as a cut-out subject: the face is kept, everything
-   around it falls away. A wider ellipse covers the whole close-up and the
-   separation stops being visible at all. */
-const SUBJECT_ELLIPSE =
-  "radial-gradient(ellipse 27% 36% at 50% 34%, #000 52%, transparent 76%)";
-const SUBJECT_MASK: CSSProperties = {
-  filter: "contrast(1.06) saturate(1.06)",
-  maskImage: SUBJECT_ELLIPSE,
-  WebkitMaskImage: SUBJECT_ELLIPSE,
-};
 
 const SIZES = "(max-width: 768px) 100vw, 66vw";
 
 function Frame({
   tool,
+  src = tool.image,
   style,
   className,
 }: {
   tool: Tool;
+  src?: string;
   style?: CSSProperties;
   className?: string;
 }) {
   return (
     <Image
-      src={tool.image}
+      src={src}
       alt={tool.alt}
       fill
       sizes={SIZES}
@@ -127,15 +119,7 @@ function Frame({
 function processedLayer(tool: Tool) {
   if (tool.process === "grade") return <Frame tool={tool} style={GRADE} />;
   if (tool.process === "reframe") return <Frame tool={tool} style={REFRAME} />;
-
-  /* Background isolation: soften everything, then lay the sharp subject
-     back over the centre through a soft elliptical mask. */
-  return (
-    <>
-      <Frame tool={tool} style={BACKGROUND_BLUR} />
-      <Frame tool={tool} style={SUBJECT_MASK} />
-    </>
-  );
+  return <Frame tool={tool} src={tool.processed} />;
 }
 
 /* ------------------------------------------------------------------ */
