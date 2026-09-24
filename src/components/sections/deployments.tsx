@@ -168,6 +168,7 @@ function SurfaceRow({
                 design={demo.design}
                 background={demo.background}
                 fit={surface.fit}
+                poster={demo.poster}
               />
             </span>
 

@@ -36,6 +36,11 @@ type DemoModalProps = {
   shell?: "browser" | "bare";
   /** Case-study brief shown beside the product where the screen allows. */
   brief?: Brief;
+  /**
+   * Phone-sized screen: the product takes the whole screen as a sheet, in
+   * its own mobile layout, rather than a shrunken desktop window.
+   */
+  compact?: boolean;
   children: ReactNode;
 };
 
@@ -109,6 +114,7 @@ export function DemoModal({
   design,
   shell = "browser",
   brief,
+  compact = false,
   children,
 }: DemoModalProps) {
   const isClient = useSyncExternalStore(noopSubscribe, () => true, () => false);
@@ -148,8 +154,75 @@ export function DemoModal({
 
   return createPortal(
     <AnimatePresence>
-      {open && (
+      {open && compact && (
+        <div key="sheet" className="fixed inset-0 z-[800]">
+          <motion.div
+            aria-hidden="true"
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35 }}
+          />
+          <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${name} interactive demo`}
+            className="absolute inset-0 flex flex-col overflow-hidden bg-[#0c0c10] font-sans"
+            style={{ "--accent": accent } as CSSProperties}
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ duration: 0.6, ease: EASE_OUT_EXPO }}
+          >
+            {/* ---- Sheet header: what this is, and the way out ---- */}
+            <div className="relative flex h-14 shrink-0 items-center gap-3 pl-5 pr-3 text-white">
+              <motion.span
+                aria-hidden="true"
+                className="h-2 w-2 shrink-0 rounded-full"
+                style={{ background: accent }}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.35, ease: EASE_OUT_EXPO }}
+              />
+              <motion.div
+                className="min-w-0 flex-1"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3, ease: EASE_OUT_EXPO }}
+              >
+                <p className="text-[15px] font-semibold leading-tight tracking-[-0.01em]">{name}</p>
+                <p className="truncate text-[12px] leading-tight text-white/50">
+                  {brief?.pitch ?? tagline}
+                </p>
+              </motion.div>
+              <button
+                ref={closeButton}
+                type="button"
+                onClick={onClose}
+                aria-label="Close demo"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white/80 transition-colors active:bg-white/20"
+              >
+                <X className="h-4 w-4" />
+              </button>
+              {/* A hairline in the product's colour, drawn in as it opens. */}
+              <motion.span
+                aria-hidden="true"
+                className="absolute inset-x-0 bottom-0 h-px origin-left"
+                style={{ background: accent }}
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 0.9, delay: 0.35, ease: EASE_OUT_EXPO }}
+              />
+            </div>
+
+            <div className="relative min-h-0 flex-1">{children}</div>
+          </motion.div>
+        </div>
+      )}
+      {open && !compact && (
         <div
+          key="window"
           className="fixed inset-0 z-[800] flex items-center justify-center p-2 md:p-6"
           style={{ gap: showBrief && shell === "browser" ? BRIEF_GAP : undefined }}
         >

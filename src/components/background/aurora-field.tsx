@@ -10,8 +10,12 @@ type Orb = {
   id: string;
   /** Tailwind box: size + resting position. */
   box: string;
+  /**
+   * Soft all the way out, so no blur filter is needed: a filter on a layer
+   * that never stops moving is recomputed by the GPU every frame, which
+   * doubled the page's frame cost while scrolling.
+   */
   gradient: string;
-  blur: number;
   drift: { x: number[]; y: number[]; scale: number[] };
   /** Keyframe offsets, so the three orbs never move in lockstep. */
   times: number[];
@@ -22,8 +26,7 @@ const ORBS: Orb[] = [
     id: "slate",
     box: "-top-[28vmax] -left-[18vmax] h-[78vmax] w-[78vmax]",
     gradient:
-      "radial-gradient(circle at 50% 50%, #E2E8F0 0%, rgba(226,232,240,0.92) 46%, rgba(226,232,240,0) 80%)",
-    blur: 120,
+      "radial-gradient(circle closest-side at 50% 50%, rgba(226,232,240,0.95) 0%, rgba(226,232,240,0.9) 40%, rgba(226,232,240,0.7) 62%, rgba(226,232,240,0.4) 80%, rgba(226,232,240,0.14) 92%, rgba(226,232,240,0) 100%)",
     drift: {
       x: [0, 90, -50, 0],
       y: [0, -70, 45, 0],
@@ -35,8 +38,7 @@ const ORBS: Orb[] = [
     id: "indigo",
     box: "top-[8vmax] -right-[24vmax] h-[82vmax] w-[82vmax]",
     gradient:
-      "radial-gradient(circle at 50% 50%, #E0E7FF 0%, rgba(224,231,255,0.92) 46%, rgba(224,231,255,0) 80%)",
-    blur: 140,
+      "radial-gradient(circle closest-side at 50% 50%, rgba(224,231,255,0.95) 0%, rgba(224,231,255,0.9) 40%, rgba(224,231,255,0.7) 62%, rgba(224,231,255,0.4) 80%, rgba(224,231,255,0.14) 92%, rgba(224,231,255,0) 100%)",
     drift: {
       x: [0, -110, 60, 0],
       y: [0, 80, -40, 0],
@@ -48,8 +50,7 @@ const ORBS: Orb[] = [
     id: "violet",
     box: "-bottom-[34vmax] left-[14vmax] h-[86vmax] w-[86vmax]",
     gradient:
-      "radial-gradient(circle at 50% 50%, #F3E8FF 0%, rgba(243,232,255,0.92) 46%, rgba(243,232,255,0) 80%)",
-    blur: 150,
+      "radial-gradient(circle closest-side at 50% 50%, rgba(243,232,255,0.95) 0%, rgba(243,232,255,0.9) 40%, rgba(243,232,255,0.7) 62%, rgba(243,232,255,0.4) 80%, rgba(243,232,255,0.14) 92%, rgba(243,232,255,0) 100%)",
     drift: {
       x: [0, 70, -95, 0],
       y: [0, -55, 35, 0],
@@ -75,10 +76,7 @@ export function AuroraField() {
         <motion.div
           key={orb.id}
           className={cn("absolute rounded-full will-change-transform", orb.box)}
-          style={{
-            backgroundImage: orb.gradient,
-            filter: `blur(${orb.blur}px)`,
-          }}
+          style={{ backgroundImage: orb.gradient }}
           animate={prefersReducedMotion ? undefined : orb.drift}
           transition={
             prefersReducedMotion

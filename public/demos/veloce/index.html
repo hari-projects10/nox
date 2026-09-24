@@ -3,6 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* ?fullbleed: opened on a real phone, the app fills its screen instead of
+   sitting inside a drawn device, and the phone's own status bar replaces ours.
+   Kept as a stylesheet that is put back whenever the runtime, which
+   rebuilds the document as it renders, clears it away. */
+if (new URLSearchParams(location.search).has("fullbleed")) {
+  var fullbleed = function () {
+    if (document.getElementById("vx-fullbleed")) return;
+    var style = document.createElement("style");
+    style.id = "vx-fullbleed";
+    style.textContent =
+      ".vx-stage{padding:0!important;min-height:100dvh!important}" +
+      ".vx-device{width:100vw!important;height:100dvh!important;border:0!important;border-radius:0!important;box-shadow:none!important}" +
+      ".vx-notch,.vx-status{display:none!important}";
+    (document.head || document.documentElement).appendChild(style);
+  };
+  fullbleed();
+  new MutationObserver(fullbleed).observe(document, { childList: true, subtree: true });
+}
+</script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -53,12 +73,12 @@
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 </helmet>
-<div style="--accent: {{ theme.accent }}; --accent-deep: {{ theme.deep }}; --accent-text: {{ theme.text }}; --on-accent: {{ theme.on }}; --accent-soft: color-mix(in srgb, {{ theme.accent }} 15%, transparent); min-height: 100%; background: radial-gradient(900px 560px at 50% -6%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%), #0b0b0c; font-family: Manrope, 'Helvetica Neue', Arial, sans-serif; padding: 30px 16px; display: flex; align-items: center; justify-content: center; transition: background 0.4s ease;">
-  <div style="position: relative; width: 384px; height: 812px; border: 10px solid #151618; border-radius: 54px; background: var(--bg); box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 40px 100px rgba(0,0,0,0.8), 0 10px 60px color-mix(in srgb, var(--accent) 10%, transparent); overflow: hidden;">
+<div class="vx-stage" style="--accent: {{ theme.accent }}; --accent-deep: {{ theme.deep }}; --accent-text: {{ theme.text }}; --on-accent: {{ theme.on }}; --accent-soft: color-mix(in srgb, {{ theme.accent }} 15%, transparent); min-height: 100%; background: radial-gradient(900px 560px at 50% -6%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%), #0b0b0c; font-family: Manrope, 'Helvetica Neue', Arial, sans-serif; padding: 30px 16px; display: flex; align-items: center; justify-content: center; transition: background 0.4s ease;">
+  <div class="vx-device" style="position: relative; width: 384px; height: 812px; border: 10px solid #151618; border-radius: 54px; background: var(--bg); box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 40px 100px rgba(0,0,0,0.8), 0 10px 60px color-mix(in srgb, var(--accent) 10%, transparent); overflow: hidden;">
 
-    <div style="position: absolute; top: 9px; left: 50%; transform: translateX(-50%); width: 94px; height: 27px; border-radius: 99px; background: #000; z-index: 40;"></div>
+    <div class="vx-notch" style="position: absolute; top: 9px; left: 50%; transform: translateX(-50%); width: 94px; height: 27px; border-radius: 99px; background: #000; z-index: 40;"></div>
 
-    <div style="position: absolute; top: 0; left: 0; right: 0; height: 46px; display: flex; align-items: center; justify-content: space-between; padding: 0 26px; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; z-index: 30;">
+    <div class="vx-status" style="position: absolute; top: 0; left: 0; right: 0; height: 46px; display: flex; align-items: center; justify-content: space-between; padding: 0 26px; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; z-index: 30;">
       <div>9:41</div>
       <div style="display: flex; align-items: center; gap: 6px;">
         <svg width="16" height="11" viewBox="0 0 16 11" aria-hidden="true"><g fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"></rect><rect x="4.3" y="5" width="3" height="6" rx="1"></rect><rect x="8.6" y="2.6" width="3" height="8.4" rx="1"></rect><rect x="12.9" y="0" width="3" height="11" rx="1"></rect></g></svg>

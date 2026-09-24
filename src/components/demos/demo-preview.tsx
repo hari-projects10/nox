@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 type Design = { width: number; height: number };
 
@@ -15,42 +16,43 @@ type DemoPreviewProps = {
    * seen in full.
    */
   fit: "top" | "contain";
+  /** A still of the product: all phones see, and what desktop sees first. */
+  poster: string;
 };
 
-/** Live previews are heavy; phones get the static poster instead. */
+/** Live previews are heavy; phones and touch keep the poster instead. */
 const LIVE_FROM = "(min-width: 768px)";
 
 /**
  * A running instance of the product, scaled into a panel and held inert —
- * the section's proof that these are real systems, not mockups. Mounts only
- * once it is near the viewport, so the homepage never pays for it up front.
+ * the section's proof that these are real systems, not mockups. Shows a
+ * poster of the same frame until someone rests on it.
  */
-export function DemoPreview({ src, title, design, background, fit }: DemoPreviewProps) {
+export function DemoPreview({ src, title, design, background, fit, poster }: DemoPreviewProps) {
   const container = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [scale, setScale] = useState(0);
 
-  /* Gate: desktop, not data-saving, and close enough to matter. */
-  useEffect(() => {
-    const el = container.current;
-    if (!el || typeof IntersectionObserver === "undefined") return;
-    if (!window.matchMedia(LIVE_FROM).matches) return;
-    if (window.matchMedia("(prefers-reduced-data: reduce)").matches) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        setMounted(true);
-        observer.disconnect();
-      },
-      /* A screen and a half of warning: these carry a 3.4MB model and a
-         WebGL runtime, so arriving at the panel should not be the moment
-         the download starts. */
-      { rootMargin: "1400px" },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  /*
+   * Goes live only when a pointer rests on the card. Starting a product is
+   * heavy work that shares the page's main thread (Veloce parses a 3.4MB
+   * model), so doing it as the section scrolls past froze the scroll for
+   * most of a second. The poster is the same frame, so until then nothing
+   * looks different; resting on the card is also exactly when the motion
+   * inside it is worth seeing.
+   */
+  const dwell = useRef(0);
+  const canGoLive = () =>
+    window.matchMedia(LIVE_FROM).matches &&
+    window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
+    !window.matchMedia("(prefers-reduced-data: reduce)").matches;
+  const onPointerEnter = () => {
+    if (mounted || !canGoLive()) return;
+    dwell.current = window.setTimeout(() => setMounted(true), 350);
+  };
+  const onPointerLeave = () => window.clearTimeout(dwell.current);
+  useEffect(() => () => window.clearTimeout(dwell.current), []);
 
   useEffect(() => {
     const el = container.current;
@@ -78,7 +80,18 @@ export function DemoPreview({ src, title, design, background, fit }: DemoPreview
       ref={container}
       className="absolute inset-0 overflow-hidden"
       style={{ background }}
+      onPointerEnter={onPointerEnter}
+      onPointerLeave={onPointerLeave}
     >
+      <Image
+        src={poster}
+        alt=""
+        aria-hidden="true"
+        fill
+        sizes="(max-width: 1024px) 100vw, 66vw"
+        className={fit === "top" ? "object-cover object-top" : "scale-[0.92] object-contain"}
+      />
+
       {mounted && scale > 0 && (
         <iframe
           src={src}
@@ -88,8 +101,11 @@ export function DemoPreview({ src, title, design, background, fit }: DemoPreview
           loading="lazy"
           scrolling="no"
           sandbox="allow-scripts allow-same-origin"
-          className="pointer-events-none absolute border-0"
+          onLoad={() => setLoaded(true)}
+          className="pointer-events-none absolute border-0 transition-opacity duration-700"
           style={{
+            /* Takes over from the poster only once it has something to show. */
+            opacity: loaded ? 1 : 0,
             width: design.width,
             height: design.height,
             transform: `scale(${scale})`,

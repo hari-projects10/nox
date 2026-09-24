@@ -1,5 +1,7 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
+
 import type { Brief } from "./demo-brief";
 import { DemoModal } from "./demo-modal";
 import { IframeDemo } from "./iframe-demo";
@@ -12,6 +14,7 @@ export const DEMOS = {
     url: "console.smarthr.ai/orchestrator",
     accent: "#2d6bea",
     src: "/demos/smart-hr/index.html",
+    poster: "/images/demos/smart-hr-poster.jpg",
     /*
      * The console's authored layout: a 6-column grid (Automation activity
      * full width; Workload and Performance & health side by side beneath it).
@@ -44,6 +47,9 @@ export const DEMOS = {
     url: "fleet.veloce.app/vehicle",
     accent: "#ec0618",
     src: "/demos/veloce/index.html",
+    poster: "/images/demos/veloce-poster.jpg",
+    /* On a phone the app is the screen: no drawn device around it. */
+    phoneSrc: "/demos/veloce/index.html?fullbleed",
     /* Phone mockup (384x812 + bezel + page padding) — fit it, never crop it. */
     design: { width: 436, height: 872 },
     background: "#0b0b0c",
@@ -72,6 +78,9 @@ export const DEMOS = {
     url: string;
     accent: string;
     src: string;
+    poster: string;
+    /** Where a phone should load it, if not `src`. */
+    phoneSrc?: string;
     design?: { width: number; height: number };
     background?: string;
     shell?: "browser" | "bare";
@@ -80,6 +89,14 @@ export const DEMOS = {
 >;
 
 export type DemoId = keyof typeof DEMOS;
+
+const PHONE = "(max-width: 767px)";
+
+function subscribePhone(onChange: () => void) {
+  const query = window.matchMedia(PHONE);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
 
 /**
  * `id` stays set after closing, so the product keeps rendering while the
@@ -95,6 +112,11 @@ export function ProductDemo({
   onClose: () => void;
 }) {
   const demo = DEMOS[id];
+  const phone = useSyncExternalStore(
+    subscribePhone,
+    () => window.matchMedia(PHONE).matches,
+    () => false,
+  );
 
   return (
     <DemoModal
@@ -107,12 +129,15 @@ export function ProductDemo({
       design={demo.design}
       shell={demo.shell}
       brief={demo.brief}
+      compact={phone}
     >
+      {/* A phone gets the product's own mobile layout, full width and
+          unscaled; everything larger gets the design viewport, fitted. */}
       <IframeDemo
-        key={id}
-        src={demo.src}
+        key={`${id}-${phone ? "phone" : "desk"}`}
+        src={phone && "phoneSrc" in demo ? demo.phoneSrc : demo.src}
         title={`${demo.name} interactive demo`}
-        design={demo.design}
+        design={phone ? undefined : demo.design}
         background={demo.background}
       />
     </DemoModal>
