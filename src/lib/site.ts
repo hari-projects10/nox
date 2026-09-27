@@ -23,3 +23,18 @@ export const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
 
 /** Matches --ease-in-out-quint in globals.css. */
 export const EASE_IN_OUT_QUINT = [0.83, 0, 0.17, 1] as const;
+
+/**
+ * For footage used as moving imagery, not as a video: opts out of every
+ * native media affordance (picture-in-picture, casting, the controls strip
+ * and its overflow menu), so nothing ever offers to play, pause or pop it
+ * out. The CSS side of this lives under "Ambient video" in globals.css.
+ */
+export const AMBIENT_VIDEO = {
+  controls: false,
+  disablePictureInPicture: true,
+  disableRemotePlayback: true,
+  controlsList: "nodownload nofullscreen noremoteplayback noplaybackrate",
+  "x-webkit-airplay": "deny",
+  tabIndex: -1,
+} as const;

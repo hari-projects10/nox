@@ -9,7 +9,7 @@ import {
 } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 
-import { EASE_OUT_EXPO } from "@/lib/site";
+import { AMBIENT_VIDEO, EASE_OUT_EXPO } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
@@ -200,6 +200,7 @@ export function Capabilities() {
                   muted
                   loop
                   playsInline
+                  {...AMBIENT_VIDEO}
                   /* Buffer the showing clip and the one queued next only,
                      and only once the page above has finished loading. */
                   preload={

@@ -93,6 +93,91 @@
 }
 
 /* ------------------------------------------------------------------
+   Ambient loops
+   Endless background motion runs as CSS animations, on the compositor:
+   driven from script it cost a style write per layer per frame, and it
+   stuttered with everything else whenever the main thread was busy.
+   ease-in-out per keyframe matches framer's per-segment "easeInOut".
+------------------------------------------------------------------ */
+@keyframes drift-slate {
+  0% { transform: translate(0, 0) scale(1); }
+  34% { transform: translate(90px, -70px) scale(1.14); }
+  68% { transform: translate(-50px, 45px) scale(0.95); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes drift-indigo {
+  0% { transform: translate(0, 0) scale(1); }
+  42% { transform: translate(-110px, 80px) scale(0.93); }
+  74% { transform: translate(60px, -40px) scale(1.12); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes drift-violet {
+  0% { transform: translate(0, 0) scale(1); }
+  28% { transform: translate(70px, -55px) scale(1.1); }
+  62% { transform: translate(-95px, 35px) scale(0.92); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes drift-clouds {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-2.5%); }
+}
+
+.ambient {
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* !important: each loop's name and length are set inline. */
+  .ambient {
+    animation: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Ambient video
+   The site's footage is imagery, never "a video": no browser play button
+   (Safari draws one over a video it will not autoplay, e.g. in Low Power
+   Mode), no controls overlay, and no hover or tap affordance at all.
+------------------------------------------------------------------ */
+video::-webkit-media-controls,
+video::-webkit-media-controls-panel,
+video::-webkit-media-controls-overlay-play-button,
+video::-webkit-media-controls-start-playback-button,
+video::-webkit-media-controls-overlay-enclosure {
+  display: none !important;
+  -webkit-appearance: none;
+  opacity: 0 !important;
+}
+video {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* ------------------------------------------------------------------
+   Split-text reveal
+   Per-character rise, as CSS transitions so it runs on the compositor.
+   Each character carries its own delay in --d.
+------------------------------------------------------------------ */
+.split-char {
+  display: inline-block;
+  transform: translateY(115%);
+  /* Literal ease-out-expo: @theme inline does not emit it as a variable. */
+  transition: transform var(--split-duration, 1.05s) cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s);
+}
+[data-revealed] .split-char {
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .split-char {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------
    Lenis (from lenis/dist/lenis.css, inlined to keep import order clean)
 ------------------------------------------------------------------ */
 html.lenis,

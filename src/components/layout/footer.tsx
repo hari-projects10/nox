@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import {
   motion,
+  useInView,
   useMotionValue,
   useReducedMotion,
   useScroll,
@@ -26,34 +27,20 @@ const WORDMARK = "LET’S TALK";
  */
 const SCENE = { viewBox: "0 0 1600 900", preserveAspectRatio: "xMidYMid slice" } as const;
 
-/** Cloud banks as overlapping puffs, flattened on a shared base line. */
-const MAIN_BANK = [
-  [600, 470, 132],
-  [470, 520, 96],
-  [745, 515, 108],
-  [350, 560, 82],
-  [870, 560, 84],
-  [225, 590, 76],
-  [120, 606, 92],
-  [990, 600, 62],
-  [30, 630, 70],
-] as const;
-
-const SIDE_BANK = [
-  [1110, 598, 44],
-  [1185, 604, 40],
-  [1330, 562, 70],
-  [1255, 606, 46],
-  [1420, 604, 42],
-  [1525, 612, 52],
-  [1600, 620, 44],
-] as const;
+/**
+ * The cloud banks, pre-rendered. They were an SVG of puffs roughened by
+ * turbulence, displacement and blur filters, and rasterising those filters
+ * stalled the GPU for a quarter of a second as the footer came into view.
+ * Nothing in them moves, so they ship as one image rendered from that SVG
+ * (footer-clouds.source.svg, rendered 2880px wide in Chrome).
+ */
+const CLOUDS = "/images/footer-clouds.webp";
 
 /**
  * Closing panel: the LET’S TALK close, set in the sky of a painted landscape.
  *
- * Built from vector layers rather than a photograph so it stays sharp at
- * any width and weighs nothing. SVG noise roughens the cloud silhouettes;
+ * Painted rather than photographed: the clouds are an SVG painting
+ * (roughened by noise filters) baked to one light image, and
  * the hills are live WebGL grass moving in the wind, with a painted SVG
  * version standing in wherever that cannot run. Layers drift apart on the
  * way in for depth, and the clouds move slowly once it settles.
@@ -71,6 +58,15 @@ export function Footer() {
   const hillsY = useTransform(() => 140 * (1 - scrollYProgress.get()) * depth.get());
   const markY = useTransform(() => 90 * (1 - scrollYProgress.get()) * depth.get());
 
+  // One trigger for the whole close, so the wordmark and the button (which
+  // live in different layers) still arrive together.
+  const arrived = useInView(ref, { once: true, amount: 0.4 });
+  const arrival = {
+    initial: { opacity: 0 },
+    animate: { opacity: arrived ? 1 : 0 },
+    transition: { duration: motionOff ? 0 : 1.6, ease: EASE_OUT_EXPO },
+  } as const;
+
   return (
     <footer
       ref={ref}
@@ -82,60 +78,26 @@ export function Footer() {
       }}
     >
       {/* ---- Scene ---- */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 select-none">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[2] select-none">
         {/* Clouds — the outer layer carries scroll depth, the inner one the
-            slow drift, both as transforms on an already-rasterised layer. */}
+            slow drift (a compositor loop), both as transforms on an
+            already-rasterised layer. */}
         <motion.div className="absolute inset-0 will-change-transform" style={{ y: cloudsY }}>
-          <motion.div
-            className="absolute inset-y-0 -left-[4%] w-[108%] will-change-transform"
-            animate={motionOff ? undefined : { x: ["0%", "-2.5%", "0%"] }}
-            transition={{ duration: 70, ease: "easeInOut", repeat: Infinity }}
+          <div
+            className="ambient absolute inset-y-0 -left-[4%] w-[108%] will-change-transform"
+            style={{ animationName: "drift-clouds", animationDuration: "70s" }}
           >
-            <svg {...SCENE} className="h-full w-full">
-              <defs>
-                <linearGradient id="nx-cloud" x1="0" y1="330" x2="0" y2="690" gradientUnits="userSpaceOnUse">
-                  <stop offset="0" stopColor="#fdf9f7" />
-                  <stop offset="0.45" stopColor="#f7f1ef" />
-                  <stop offset="1" stopColor="#dce3ea" />
-                </linearGradient>
-                <filter id="nx-brush" x="-10%" y="-20%" width="120%" height="140%">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.013" numOctaves="3" seed="7" result="warp" />
-                  <feDisplacementMap in="SourceGraphic" in2="warp" scale="30" xChannelSelector="R" yChannelSelector="G" result="rough" />
-                  <feGaussianBlur in="rough" stdDeviation="2.6" result="soft" />
-                  {/* Faint dry-brush strokes inside the fill */}
-                  <feTurbulence type="fractalNoise" baseFrequency="0.05 0.18" numOctaves="2" seed="3" result="strokes" />
-                  <feColorMatrix
-                    in="strokes"
-                    type="matrix"
-                    values="0 0 0 0 0.82  0 0 0 0 0.86  0 0 0 0 0.9  0 0 0 -1.2 0.75"
-                    result="tint"
-                  />
-                  <feComposite in="tint" in2="soft" operator="in" result="tintIn" />
-                  <feMerge>
-                    <feMergeNode in="soft" />
-                    <feMergeNode in="tintIn" />
-                  </feMerge>
-                </filter>
-                <filter id="nx-haze" x="-5%" y="-50%" width="110%" height="200%">
-                  <feGaussianBlur stdDeviation="22" />
-                </filter>
-              </defs>
-
-              <g filter="url(#nx-brush)" fill="url(#nx-cloud)">
-                {MAIN_BANK.map(([cx, cy, r]) => (
-                  <circle key={`m${cx}`} cx={cx} cy={cy} r={r} />
-                ))}
-                <rect x="-40" y="580" width="1100" height="120" rx="40" />
-                {SIDE_BANK.map(([cx, cy, r]) => (
-                  <circle key={`s${cx}`} cx={cx} cy={cy} r={r} />
-                ))}
-                <rect x="1070" y="610" width="600" height="90" rx="30" />
-              </g>
-
-              {/* Horizon haze melts the cloud bases into distance */}
-              <rect x="-100" y="640" width="1800" height="90" fill="#d3dde6" opacity="0.85" filter="url(#nx-haze)" />
-            </svg>
-          </motion.div>
+            {/* object-cover is the scene's xMidYMid slice. A plain img: it is
+                one fixed decorative plate, already sized for any width. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={CLOUDS}
+              alt=""
+              decoding="async"
+              draggable={false}
+              className="h-full w-full object-cover"
+            />
+          </div>
         </motion.div>
 
         {/* Hills */}
@@ -146,36 +108,39 @@ export function Footer() {
 
       {/* ---- Close, set in the sky ----
            The ask holds the centre; the line below rides the grass, so the
-           whole close still measures exactly one viewport. */}
-      <motion.div
-        className="relative flex flex-1 flex-col items-center justify-center gap-10 px-6 pb-[14svh] md:gap-14 md:px-12"
-        style={{ y: markY }}
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, amount: 0.4 }}
-        transition={{ duration: motionOff ? 0 : 1.6, ease: EASE_OUT_EXPO }}
-      >
+           whole close still measures exactly one viewport.
+
+           The wordmark sits behind the clouds and the button in front of
+           them, so the letters sink into the cloud bank. That needs the two
+           in separate layers either side of the scene (z 1 < scene 2 < 3):
+           this wrapper must not form a stacking context of its own, so the
+           parallax and fade are carried by each of them, not by it. */}
+      <div className="relative flex flex-1 flex-col items-center justify-center gap-10 px-6 pb-[14svh] md:gap-14 md:px-12">
         {/* ---- Screen-width wordmark ----
              Gradient clipped to the glyphs: the weight stays enormous while
              the letters fade off at the baseline, which keeps it elegant. */}
-        <h2
+        <motion.h2
           aria-label={WORDMARK}
+          style={{ y: markY }}
+          {...arrival}
           className={[
-            "select-none whitespace-nowrap text-center",
+            "relative z-[1] select-none whitespace-nowrap text-center",
             "font-display text-[clamp(3.25rem,17vw,15rem)] font-medium leading-[0.82] tracking-tighter",
             "bg-[linear-gradient(180deg,#111111_0%,#111111_34%,rgba(17,17,17,0.32)_100%)]",
             "bg-clip-text text-transparent",
           ].join(" ")}
         >
           {WORDMARK}
-        </h2>
+        </motion.h2>
 
         {/* ---- Close ----
              Same pill as the section CTAs, scaled up: the footer is where the
              site's one action should look most familiar, not most novel. */}
-        <a
+        <motion.a
           href={`mailto:${site.contact.email}`}
-          className="group inline-flex items-center gap-4 rounded-full bg-headline py-2.5 pl-8 pr-2.5 text-[15px] font-medium text-white transition-colors duration-500 hover:bg-black/80 md:text-base"
+          style={{ y: markY }}
+          {...arrival}
+          className="group relative z-[3] inline-flex items-center gap-4 rounded-full bg-headline py-2.5 pl-8 pr-2.5 text-[15px] font-medium text-white transition-colors duration-500 hover:bg-black/80 md:text-base"
         >
           {site.contact.cta}
           <span className="flex size-11 items-center justify-center rounded-full bg-white text-headline md:size-12">
@@ -184,11 +149,11 @@ export function Footer() {
               strokeWidth={1.8}
             />
           </span>
-        </a>
-      </motion.div>
+        </motion.a>
+      </div>
 
       {/* Light on the grass, where the old muted grey would sink */}
-      <p className="relative pb-10 text-center text-[12.5px] text-white/75">
+      <p className="relative z-[3] pb-10 text-center text-[12.5px] text-white/75">
         © {YEAR} {site.name}. All rights reserved.
       </p>
     </footer>

@@ -766,10 +766,12 @@ async function startField(
   let retired = false;
   // Frame timing, judged in windows once the field has settled, so a device
   // that cannot keep up gets a lighter field, and failing that the painting,
-  // never a stuttering one.
+  // never a stuttering one. Only a sustained slow pace counts: one-off stalls
+  // (the page loading, a demo parsing a model, GC) are not the field's
+  // doing, and a browser capping animation at 30fps to save power is fine.
   const frames: number[] = [];
   let warmup = 60;
-  let stalls = 0;
+  let slowWindows = 0;
 
   const pause = () => {
     cancelAnimationFrame(raf);
@@ -778,7 +780,7 @@ async function startField(
   const struggle = () => {
     frames.length = 0;
     warmup = 60;
-    stalls = 0;
+    slowWindows = 0;
     if (quality === HIGH) {
       quality = LOW;
       layout();
@@ -799,17 +801,15 @@ async function startField(
     draw(clock);
     if (!elapsed || warmup-- > 0) return;
 
-    // Repeated long stalls step down at once; a slow median after a window.
-    if (elapsed > 250 && ++stalls >= 3) {
-      struggle();
-      return;
-    }
+    // A stall this long is something else blocking the page: skip it.
+    if (elapsed > 100) return;
     frames.push(elapsed);
-    if (frames.length === 45) {
-      const median = frames.sort((a, b) => a - b)[22];
+    if (frames.length === 60) {
+      const median = frames.sort((a, b) => a - b)[30];
       frames.length = 0;
-      stalls = 0;
-      if (median > 24) struggle();
+      // Under ~25fps for three windows running (several seconds) steps down.
+      slowWindows = median > 40 ? slowWindows + 1 : 0;
+      if (slowWindows >= 3) struggle();
     }
   };
   const run = () => {
@@ -840,18 +840,11 @@ async function startField(
   );
   onScreen.observe(host);
 
-  const onLost = (event: Event) => {
-    event.preventDefault();
-    pause();
-    setLive(false);
-  };
-  canvas.addEventListener("webglcontextlost", onLost);
-
+  // Context loss is handled by the component, which rebuilds on restore.
   return () => {
     pause();
     resize.disconnect();
     onScreen.disconnect();
-    canvas.removeEventListener("webglcontextlost", onLost);
     document.removeEventListener("visibilitychange", onVisibility);
     [weatherVao, bladeVao, groundVao].forEach((vao) => gl.deleteVertexArray(vao));
     [templateBuffer, bladeBuffer, groundBuffer].forEach((buffer) => gl.deleteBuffer(buffer));
@@ -867,12 +860,16 @@ async function startField(
  *
  * The painted `fallback` holds the place until the first frame is drawn
  * (normally long before the footer is reached),
- * and stays for good where WebGL 2 is unavailable or the context is lost.
+ * stays for good where WebGL 2 is unavailable, and fills in while a lost
+ * context is being restored.
  * With reduced motion the field renders a single still frame.
  */
 export function GrassField({ still, fallback }: { still: boolean; fallback: ReactNode }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [live, setLive] = useState(false);
+  // A lost canvas is blanked by the browser, so it is swapped out at once,
+  // not faded.
+  const [lost, setLost] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -881,16 +878,41 @@ export function GrassField({ still, fallback }: { still: boolean; fallback: Reac
 
     let dispose: (() => void) | null = null;
     let cancelled = false;
+    // Bumped whenever a build in flight should be abandoned.
+    let generation = 0;
     let idle = 0;
     const hasIdle = "requestIdleCallback" in window;
 
     // Built in the background once the page has loaded and gone quiet, so
     // the field is already drawn and moving before anyone scrolls down to it.
     const start = async () => {
-      const field = await startField(canvas, host, still, setLive, () => cancelled);
-      if (cancelled) field?.();
+      const mine = ++generation;
+      const stale = () => cancelled || mine !== generation;
+      const field = await startField(canvas, host, still, setLive, stale);
+      if (stale()) field?.();
       else dispose = field;
     };
+    const stop = () => {
+      generation++;
+      dispose?.();
+      dispose = null;
+    };
+
+    // The browser drops contexts under GPU pressure (a driver reset, or too
+    // many contexts once the product demos spin up their own). Show the
+    // painting meanwhile and rebuild when the context comes back.
+    const onLost = (event: Event) => {
+      event.preventDefault();
+      stop();
+      setLost(true);
+      setLive(false);
+    };
+    const onRestored = () => {
+      setLost(false);
+      if (!cancelled) void start();
+    };
+    canvas.addEventListener("webglcontextlost", onLost);
+    canvas.addEventListener("webglcontextrestored", onRestored);
     const schedule = () => {
       idle = hasIdle
         ? window.requestIdleCallback(() => void start(), { timeout: 2000 })
@@ -902,9 +924,11 @@ export function GrassField({ still, fallback }: { still: boolean; fallback: Reac
     return () => {
       cancelled = true;
       window.removeEventListener("load", schedule);
+      canvas.removeEventListener("webglcontextlost", onLost);
+      canvas.removeEventListener("webglcontextrestored", onRestored);
       if (hasIdle) window.cancelIdleCallback(idle);
       else window.clearTimeout(idle);
-      dispose?.();
+      stop();
     };
   }, [still]);
 
@@ -914,6 +938,7 @@ export function GrassField({ still, fallback }: { still: boolean; fallback: Reac
         className={cn(
           "absolute inset-0 transition-[opacity,visibility] duration-700",
           live && "invisible opacity-0",
+          lost && "transition-none",
         )}
       >
         {fallback}
@@ -923,6 +948,7 @@ export function GrassField({ still, fallback }: { still: boolean; fallback: Reac
         className={cn(
           "absolute inset-x-0 top-0 h-0 w-full opacity-0 transition-opacity duration-700",
           live && "opacity-100",
+          lost && "invisible transition-none",
         )}
       />
     </>

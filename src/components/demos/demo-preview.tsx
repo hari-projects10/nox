@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { type PointerEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useLenis } from "lenis/react";
 
 type Design = { width: number; height: number };
 
@@ -22,6 +23,13 @@ type DemoPreviewProps = {
 
 /** Live previews are heavy; phones and touch keep the poster instead. */
 const LIVE_FROM = "(min-width: 768px)";
+/** How long the pointer rests on a card before it goes live. */
+const DWELL_MS = 350;
+/** And how long the page must have been still. */
+const SCROLL_QUIET_MS = 400;
+
+/** Clock reads for event handlers and timers only, never render. */
+const msSince = (time: number) => performance.now() - time;
 
 /**
  * A running instance of the product, scaled into a panel and held inert —
@@ -41,17 +49,46 @@ export function DemoPreview({ src, title, design, background, fit, poster }: Dem
    * most of a second. The poster is the same frame, so until then nothing
    * looks different; resting on the card is also exactly when the motion
    * inside it is worth seeing.
+   *
+   * "Resting" means the pointer itself moved onto the card and the page has
+   * stopped moving. A pointer parked mid-screen while the page scrolls under
+   * it gets hover events too, and booting a demo then froze the scroll.
    */
   const dwell = useRef(0);
+  const hovering = useRef(false);
+  const lastScroll = useRef(0);
+  useLenis(() => {
+    lastScroll.current = msSince(0);
+  });
   const canGoLive = () =>
     window.matchMedia(LIVE_FROM).matches &&
     window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
     !window.matchMedia("(prefers-reduced-data: reduce)").matches;
-  const onPointerEnter = () => {
-    if (mounted || !canGoLive()) return;
-    dwell.current = window.setTimeout(() => setMounted(true), 350);
+  const settle = () => {
+    dwell.current = 0;
+    if (!hovering.current) return;
+    if (msSince(lastScroll.current) < SCROLL_QUIET_MS) {
+      dwell.current = window.setTimeout(settle, 150);
+      return;
+    }
+    // Off the input path, so a click or a new gesture still lands first.
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(() => hovering.current && setMounted(true), { timeout: 400 });
+    } else {
+      setMounted(true);
+    }
   };
-  const onPointerLeave = () => window.clearTimeout(dwell.current);
+  const onPointerMove = (event: PointerEvent) => {
+    if (mounted || dwell.current || (!event.movementX && !event.movementY)) return;
+    if (!canGoLive()) return;
+    hovering.current = true;
+    dwell.current = window.setTimeout(settle, DWELL_MS);
+  };
+  const onPointerLeave = () => {
+    hovering.current = false;
+    window.clearTimeout(dwell.current);
+    dwell.current = 0;
+  };
   useEffect(() => () => window.clearTimeout(dwell.current), []);
 
   useEffect(() => {
@@ -80,7 +117,7 @@ export function DemoPreview({ src, title, design, background, fit, poster }: Dem
       ref={container}
       className="absolute inset-0 overflow-hidden"
       style={{ background }}
-      onPointerEnter={onPointerEnter}
+      onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
     >
       <Image

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 import { SplitText } from "@/components/ui/split-text";
-import { EASE_OUT_EXPO, site } from "@/lib/site";
+import { AMBIENT_VIDEO, EASE_OUT_EXPO, site } from "@/lib/site";
 
 /** Background loop, served from public/videos. */
 const HERO_VIDEO = "/videos/128648-741747833.mp4";
@@ -45,20 +45,27 @@ export function Hero() {
     };
   }, []);
 
-  /* Held transparent until the first frame decodes, so the hero never
-     flashes a black box while the file buffers. A cached file can finish
-     loading before hydration, when a React onLoadedData would never fire,
-     so readiness is checked directly as well as listened for. */
+  /* Held transparent until it is actually moving, so the hero never
+     flashes a black box while the file buffers — and never shows a stopped
+     frame when the browser refuses autoplay (low-power modes do), which is
+     when a native play button is drawn over it. The aurora carries the
+     hero until then. Reduced motion wants the still first frame instead.
+     A cached file can be ready before hydration, when React's media events
+     would never fire, so the state is checked directly as well. */
   useEffect(() => {
     const element = video.current;
     if (!element) return;
     const reveal = () => {
       element.style.opacity = "1";
     };
-    if (element.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) reveal();
-    element.addEventListener("loadeddata", reveal);
-    return () => element.removeEventListener("loadeddata", reveal);
-  }, []);
+    const ready = prefersReducedMotion ? "loadeddata" : "playing";
+    const isReady = prefersReducedMotion
+      ? element.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA
+      : !element.paused && element.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA;
+    if (isReady) reveal();
+    element.addEventListener(ready, reveal);
+    return () => element.removeEventListener(ready, reveal);
+  }, [prefersReducedMotion]);
 
   /* Play only while on screen, so the hero stops decoding once the
      capabilities slideshow takes over. Reduced motion keeps the first
@@ -93,6 +100,7 @@ export function Hero() {
         loop
         playsInline
         preload="auto"
+        {...AMBIENT_VIDEO}
         className="pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-1000"
         style={{
           opacity: 0,

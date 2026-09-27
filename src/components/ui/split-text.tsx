@@ -1,9 +1,7 @@
 "use client";
 
-import { Fragment, useMemo, useRef } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { type CSSProperties, Fragment, useMemo, useRef } from "react";
 
-import { EASE_OUT_EXPO } from "@/lib/site";
 import { useRevealOnce } from "@/lib/use-reveal-once";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +23,10 @@ type SplitTextProps = {
  * Character-by-character slide-up reveal. Each word gets its own mask so
  * characters rise out of nothing while words still wrap normally.
  *
+ * The rise is a CSS transition per character (.split-char in globals.css),
+ * so it runs on the compositor: it stays smooth through a busy main thread
+ * and costs nothing per frame. Reduced motion shows the text in place.
+ *
  * Decorative by nature: the tree is aria-hidden, so the parent element
  * must carry the real text via aria-label.
  */
@@ -37,12 +39,10 @@ export function SplitText({
   play = true,
   className,
 }: SplitTextProps) {
-  const prefersReducedMotion = useReducedMotion();
-
   // The trigger has to live on the unclipped wrapper, not the characters:
   // a character starts translated fully outside its own overflow-hidden
   // mask, and IntersectionObserver clips against ancestor overflow, so a
-  // per-character whileInView would never fire.
+  // per-character observer would never fire.
   const ref = useRef<HTMLSpanElement>(null);
   const revealed = useRevealOnce(ref, { enabled: inView }) && play;
 
@@ -57,25 +57,25 @@ export function SplitText({
   }, [text]);
 
   return (
-    <span ref={ref} aria-hidden="true" className={cn("inline", className)}>
+    <span
+      ref={ref}
+      aria-hidden="true"
+      data-revealed={revealed ? "" : undefined}
+      className={cn("inline", className)}
+      style={{ "--split-duration": `${duration}s` } as CSSProperties}
+    >
       {words.map(({ word, chars }, wordIndex) => (
         <Fragment key={`${word}-${wordIndex}`}>
           {/* Mask: extra padding keeps descenders from being clipped. */}
           <span className="inline-block overflow-hidden whitespace-nowrap pb-[0.14em] align-bottom -mb-[0.14em]">
             {chars.map(({ char, index }) => (
-              <motion.span
+              <span
                 key={index}
-                className="inline-block will-change-transform"
-                initial={prefersReducedMotion ? { y: 0 } : { y: "115%" }}
-                animate={revealed ? { y: 0 } : { y: "115%" }}
-                transition={{
-                  duration: prefersReducedMotion ? 0 : duration,
-                  delay: prefersReducedMotion ? 0 : delay + index * stagger,
-                  ease: EASE_OUT_EXPO,
-                }}
+                className="split-char"
+                style={{ "--d": `${delay + index * stagger}s` } as CSSProperties}
               >
                 {char}
-              </motion.span>
+              </span>
             ))}
           </span>
           {/* Real space, outside the mask, so words still wrap. */}
