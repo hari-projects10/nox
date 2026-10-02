@@ -19,7 +19,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "GATVEON — Architecting the Digital Frontier",
+    default: "GATVEON",
     template: "%s — GATVEON",
   },
   description:

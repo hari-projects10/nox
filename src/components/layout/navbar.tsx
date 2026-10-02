@@ -7,6 +7,8 @@ import { useLenis } from "lenis/react";
 import { EASE_OUT_EXPO, site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
+import { Logo } from "./logo";
+
 /** Where the bar reads the page: the vertical centre of its own band. */
 const PROBE_Y = 40;
 
@@ -128,10 +130,8 @@ export function Navbar() {
         onDark ? "text-white" : "text-headline",
       )}
     >
-      <a href="#top" className="flex shrink-0 items-center">
-        <span className="font-display text-[12px] font-semibold tracking-tight sm:text-[13px]">
-          {site.name}
-        </span>
+      <a href="#top" aria-label={`${site.name}, back to top`} className="flex shrink-0 items-center">
+        <Logo className="h-6 sm:h-[26px] md:h-8" />
       </a>
 
       <nav className="-mr-2 flex items-center sm:gap-1">
