@@ -91,25 +91,25 @@ function SurfaceRow({
         {/* ---- Statement ---- */}
         <motion.div
           {...reveal()}
-          className={cn("col-span-12 lg:col-span-4", flipped && "lg:order-2")}
+          className={cn("col-span-12 lg:col-span-4 2xl:col-span-5", flipped && "lg:order-2")}
         >
-          <p className="text-[13px] font-semibold uppercase tracking-[0.18em] text-headline">
+          <p className="text-[13px] font-semibold uppercase tracking-[0.18em] text-headline 2xl:text-[14px]">
             {surface.label}
           </p>
 
-          <h3 className="mt-3 font-display text-[clamp(1.75rem,2.6vw,2.75rem)] font-medium leading-[1.05] tracking-[-0.035em] text-headline">
+          <h3 className="mt-3 font-display text-[clamp(1.75rem,2.6vw,2.75rem)] font-medium leading-[1.05] tracking-[-0.035em] text-headline 2xl:text-[3.5rem]">
             {surface.headline}
           </h3>
 
-          <p className="mt-5 max-w-md text-[15px] leading-relaxed text-ink-soft md:text-base">
+          <p className="mt-5 max-w-md text-[15px] leading-relaxed text-ink-soft md:text-base 2xl:max-w-xl 2xl:text-lg">
             {surface.body}
           </p>
 
-          <ul className="mt-8 max-w-md">
+          <ul className="mt-8 max-w-md 2xl:max-w-xl">
             {surface.capabilities.map((capability) => (
               <li
                 key={capability}
-                className="flex items-center gap-3 py-2 text-[13.5px] text-ink-soft"
+                className="flex items-center gap-3 py-2 text-[13.5px] text-ink-soft 2xl:text-[15.5px]"
               >
                 <span
                   aria-hidden="true"
@@ -124,7 +124,7 @@ function SurfaceRow({
           <button
             type="button"
             onClick={() => onOpen(surface.demo)}
-            className="group mt-8 inline-flex items-center gap-3 rounded-full bg-headline py-2 pl-5 pr-2 text-sm font-medium text-white transition-colors hover:bg-black/80"
+            className="group mt-8 inline-flex items-center gap-3 rounded-full bg-headline py-2 pl-5 pr-2 text-sm font-medium text-white transition-colors hover:bg-black/80 2xl:pl-6 2xl:text-[15px]"
           >
             {surface.action}
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-headline">
@@ -136,7 +136,10 @@ function SurfaceRow({
         {/* ---- Proof: the system itself, running ---- */}
         <motion.div
           {...reveal(0.1)}
-          className={cn("col-span-12 lg:col-span-8", flipped && "lg:order-1")}
+          className={cn(
+            "col-span-12 w-full lg:col-span-8 2xl:col-span-7 2xl:max-w-[840px]",
+            flipped ? "lg:order-1 2xl:justify-self-start" : "2xl:justify-self-end",
+          )}
         >
           <button
             type="button"
@@ -228,12 +231,12 @@ export function Deployments() {
         {/* ---- Section header ---- */}
         <header className="mb-12 grid grid-cols-12 items-end gap-y-8 md:mb-16 md:gap-x-10">
           <div className="col-span-12 lg:col-span-7">
-            <p className="mb-6 text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-muted">
+            <p className="mb-6 text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-muted 2xl:text-[12px]">
               Deployment surfaces
             </p>
             <h2
               aria-label="Where our systems run"
-              className="font-display text-[clamp(2.25rem,5.5vw,4.5rem)] font-medium leading-[0.95] tracking-tighter text-headline"
+              className="font-display text-[clamp(2.25rem,5.5vw,4.5rem)] font-medium leading-[0.95] tracking-tighter text-headline 2xl:text-[5.25rem]"
             >
               <SplitText text="Where our systems run" inView stagger={0.03} />
             </h2>
@@ -241,7 +244,7 @@ export function Deployments() {
 
           <motion.p
             {...reveal(0.2)}
-            className="col-span-12 max-w-md text-[15px] leading-relaxed text-ink-soft lg:col-span-5 lg:justify-self-end"
+            className="col-span-12 max-w-md text-[15px] leading-relaxed text-ink-soft lg:col-span-5 lg:justify-self-end 2xl:max-w-lg 2xl:text-[17px]"
           >
             Every engagement ends the same way, a system in production, on the surfaces
             the business actually operates on. Both environments below are running live.
