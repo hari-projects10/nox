@@ -1,5 +1,5 @@
 export const site = {
-  name: "NOXTEAM",
+  name: "GATVEON",
   hero: {
     headline: "Architecting the Digital Frontier.",
     subheadline:
@@ -7,7 +7,7 @@ export const site = {
   },
   /* PLACEHOLDER — swap for the real address before launch. */
   contact: {
-    email: "hello@noxteam.com",
+    email: "hello@gatveon.com",
     cta: "Start a project",
   },
   nav: [

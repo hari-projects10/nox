@@ -15,3 +15,10 @@ export const scrollProgress = motionValue(0);
 
 /** Signed scroll velocity in px/frame, as reported by Lenis. */
 export const scrollVelocity = motionValue(0);
+
+/**
+ * Window event fired when code moves the page on purpose, such as the
+ * assistant taking a visitor to a section. Choreography that reads scroll
+ * gestures (IntroSnap) stands down for it, as it does for an in-page link.
+ */
+export const DELIBERATE_SCROLL = "site:deliberate-scroll";

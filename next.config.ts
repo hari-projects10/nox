@@ -1,8 +1,11 @@
 import type { NextConfig } from "next";
+import { withBotId } from "botid/next/config";
 
 const nextConfig: NextConfig = {
   /* No floating dev badge over the bottom-left of the design. */
   devIndicators: false,
+  /* Don't advertise the framework in every response header. */
+  poweredByHeader: false,
   /* Pull only the icons and helpers actually referenced, instead of the
      whole barrel file, out of these packages. */
   experimental: {
@@ -59,4 +62,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+/* BotID proxies its challenge through this domain, so it can't be told
+   apart from the site itself (see src/instrumentation-client.ts). */
+export default withBotId(nextConfig);

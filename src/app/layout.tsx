@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 
 import { AuroraField } from "@/components/background/aurora-field";
+import { ChatWidget } from "@/components/chat/chat-widget";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { KineticViewport } from "@/components/providers/kinetic-viewport";
@@ -18,8 +19,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "NOXTEAM — Architecting the Digital Frontier",
-    template: "%s — NOXTEAM",
+    default: "GATVEON — Architecting the Digital Frontier",
+    template: "%s — GATVEON",
   },
   description:
     "We engineer kinetic interfaces and scalable architectures for the world’s most ambitious brands.",
@@ -83,6 +84,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </SmoothScroll>
 
         <FilmGrain />
+
+        {/* Outside KineticViewport: its transform would unpin a fixed child. */}
+        <ChatWidget />
       </body>
     </html>
   );

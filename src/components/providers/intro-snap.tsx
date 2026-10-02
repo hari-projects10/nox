@@ -5,6 +5,8 @@ import { useReducedMotion } from "framer-motion";
 import type Lenis from "lenis";
 import { useLenis } from "lenis/react";
 
+import { DELIBERATE_SCROLL } from "@/lib/scroll-store";
+
 /** Scroll, in px, past a resting point that counts as a new gesture. */
 const TRIGGER = 6;
 
@@ -82,11 +84,17 @@ export function IntroSnap({ targets }: { targets: string[] }) {
       const link = (event.target as Element | null)?.closest?.('a[href*="#"]');
       if (link) step.current = targets.length;
     };
+    /* Neither is a move made from code, such as the assistant's. */
+    const onDeliberate = () => {
+      step.current = targets.length;
+    };
     window.addEventListener("wheel", onWheel, { passive: true, capture: true });
     document.addEventListener("click", onClick, { capture: true });
+    window.addEventListener(DELIBERATE_SCROLL, onDeliberate);
     return () => {
       window.removeEventListener("wheel", onWheel, { capture: true });
       document.removeEventListener("click", onClick, { capture: true });
+      window.removeEventListener(DELIBERATE_SCROLL, onDeliberate);
     };
   }, [targets.length]);
 

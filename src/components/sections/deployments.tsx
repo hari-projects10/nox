@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
 import { DemoPreview } from "@/components/demos/demo-preview";
-import { DEMOS, ProductDemo, type DemoId } from "@/components/demos/product-demo";
+import { ProductDemo } from "@/components/demos/product-demo";
+import { DEMOS, OPEN_DEMO, type DemoId } from "@/lib/demos";
 import { SplitText } from "@/components/ui/split-text";
 import { EASE_OUT_EXPO } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -207,6 +208,19 @@ export function Deployments() {
     setIsDemoOpen(true);
   }, []);
   const closeDemo = useCallback(() => setIsDemoOpen(false), []);
+
+  /* Others can open a demo too (the assistant does); answering the request
+     tells them it was handled here. */
+  useEffect(() => {
+    const onRequest = (event: Event) => {
+      const { id } = (event as CustomEvent<{ id: DemoId }>).detail;
+      if (!(id in DEMOS)) return;
+      event.preventDefault();
+      openDemo(id);
+    };
+    window.addEventListener(OPEN_DEMO, onRequest);
+    return () => window.removeEventListener(OPEN_DEMO, onRequest);
+  }, [openDemo]);
 
   return (
     <section id="work" className="relative px-6 py-20 md:px-12 md:py-28">

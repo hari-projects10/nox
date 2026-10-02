@@ -6,6 +6,8 @@
 import type { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
 
+import { site } from "@/lib/site";
+
 export const metadata: Metadata = { title: "Studio" };
 
 /* Stub route: exists so the page transition has somewhere to go.
@@ -15,7 +17,7 @@ export default function StudioPage() {
     <main className="flex min-h-svh items-center px-6 md:px-12">
       <div className="mx-auto w-full max-w-7xl">
         <p className="text-[11px] uppercase tracking-[0.28em] text-ink-muted">
-          Noxteam
+          {site.name}
         </p>
         <h1 className="mt-5 font-display text-[clamp(2.75rem,9vw,8rem)] font-medium leading-[0.88] tracking-tighter text-headline">
           Studio
