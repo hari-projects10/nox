@@ -21,7 +21,7 @@ const STARTERS = [
   "Can I book a call with the team?",
 ];
 
-const HEADLINE = "What are we building together?";
+const HEADLINE = "What Are We Building Together?";
 
 /**
  * The welcome, read in sequence like the case-study briefs: the ask rises

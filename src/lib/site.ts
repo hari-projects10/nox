@@ -1,7 +1,7 @@
 export const site = {
   name: "GATVEON",
   hero: {
-    headline: "Architecting the digital frontier.",
+    headline: "Architecting the Digital Frontier.",
     subheadline:
       "We engineer kinetic interfaces and scalable architectures for the world’s most ambitious brands.",
   },

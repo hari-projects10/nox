@@ -33,7 +33,7 @@ const surfaces: Surface[] = [
   {
     demo: "smart-hr",
     label: "Enterprise web",
-    headline: "The console a company runs on.",
+    headline: "The Console a Company Runs On.",
     body:
       "Operations platforms where the work actually happens: orchestration, live queues, approvals and audit. Built for the teams that keep a business moving, and for the volume they move it at.",
     capabilities: [
@@ -48,7 +48,7 @@ const surfaces: Surface[] = [
   {
     demo: "veloce",
     label: "Native mobile",
-    headline: "The device it is carried on.",
+    headline: "The Device It Is Carried On.",
     body:
       "Applications that hold up away from the desk: streaming telemetry, hardware-grade rendering, and interfaces that stay readable at a glance in a moving vehicle or on a factory floor.",
     capabilities: [
@@ -235,10 +235,10 @@ export function Deployments() {
               Deployment surfaces
             </p>
             <h2
-              aria-label="Where our systems run"
+              aria-label="Where Our Systems Run"
               className="font-display text-[clamp(2.25rem,5.5vw,4.5rem)] font-medium leading-[0.95] tracking-tighter text-headline 2xl:text-[5.25rem]"
             >
-              <SplitText text="Where our systems run" inView stagger={0.03} />
+              <SplitText text="Where Our Systems Run" inView stagger={0.03} />
             </h2>
           </div>
 

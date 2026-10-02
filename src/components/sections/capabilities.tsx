@@ -36,7 +36,7 @@ const capabilities: Capability[] = [
   },
   {
     id: "agents",
-    heading: "Autonomous agents",
+    heading: "Autonomous Agents",
     content:
       "Reasoning engines that execute complex workflows. Moving beyond reactive chatbots to intelligent systems that act, adapt, and operate independently.",
     video_keyword: "kinetic-particles-bright",
@@ -44,7 +44,7 @@ const capabilities: Capability[] = [
   },
   {
     id: "ai-web",
-    heading: "Cognitive interfaces",
+    heading: "Cognitive Interfaces",
     content:
       "Web architectures that adapt in real-time. We bridge Large Language Models with hyper-reactive frontends to create context-aware, highly personalized user experiences.",
     video_keyword: "clean-code-projection",
@@ -52,7 +52,7 @@ const capabilities: Capability[] = [
   },
   {
     id: "enterprise",
-    heading: "Enterprise infrastructure",
+    heading: "Enterprise Infrastructure",
     content:
       "High-concurrency systems built for global scale. Secure, modular architectures engineered for zero downtime and seamless third-party integration.",
     video_keyword: "server-rack-minimal-white",
@@ -60,7 +60,7 @@ const capabilities: Capability[] = [
   },
   {
     id: "mobile",
-    heading: "Native ecosystems",
+    heading: "Native Ecosystems",
     content:
       "High-performance mobile environments. Fluid interactions and edge-computed features delivered natively to iOS and Android with zero latency.",
     video_keyword: "glass-mobile-wireframe",

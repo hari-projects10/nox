@@ -140,10 +140,10 @@ export function Labs() {
               Applied research
             </p>
             <h2
-              aria-label="Vision engineering"
+              aria-label="Vision Engineering"
               className="font-display text-[clamp(2.25rem,5.5vw,4.5rem)] font-medium leading-[0.95] tracking-tighter text-headline"
             >
-              <SplitText text="Vision engineering" inView stagger={0.03} />
+              <SplitText text="Vision Engineering" inView stagger={0.03} />
             </h2>
           </div>
 
@@ -235,19 +235,19 @@ export function Labs() {
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
               >
-                <p className="max-w-md text-[15px] leading-relaxed text-ink-soft md:text-base">
+                <p className="max-w-lg text-base leading-relaxed text-ink-soft md:text-lg 2xl:max-w-xl 2xl:text-xl">
                   {active.description}
                 </p>
 
-                <ul className="mt-8 max-w-md">
+                <ul className="mt-8 max-w-lg 2xl:max-w-xl">
                   {active.specs.map((spec) => (
                     <li
                       key={spec}
-                      className="flex items-center gap-3 py-2 text-[13.5px] text-ink-soft"
+                      className="flex items-center gap-3 py-2 text-[15px] text-ink-soft md:text-base 2xl:text-[17px]"
                     >
                       <span
                         aria-hidden="true"
-                        className="h-1 w-1 shrink-0 rounded-full bg-headline"
+                        className="h-1.5 w-1.5 shrink-0 rounded-full bg-headline"
                       />
                       {spec}
                     </li>
