@@ -152,7 +152,7 @@ export function Labs() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-120px" }}
             transition={{ duration: 1, delay: 0.15, ease: EASE_OUT_EXPO }}
-            className="col-span-12 max-w-md text-[15px] leading-relaxed text-ink-soft lg:col-span-5 lg:justify-self-end"
+            className="col-span-12 max-w-lg text-base leading-relaxed text-ink-soft md:text-lg lg:col-span-5 lg:justify-self-end 2xl:max-w-xl 2xl:text-xl"
           >
             Client work keeps running into capabilities no library ships. When it does,
             we build the instrument ourselves — and it stays in the toolchain. Drag any

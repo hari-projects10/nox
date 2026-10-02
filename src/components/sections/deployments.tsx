@@ -244,7 +244,7 @@ export function Deployments() {
 
           <motion.p
             {...reveal(0.2)}
-            className="col-span-12 max-w-md text-[15px] leading-relaxed text-ink-soft lg:col-span-5 lg:justify-self-end 2xl:max-w-lg 2xl:text-[17px]"
+            className="col-span-12 max-w-lg text-base leading-relaxed text-ink-soft md:text-lg lg:col-span-5 lg:justify-self-end 2xl:max-w-xl 2xl:text-xl"
           >
             Every engagement ends the same way, a system in production, on the surfaces
             the business actually operates on. Both environments below are running live.
