@@ -32,7 +32,7 @@ type Surface = {
 const surfaces: Surface[] = [
   {
     demo: "smart-hr",
-    label: "Enterprise Web",
+    label: "Enterprise web",
     headline: "The console a company runs on.",
     body:
       "Operations platforms where the work actually happens: orchestration, live queues, approvals and audit. Built for the teams that keep a business moving, and for the volume they move it at.",
@@ -47,7 +47,7 @@ const surfaces: Surface[] = [
   },
   {
     demo: "veloce",
-    label: "Native Mobile",
+    label: "Native mobile",
     headline: "The device it is carried on.",
     body:
       "Applications that hold up away from the desk: streaming telemetry, hardware-grade rendering, and interfaces that stay readable at a glance in a moving vehicle or on a factory floor.",
@@ -224,7 +224,7 @@ export function Deployments() {
 
   return (
     <section id="work" className="relative px-6 py-20 md:px-12 md:py-28">
-      <div className="mx-auto w-full max-w-7xl">
+      <div className="mx-auto w-full max-w-[1600px]">
         {/* ---- Section header ---- */}
         <header className="mb-12 grid grid-cols-12 items-end gap-y-8 md:mb-16 md:gap-x-10">
           <div className="col-span-12 lg:col-span-7">

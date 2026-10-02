@@ -491,7 +491,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:999px;b
   <aside class="{{ sideCls }}" onMouseEnter="{{ openSide }}" onMouseLeave="{{ closeSide }}">
     <div class="brand">
       <div class="logo"><svg width="19" height="19" viewBox="0 0 24 24" fill="#fff"><path d="M12 1.6c1.15 6.3 2.95 8.1 9.25 9.25-6.3 1.15-8.1 2.95-9.25 9.25-1.15-6.3-2.95-8.1-9.25-9.25 6.3-1.15 8.1-2.95 9.25-9.25z"></path><path d="M19.3 16.2c.45 2.45 1.15 3.15 3.6 3.6-2.45.45-3.15 1.15-3.6 3.6-.45-2.45-1.15-3.15-3.6-3.6 2.45-.45 3.15-1.15 3.6-3.6z" opacity=".9"></path></svg></div>
-      <div class="brand-text"><div class="brand-name">Smart HR<svg class="sp" width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.6c1.15 6.3 2.95 8.1 9.25 9.25-6.3 1.15-8.1 2.95-9.25 9.25-1.15-6.3-2.95-8.1-9.25-9.25 6.3-1.15 8.1-2.95 9.25-9.25z"></path></svg></div><div class="brand-sub">People Operations</div></div>
+      <div class="brand-text"><div class="brand-name">Smart HR<svg class="sp" width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.6c1.15 6.3 2.95 8.1 9.25 9.25-6.3 1.15-8.1 2.95-9.25 9.25-1.15-6.3-2.95-8.1-9.25-9.25 6.3-1.15 8.1-2.95 9.25-9.25z"></path></svg></div><div class="brand-sub">People operations</div></div>
     </div>
     <div class="ws">
       <button class="ws-btn" onClick="{{ toggleEntity }}" aria-expanded="{{ entityExpanded }}" aria-haspopup="listbox">
@@ -563,7 +563,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:999px;b
     </div>
     <div class="me">
       <span class="av" style="width:36px;height:36px;font-size:13px;background:linear-gradient(145deg,#6A9AF6,#2D6BEA);color:#fff">ME<img class="avimg" src="{{ mePhoto }}" alt=""/></span>
-      <div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:600;line-height:1.3">Maya Ellison</div><div class="card-s ell">Head of People</div></div>
+      <div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:600;line-height:1.3">Maya Ellison</div><div class="card-s ell">Head of people</div></div>
       <span style="width:9px;height:9px;border-radius:999px;background:#16A34A;box-shadow:0 0 0 3px rgba(22,163,74,.18)" title="Online"></span>
     </div>
   </aside>
@@ -1175,9 +1175,9 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:999px;b
               <div class="pol">
                 <div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">Escalate to</div><div class="card-s">Who gets anything the agents stop on</div></div>
                 <select class="select" value="{{ escalate }}" onChange="{{ onEscalate }}" aria-label="Escalate to">
-                  <option value="Head of People">Head of People</option>
-                  <option value="HR Business Partner">HR Business Partner</option>
-                  <option value="Entity HR Lead">Entity HR Lead</option>
+                  <option value="Head of people">Head of people</option>
+                  <option value="HR business partner">HR business partner</option>
+                  <option value="Entity HR lead">Entity HR lead</option>
                 </select>
               </div>
             </section>
@@ -1376,10 +1376,10 @@ const INBOX=[
 const HISTORY=[
  {id:'h1',agent:'leave',when:'Today, 09:12',person:'Anika Roy',sub:'Annual leave · 3 days, full team coverage',status:'Auto-approved',tone:'ok',detail:'Approved automatically by Leave & attendance — full team coverage.'},
  {id:'h2',agent:'pay',when:'Today, 08:31',person:'Felix Braun',sub:'Travel claim · $680, receipts matched',status:'Auto-approved',tone:'ok',detail:'Reimbursed automatically by Pay & expenses — receipts matched.'},
- {id:'h3',agent:'hiring',when:'Today, 08:54',person:'Noah Pierce',sub:'Backend Engineer application · AI fit 71',status:'Declined',tone:'bad',detail:'Below the shortlist limit. A personal decline email was sent.'}];
+ {id:'h3',agent:'hiring',when:'Today, 08:54',person:'Noah Pierce',sub:'Backend engineer application · AI fit 71',status:'Declined',tone:'bad',detail:'Below the shortlist limit. A personal decline email was sent.'}];
 const HANDLED=[
  {agent:'leave',text:'Approved 3 days off for Anika Roy — full team coverage',time:'09:12'},
- {agent:'hiring',text:'Screened 42 applicants for Backend Engineer, 9 shortlisted',time:'08:54'},
+ {agent:'hiring',text:'Screened 42 applicants for backend engineer, 9 shortlisted',time:'08:54'},
  {agent:'pay',text:'Reimbursed $680 travel claim for Felix Braun',time:'08:31'},
  {agent:'joining',text:'Laptop, email and access ready for 2 joiners on Monday',time:'08:05'},
  {agent:'helpdesk',text:'Answered 14 policy questions, 1 sent to you',time:'07:48'}];
@@ -1414,7 +1414,7 @@ const ROUTES=[
 const FALLBACK={agent:'helpdesk',text:'I can help with leave, pay and claims, access and joining, or any people policy. Tell me which and I will take it from there.'};
 const POS=[[80,52],[330,26],[580,52],[580,288],[330,314],[80,288]];
 const WF=[
- {id:'onboard',label:'Onboard new hire',meta:'Anika Roy · Senior Engineer',hours:'6 hours',steps:[
+ {id:'onboard',label:'Onboard new hire',meta:'Anika Roy · Senior engineer',hours:'6 hours',steps:[
   ['hiring','Signed offer verified, employee record created'],
   ['compliance','Right-to-work and background check cleared'],
   ['joining','Laptop ordered; email, Slack and GitHub set up'],
@@ -1427,20 +1427,20 @@ const WF=[
   ['compliance','Statutory filings and bank file validated'],
   ['pay','Payslips generated and bank file released'],
   ['helpdesk','Payslip notifications sent, 12 questions answered']]},
- {id:'offboard',label:'Offboard employee',meta:'Victor Lang · Sales Lead',hours:'5 hours',steps:[
+ {id:'offboard',label:'Offboard employee',meta:'Victor Lang · Sales lead',hours:'5 hours',steps:[
   ['leave','Final leave balance calculated and encashed'],
   ['pay','Final settlement prepared, gratuity included'],
   ['joining','Devices recalled, all system access removed'],
   ['compliance','Exit documents archived under retention policy'],
   ['helpdesk','Exit interview booked, alumni access issued']]}];
 const CANDS=[
- {id:'amara',name:'Zara Mbeki',role:'Product Designer',score:94,col:'applied'},
- {id:'liam',name:'Noah Pierce',role:'Backend Engineer',score:71,col:'applied'},
- {id:'mei',name:'Hana Sato',role:'Data Scientist',score:89,col:'applied'},
- {id:'diego',name:'Luca Ferrari',role:'Product Designer',score:62,col:'applied'},
- {id:'hannah',name:'Greta Olsen',role:'Backend Engineer',score:91,col:'applied'},
- {id:'ravi',name:'Dev Malhotra',role:'Data Scientist',score:83,col:'applied'},
- {id:'sofia',name:'Ines Carvalho',role:'Engineering Manager',score:96,col:'interview'}];
+ {id:'amara',name:'Zara Mbeki',role:'Product designer',score:94,col:'applied'},
+ {id:'liam',name:'Noah Pierce',role:'Backend engineer',score:71,col:'applied'},
+ {id:'mei',name:'Hana Sato',role:'Data scientist',score:89,col:'applied'},
+ {id:'diego',name:'Luca Ferrari',role:'Product designer',score:62,col:'applied'},
+ {id:'hannah',name:'Greta Olsen',role:'Backend engineer',score:91,col:'applied'},
+ {id:'ravi',name:'Dev Malhotra',role:'Data scientist',score:83,col:'applied'},
+ {id:'sofia',name:'Ines Carvalho',role:'Engineering manager',score:96,col:'interview'}];
 const COLS=[['applied','Applied'],['short','AI shortlisted'],['interview','Interview'],['offer','Offer']];
 const APPLICANTS=Array.from({length:120},(_,i)=>40+((i*37+11)%59));
 const PEOPLE=['Adrian Castellanos Vega','Nora Castillo Reyes','Clara Jensen','Mateo Duarte','Victor Lang','Anika Roy','Felix Braun'];
@@ -1466,7 +1466,7 @@ const KS={tasks:[820,900,870,960,1010,1080,1150,1210],auto:[88,90,89,92,93,95,94
 class Component extends DCLogic {
   state={view:'home',enter:true,chatOpen:false,
     enabled:{},gate:{},settled:{},sel:'i1',
-    leaveDays:5,fit:80,payCap:2500,escalate:'Head of People',
+    leaveDays:5,fit:80,payCap:2500,escalate:'Head of people',
     pol:{salary:true,sign:true,decline:true,audit:true},
     logFilter:'all',
     msgs:[CHAT_HELLO],

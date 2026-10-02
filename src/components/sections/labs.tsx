@@ -132,7 +132,7 @@ export function Labs() {
 
   return (
     <section id="labs" className="relative px-6 py-20 md:px-12 md:py-28">
-      <div className="mx-auto w-full max-w-7xl">
+      <div className="mx-auto w-full max-w-[1600px]">
         {/* ---- Section header ---- */}
         <header className="mb-10 grid grid-cols-12 items-end gap-y-8 md:mb-14 md:gap-x-10">
           <div className="col-span-12 lg:col-span-7">
@@ -140,10 +140,10 @@ export function Labs() {
               Applied research
             </p>
             <h2
-              aria-label="Vision Engineering"
+              aria-label="Vision engineering"
               className="font-display text-[clamp(2.25rem,5.5vw,4.5rem)] font-medium leading-[0.95] tracking-tighter text-headline"
             >
-              <SplitText text="Vision Engineering" inView stagger={0.03} />
+              <SplitText text="Vision engineering" inView stagger={0.03} />
             </h2>
           </div>
 
