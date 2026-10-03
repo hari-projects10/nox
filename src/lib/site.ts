@@ -5,9 +5,10 @@ export const site = {
     subheadline:
       "We engineer kinetic interfaces and scalable architectures for the world’s most ambitious brands.",
   },
-  /* PLACEHOLDER — swap for the real address before launch. */
+  /* The studio's public inbox (Zoho Mail). Used by the footer, the assistant
+     and every "email us" fallback. */
   contact: {
-    email: "hello@gatveon.com",
+    email: "contact@gatveon.com",
     cta: "Start a project",
   },
   nav: [
