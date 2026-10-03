@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useLenis } from "lenis/react";
+import { usePathname } from "next/navigation";
 
 import { EASE_OUT_EXPO, site } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -40,6 +41,9 @@ const anchors = site.nav
  * never obstructed but navigation is always one gesture away.
  */
 export function Navbar() {
+  /* The sections live on the home page; anywhere else (a 404, say) the
+     links go there first. */
+  const onHome = usePathname() === "/";
   const [active, setActive] = useState<string | null>(null);
   const [onDark, setOnDark] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -130,7 +134,11 @@ export function Navbar() {
         onDark ? "text-white" : "text-headline",
       )}
     >
-      <a href="#top" aria-label={`${site.name}, back to top`} className="flex shrink-0 items-center">
+      <a
+        href={onHome ? "#top" : "/"}
+        aria-label={onHome ? `${site.name}, back to top` : `${site.name}, home`}
+        className="flex shrink-0 items-center"
+      >
         <Logo className="h-6 sm:h-[26px] md:h-8" />
       </a>
 
@@ -141,7 +149,7 @@ export function Navbar() {
           return (
             <a
               key={item.label}
-              href={item.href}
+              href={onHome || !item.href.startsWith("#") ? item.href : `/${item.href}`}
               aria-current={isActive ? "page" : undefined}
               className={cn(
                 "group relative block px-2 py-3 text-[12px] font-medium sm:px-3 sm:text-[13px]",

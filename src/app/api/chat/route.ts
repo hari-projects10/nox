@@ -5,6 +5,7 @@ import { answerFromFaq, streamPrepared } from "@/lib/chat/faq";
 import { openStream, readStream, type GeminiContent, type GeminiPart } from "@/lib/chat/gemini";
 import { admit, admitLead, isSameSite, recordCall, visitorKey, type Denial } from "@/lib/chat/guard";
 import { parseLead, SAVE_LEAD_TOOL, SYSTEM_PROMPT } from "@/lib/chat/prompt";
+import { notifyLead } from "@/lib/chat/notify";
 import { getStore } from "@/lib/chat/store";
 import { site } from "@/lib/site";
 
@@ -77,8 +78,19 @@ export async function POST(request: Request) {
      gate has passed. */
   if (!isSameSite(request)) return notice("unavailable", 403);
 
-  const verification = await checkBotId();
-  if (verification.isBot) return notice("unavailable", 403);
+  /* Off Vercel (local runs) there is nothing to verify against. On Vercel a
+     failing check is logged and skipped, not fatal: the per-visitor limits
+     and daily cap below still hold, and the assistant stays up. */
+  let isBot = false;
+  try {
+    const verification = await checkBotId({
+      developmentOptions: { isDevelopment: !process.env.VERCEL },
+    });
+    isBot = verification.isBot;
+  } catch (error) {
+    console.error("[chat] BotID check failed; continuing on the other limits", error);
+  }
+  if (isBot) return notice("unavailable", 403);
 
   const declared = Number(request.headers.get("content-length") ?? 0);
   if (declared > CHAT.input.maxBodyBytes) return notice("too-long", 413);
@@ -173,6 +185,7 @@ export async function POST(request: Request) {
                   500,
                 );
                 console.info(`[chat] New lead: ${lead.name}`);
+                await notifyLead(lead);
                 outcome = "Saved. The team will be in touch.";
               } else {
                 outcome = `Not saved: too many submissions today. Ask them to email ${EMAIL} instead.`;

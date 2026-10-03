@@ -19,6 +19,17 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        /* Baseline hardening. SAMEORIGIN still lets the page frame its own
+           demos; nothing on the site uses the camera, mic or location. */
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+        ],
+      },
+      {
         source: "/videos/:path*",
         headers: [
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
@@ -31,34 +42,33 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        /* The model and runtime are write-once and heavy; only the demo
-           markup should ever need revalidating. */
-        source: "/demos/:path*.:ext(glb|jpg|jpeg|png|svg|woff2)",
-        headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
-        ],
-      },
-      {
         source: "/demos/:path*",
         headers: [
           {
             key: "Cache-Control",
             value: "public, max-age=3600, stale-while-revalidate=86400",
           },
+          /* The demos are seen inside the site, never as search results. */
+          { key: "X-Robots-Tag", value: "noindex" },
+        ],
+      },
+      {
+        /* The model and images are write-once and heavy; only the demo
+           markup and scripts should ever need revalidating. Listed after the
+           rule above on purpose: when two rules set the same header, the
+           later one wins. */
+        source: "/demos/:path*.:ext(glb|jpg|jpeg|png|svg|woff2)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
         ],
       },
     ];
   },
   images: {
-    /* AVIF first: same picture, materially fewer bytes. */
+    /* AVIF first: same picture, materially fewer bytes. Local images only:
+       an allowed remote host would let anyone spend the optimisation quota
+       on it through /_next/image. */
     formats: ["image/avif", "image/webp"],
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-        pathname: "/**",
-      },
-    ],
   },
 };
 

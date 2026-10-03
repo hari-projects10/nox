@@ -1,7 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { motion, useReducedMotion, useSpring, useTransform } from "framer-motion";
+import { useEffect, type ReactNode } from "react";
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
 
 import { scrollVelocity } from "@/lib/scroll-store";
 
@@ -26,18 +26,20 @@ function clamp(value: number, min: number, max: number) {
  *
  * The transform lives on this wrapper only — the 3D canvas, grain and cursor
  * sit outside it, so they stay geometrically true while the content flexes.
+ *
+ * Reduced motion flattens the give after mount rather than rendering a
+ * different element, so the server's HTML and the first client render agree.
  */
 export function KineticViewport({ children }: { children: ReactNode }) {
   const prefersReducedMotion = useReducedMotion();
   const velocity = useSpring(scrollVelocity, VELOCITY_SPRING);
 
-  const scaleY = useTransform(velocity, (v) =>
-    clamp(1 - Math.abs(v) * SQUASH_PER_UNIT, MIN_SCALE, 1),
-  );
+  const depth = useMotionValue(1);
+  useEffect(() => depth.set(prefersReducedMotion ? 0 : 1), [depth, prefersReducedMotion]);
 
-  if (prefersReducedMotion) {
-    return <div className="relative z-10">{children}</div>;
-  }
+  const scaleY = useTransform(() =>
+    clamp(1 - Math.abs(velocity.get()) * SQUASH_PER_UNIT * depth.get(), MIN_SCALE, 1),
+  );
 
   return (
     <motion.div

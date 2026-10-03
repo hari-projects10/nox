@@ -14,16 +14,34 @@ import { ScrollRig } from "@/components/providers/scroll-rig";
 import { SmoothScroll } from "@/components/providers/smooth-scroll";
 import { FilmGrain } from "@/components/ui/film-grain";
 import { bodoni, inter } from "@/lib/fonts";
+import { site } from "@/lib/site";
+import { SITE_URL } from "@/lib/site-url";
 
 import "./globals.css";
 
+const DESCRIPTION = site.hero.subheadline;
+
 export const metadata: Metadata = {
+  metadataBase: SITE_URL,
   title: {
-    default: "GATVEON",
-    template: "%s — GATVEON",
+    default: site.name,
+    template: `%s — ${site.name}`,
   },
-  description:
-    "We engineer kinetic interfaces and scalable architectures for the world’s most ambitious brands.",
+  description: DESCRIPTION,
+  /* Link previews in WhatsApp, LinkedIn, Slack and X. The card image is
+     app/opengraph-image.tsx. */
+  openGraph: {
+    type: "website",
+    siteName: site.name,
+    title: site.name,
+    description: DESCRIPTION,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: site.name,
+    description: DESCRIPTION,
+  },
 };
 
 export const viewport: Viewport = {

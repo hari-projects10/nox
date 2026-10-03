@@ -147,6 +147,48 @@ export function RouteTransitionProvider({ children }: { children: ReactNode }) {
 }
 
 /**
+ * Where an element sits in the document's layout. Transforms are ignored on
+ * purpose: the incoming page is still mid-rise when it lands, and its
+ * painted position would leave the section short of the top by that much.
+ */
+function layoutTop(element: HTMLElement) {
+  let top = 0;
+  for (let node: HTMLElement | null = element; node; node = node.offsetParent as HTMLElement | null) {
+    top += node.offsetTop;
+  }
+  return top;
+}
+
+/**
+ * Lands on the section a link from another page asked for (`/#work`).
+ *
+ * The incoming page only mounts once the outgoing one has left, so neither
+ * the router nor the curtain can find the section when the route commits;
+ * this runs as the page itself mounts, with the section in the document.
+ */
+function HashLanding() {
+  const lenis = useLenis();
+
+  useEffect(() => {
+    /* Read raw, not decoded: the section ids are plain words, and decoding
+       a mangled hash throws, which would take the page down with it. */
+    const id = window.location.hash.slice(1);
+    const target = id ? document.getElementById(id) : null;
+    if (!target) return;
+    const top = layoutTop(target);
+    if (lenis) {
+      /* The page under Lenis just changed height; measure before moving. */
+      lenis.resize();
+      lenis.scrollTo(top, { immediate: true, force: true });
+    } else {
+      window.scrollTo(0, top);
+    }
+  }, [lenis]);
+
+  return null;
+}
+
+/**
  * Slide-in / slide-out for the page body itself, keyed on the pathname.
  * `mode="wait"` holds the incoming route until the outgoing one has left.
  */
@@ -162,6 +204,7 @@ export function PageTransition({ children }: { children: ReactNode }) {
         exit={{ opacity: 0, y: -28 }}
         transition={{ duration: 0.4, ease: EASE_OUT_EXPO }}
       >
+        <HashLanding />
         {children}
       </motion.div>
     </AnimatePresence>

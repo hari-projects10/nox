@@ -40,9 +40,9 @@ const PANEL_ID = "site-assistant";
 
 /** A reply that points to the demo work takes the visitor there. */
 const SHOWS_WORK = /\bPlatforms section\b/;
-/* Long enough to read the reply's first line first. A phone also has to
-   put the sheet away, so it waits for the whole reply to be read. */
-const AUTO_GO_MS = 1600;
+/* The panel puts itself away for the trip, so it waits until the reply has
+   been read. A phone's sheet covers more, so it waits a little longer. */
+const AUTO_GO_MS = 3000;
 const AUTO_GO_COMPACT_MS = 3400;
 
 /** The way out of a reveal: quick to start, then gone. */
@@ -267,11 +267,21 @@ export function ChatWidget() {
     setOpen(true);
   };
 
+  /* Focus goes back to the launcher once it is interactive again. From an
+     effect, after the commit that lifts its `inert`: a frame callback could
+     run before that commit when the close comes from a timer, and focusing
+     an inert element does nothing. */
+  const refocus = useRef(false);
   const closePanel = useCallback(() => {
+    refocus.current = true;
     setOpen(false);
-    /* Hand focus back to the launcher once it is interactive again. */
-    requestAnimationFrame(() => launcher.current?.focus({ preventScroll: true }));
   }, []);
+
+  useEffect(() => {
+    if (open || !refocus.current) return;
+    refocus.current = false;
+    launcher.current?.focus({ preventScroll: true });
+  }, [open]);
 
   useEffect(() => () => inflight.current?.abort(), []);
 
@@ -369,7 +379,16 @@ export function ChatWidget() {
       const content = text.trim().slice(0, MAX_CHARS);
       if (!content || pending) return;
 
-      const history = [...messages, { role: "user" as const, content }];
+      /* Talking on means staying put: a trip still counting down is called
+         off, rather than firing once the next reply lands. */
+      const history = [
+        ...messages.map((message) =>
+          message.goTo?.state === "pending"
+            ? { ...message, goTo: { ...message.goTo, state: "stayed" as const } }
+            : message,
+        ),
+        { role: "user" as const, content },
+      ];
       setMessages([...history, { role: "assistant", content: "" }]);
       setDraft("");
       setPending(true);
@@ -475,14 +494,18 @@ export function ChatWidget() {
   };
 
   /* A reply that names a section takes the visitor there. */
+  /* A sheet always steps aside; the desktop panel does when the trip is the
+     assistant's own (`close`), so the work it points to is seen whole. */
   const goToSection = useCallback(
-    (hash: string) => {
+    (hash: string, close = false) => {
+      /* Through closePanel, so focus returns to the launcher rather than
+         dropping to the page when the panel goes. */
+      if (compact || close) closePanel();
       const target = document.querySelector<HTMLElement>(hash);
       if (!target) {
         router.push(`/${hash}`);
         return;
       }
-      if (compact) setOpen(false);
       window.setTimeout(
         () => {
           /* Ours, not a gesture: the intro snap must not redirect it. */
@@ -493,7 +516,7 @@ export function ChatWidget() {
         compact ? 380 : 0,
       );
     },
-    [compact, lenis, router],
+    [compact, lenis, router, closePanel],
   );
 
   /* Run a pending trip once its countdown has been seen. */
@@ -512,7 +535,7 @@ export function ChatWidget() {
               : message,
           ),
         );
-        goToSection(hash);
+        goToSection(hash, true);
       },
       compact ? AUTO_GO_COMPACT_MS : AUTO_GO_MS,
     );
@@ -530,10 +553,10 @@ export function ChatWidget() {
         show();
         return;
       }
-      setOpen(false);
+      closePanel();
       window.setTimeout(show, 380);
     },
-    [compact, router],
+    [compact, router, closePanel],
   );
 
   const stay = (index: number) =>

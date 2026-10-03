@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Generated demo runtimes and their design sources, not our code.
+    "designs/**",
+    "public/demos/**",
   ]),
 ]);
 

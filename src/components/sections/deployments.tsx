@@ -246,7 +246,7 @@ export function Deployments() {
             {...reveal(0.2)}
             className="col-span-12 max-w-lg text-base leading-relaxed text-ink-soft md:text-lg lg:col-span-5 lg:justify-self-end 2xl:max-w-xl 2xl:text-xl"
           >
-            Every engagement ends the same way, a system in production, on the surfaces
+            Every engagement ends the same way: a system in production, on the surfaces
             the business actually operates on. Both environments below are running live.
             Open either one and use it.
           </motion.p>

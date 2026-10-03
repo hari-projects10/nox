@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
   AnimatePresence,
   motion,
@@ -23,6 +23,8 @@ type Capability = {
   video_keyword: string;
   /** Local clip, sourced against video_keyword. */
   video: string;
+  /** The clip's opening frame, held until the clip can draw its own. */
+  poster: string;
 };
 
 const capabilities: Capability[] = [
@@ -33,6 +35,7 @@ const capabilities: Capability[] = [
       "Custom intelligence models trained on your proprietary data. We build the neural infrastructure that powers proactive decision-making and predictive analytics.",
     video_keyword: "abstract-neural-network-white",
     video: "/videos/ai%20systems.mp4",
+    poster: "/images/services/ai-systems.webp",
   },
   {
     id: "agents",
@@ -41,6 +44,7 @@ const capabilities: Capability[] = [
       "Reasoning engines that execute complex workflows. Moving beyond reactive chatbots to intelligent systems that act, adapt, and operate independently.",
     video_keyword: "kinetic-particles-bright",
     video: "/videos/agents.mp4",
+    poster: "/images/services/agents.webp",
   },
   {
     id: "ai-web",
@@ -49,6 +53,7 @@ const capabilities: Capability[] = [
       "Web architectures that adapt in real-time. We bridge Large Language Models with hyper-reactive frontends to create context-aware, highly personalized user experiences.",
     video_keyword: "clean-code-projection",
     video: "/videos/ai%20web.mp4",
+    poster: "/images/services/ai-web.webp",
   },
   {
     id: "enterprise",
@@ -57,6 +62,7 @@ const capabilities: Capability[] = [
       "High-concurrency systems built for global scale. Secure, modular architectures engineered for zero downtime and seamless third-party integration.",
     video_keyword: "server-rack-minimal-white",
     video: "/videos/enterprise.mp4",
+    poster: "/images/services/enterprise.webp",
   },
   {
     id: "mobile",
@@ -65,8 +71,26 @@ const capabilities: Capability[] = [
       "High-performance mobile environments. Fluid interactions and edge-computed features delivered natively to iOS and Android with zero latency.",
     video_keyword: "glass-mobile-wireframe",
     video: "/videos/mobile.mp4",
+    poster: "/images/services/mobile.webp",
   },
 ];
+
+/** Whether the page has finished loading, read as an external store. */
+const isLoaded = () => document.readyState === "complete";
+const subscribeLoad = (onChange: () => void) => {
+  window.addEventListener("load", onChange);
+  return () => window.removeEventListener("load", onChange);
+};
+
+/**
+ * Keeps the clips on the GPU's ordinary compositing path. Playing alone,
+ * the first clip is otherwise handed to the display hardware as a video
+ * overlay, and on some drivers (AMD here) it flickers as Chrome moves it
+ * on and off that plane. Any mask rules a layer out of overlays, as the
+ * hero's fade does for its clip; this one is fully opaque, so nothing on
+ * screen changes.
+ */
+const NO_OVERLAY = "linear-gradient(#000, #000)";
 
 /** How long each capability holds the stage, in seconds. */
 const SLIDE_DURATION = 4;
@@ -96,17 +120,7 @@ export function Capabilities() {
   /* The hero's clip is above the fold and these are not, so they wait for
      the page to finish loading before claiming any bandwidth. Buffering all
      of them from the first byte left the hero with nothing to stream. */
-  const [warm, setWarm] = useState(false);
-
-  useEffect(() => {
-    if (document.readyState === "complete") {
-      setWarm(true);
-      return;
-    }
-    const onLoad = () => setWarm(true);
-    window.addEventListener("load", onLoad);
-    return () => window.removeEventListener("load", onLoad);
-  }, []);
+  const warm = useSyncExternalStore(subscribeLoad, isLoaded, () => false);
 
   const stage = useRef<HTMLDivElement>(null);
   const videos = useRef<(HTMLVideoElement | null)[]>([]);
@@ -129,6 +143,11 @@ export function Capabilities() {
     return () => window.clearTimeout(timer);
   }, [activeIndex, isInView]);
 
+  /* The slide whose clip was last started. Coming back to the section on
+     the same slide resumes its clip instead of seeking it back to the
+     start: a visible jump, and a blank frame while the seek lands. */
+  const started = useRef(-1);
+
   /* Decode at most two clips, and only during a wipe: the incoming one
      starts from its first frame, the outgoing one stops once covered.
      Nothing decodes while the section is off-screen. */
@@ -140,7 +159,12 @@ export function Capabilities() {
       return;
     }
     if (incoming && incoming.paused) {
-      incoming.currentTime = 0;
+      if (started.current !== activeIndex) {
+        started.current = activeIndex;
+        /* Only a clip that has moved needs the seek: one to where it
+           already stands still blanks it until the seek lands. */
+        if (incoming.currentTime > 0) incoming.currentTime = 0;
+      }
       if (!motionOff) incoming.play().catch(() => {});
     }
     const settle = window.setTimeout(() => {
@@ -156,15 +180,18 @@ export function Capabilities() {
       {/* ---- Section label ---- */}
       {/* Same container as the stage, so the label lines up with it */}
       <header className="mx-auto w-full max-w-[1600px] px-6 pb-6 pt-10 md:px-12 md:pb-8 md:pt-12">
-        <span className="text-[11px] font-medium uppercase tracking-[0.25em] text-headline">
+        {/* The section's heading, so each capability's (level 3) sits under
+            it. Inline, so it sets exactly as the plain label did. */}
+        <h2 className="inline text-[11px] font-medium uppercase tracking-[0.25em] text-headline">
           Services
-        </span>
+        </h2>
       </header>
 
       {/* ---- Full-screen stage ---- */}
       <div
         ref={stage}
         id="services-stage"
+        role="region"
         aria-roledescription="carousel"
         aria-label="Capabilities"
         /* Tells the transparent header to invert while it is under the bar. */
@@ -175,7 +202,11 @@ export function Capabilities() {
             on change). The incoming clip wipes in from the right using a
             translate / counter-translate pair — transform only, so the
             wipe runs on the compositor instead of repainting each frame. */}
-        <div aria-hidden="true" className="absolute inset-0 -z-20 isolate overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-20 isolate overflow-hidden"
+          style={{ maskImage: NO_OVERLAY, WebkitMaskImage: NO_OVERLAY }}
+        >
           {capabilities.map((item, i) => {
             const role =
               i === activeIndex ? "active" : i === previousIndex ? "previous" : "idle";
@@ -197,6 +228,12 @@ export function Capabilities() {
                     videos.current[i] = el;
                   }}
                   src={item.video}
+                  /* Its opening frame, until it can draw one itself. The first
+                     clip is the only one with nothing beneath it (the others
+                     wipe in over the last), so without this it flashed the
+                     stage's black as it scrolled in. The rest wait for the
+                     page to load, as the clips themselves do. */
+                  poster={i === 0 || warm ? item.poster : undefined}
                   muted
                   loop
                   playsInline
@@ -251,7 +288,9 @@ export function Capabilities() {
 
             {/* Headline */}
             <div className="absolute inset-x-0 top-1/2 max-h-full -translate-y-1/2 overflow-y-auto py-4 md:overflow-visible md:py-0">
-              <div aria-live="polite">
+              {/* Off, not polite: it rotates on its own, and a live region
+                  would announce a new slide every few seconds. */}
+              <div aria-live="off">
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div key={active.id} className="font-serif font-normal">
                     {[`${active.heading}:`, lead].map((line, i) => (

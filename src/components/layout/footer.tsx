@@ -152,8 +152,10 @@ export function Footer() {
         </motion.a>
       </div>
 
-      {/* Light on the grass, where the old muted grey would sink */}
-      <p className="relative z-[3] pb-10 text-center text-[12.5px] text-white/75">
+      {/* Light on the grass, where the old muted grey would sink. The page
+          is prerendered, so the year is the build's: once a new year turns,
+          the client's would differ until the next deploy. */}
+      <p suppressHydrationWarning className="relative z-[3] pb-10 text-center text-[12.5px] text-white/75">
         © {YEAR} {site.name}. All rights reserved.
       </p>
     </footer>

@@ -35,7 +35,7 @@ const tools: Tool[] = [
     name: "Chroma-90",
     discipline: "Colour science",
     description:
-      "A programmatic film stock. It models the response of 1990s emulsion channel crosstalk, highlight roll-off, the warmth that came from the chemistry rather than the lens and applies it as a grade that holds its character across an entire library.",
+      "A programmatic film stock. It models the response of 1990s emulsion — channel crosstalk, highlight roll-off, the warmth that came from the chemistry rather than the lens — and applies it as a grade that holds its character across an entire library.",
     specs: [
       "Emulsion response model",
       "Per-channel transfer curves",
@@ -65,7 +65,7 @@ const tools: Tool[] = [
     name: "Depth Isolate",
     discipline: "Depth and matting",
     description:
-      "Subject-aware depth separation. It estimates depth from a single frame, cuts a matte that survives hair and edges, and synthesises the defocus behind it a wide-aperture result from a lens that never had one.",
+      "Subject-aware depth separation. It estimates depth from a single frame, cuts a matte that survives hair and edges, and synthesises the defocus behind it: a wide-aperture result from a lens that never had one.",
     specs: [
       "Monocular depth estimate",
       "Edge-accurate matte",
