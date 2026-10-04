@@ -38,6 +38,7 @@ const JSON_LD = {
       url: SITE_URL.href,
       logo: new URL("/gatveon-logo-horizontal.svg", SITE_URL).href,
       email: site.contact.email,
+      telephone: site.contact.whatsapp.display,
       description: DESCRIPTION,
     },
     {

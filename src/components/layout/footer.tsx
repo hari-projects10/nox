@@ -9,12 +9,12 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
 
 import { EASE_OUT_EXPO, site } from "@/lib/site";
 
 import { GrassField } from "./grass-field";
 import { BACK_RIDGE, FRONT_RIDGE, ridgePath } from "./landscape";
+import { StartProject } from "./start-project";
 
 const YEAR = new Date().getFullYear();
 
@@ -136,20 +136,7 @@ export function Footer() {
         {/* ---- Close ----
              Same pill as the section CTAs, scaled up: the footer is where the
              site's one action should look most familiar, not most novel. */}
-        <motion.a
-          href={`mailto:${site.contact.email}`}
-          style={{ y: markY }}
-          {...arrival}
-          className="group relative z-[3] inline-flex items-center gap-4 rounded-full bg-headline py-2.5 pl-8 pr-2.5 text-[15px] font-medium text-white transition-colors duration-500 hover:bg-black/80 md:text-base"
-        >
-          {site.contact.cta}
-          <span className="flex size-11 items-center justify-center rounded-full bg-white text-headline md:size-12">
-            <ArrowUpRight
-              className="size-[18px] transition-transform duration-500 ease-out-expo group-hover:rotate-45"
-              strokeWidth={1.8}
-            />
-          </span>
-        </motion.a>
+        <StartProject style={{ y: markY }} {...arrival} />
       </div>
 
       {/* Light on the grass, where the old muted grey would sink. The page

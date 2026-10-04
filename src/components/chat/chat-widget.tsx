@@ -996,6 +996,15 @@ export function ChatWidget() {
                   <span className="truncate">
                     Prefer a person?{" "}
                     <a
+                      href={site.contact.whatsapp.start}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="-my-1 inline-block py-1 text-ink-soft underline decoration-black/15 underline-offset-2 transition-colors hover:text-headline hover:decoration-black/50 pointer-coarse:-my-2.5 pointer-coarse:py-2.5"
+                    >
+                      WhatsApp
+                    </a>{" "}
+                    or{" "}
+                    <a
                       href={`mailto:${site.contact.email}`}
                       className="-my-1 inline-block py-1 text-ink-soft underline decoration-black/15 underline-offset-2 transition-colors hover:text-headline hover:decoration-black/50 pointer-coarse:-my-2.5 pointer-coarse:py-2.5"
                     >

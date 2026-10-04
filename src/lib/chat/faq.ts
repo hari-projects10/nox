@@ -16,6 +16,7 @@ import { site } from "@/lib/site";
 
 const NAME = site.name;
 const EMAIL = site.contact.email;
+const WHATSAPP = site.contact.whatsapp.link;
 
 type Faq = { id: string; match: RegExp; answers: string[] };
 
@@ -39,11 +40,11 @@ const FAQS: Faq[] = [
     id: "contact",
     match: /\b(contact|reach (you|out)|get in touch|talk to (someone|a person|a human|the team|you)|speak (to|with)|book (a )?(call|meeting)|schedule (a )?(call|meeting)|call me|phone number|your (email|number|phone)|whatsapp)\b/,
     answers: [
-      `Happy to set that up. Share your name and an email or phone number here and the team will reach out to arrange a time. You can also email us at ${EMAIL}.`,
-      `Of course. Drop your name and the best email or number to reach you, and I'll pass it straight to the team. Or write to ${EMAIL} directly.`,
+      `Happy to set that up. Share your name and an email or phone number here and the team will reach out to arrange a time. You can also message us on WhatsApp at ${WHATSAPP} or email ${EMAIL}.`,
+      `Of course. Drop your name and the best email or number to reach you, and I'll pass it straight to the team. Or message us directly on WhatsApp: ${WHATSAPP}`,
       `The quickest way is to leave your name and contact details right here, and the team will get back to you to schedule a call. Email works too: ${EMAIL}.`,
       `Sure! Tell me your name, an email or phone number, and a line about your project, and I'll make sure the team follows up.`,
-      `You can reach the team at ${EMAIL}, or share your name and contact details with me and they'll reach out to you.`,
+      `You can reach the team on WhatsApp at ${WHATSAPP} or by email at ${EMAIL}. Or share your name and contact details with me and they'll reach out to you.`,
       `Let's get you connected. What's your name, and what's the best email or phone number for the team to use?`,
       `Absolutely. A short discovery call is the best first step. Share your name and how to reach you, and the team will arrange a time that suits you.`,
       `Glad you'd like to talk. Leave your name and an email or number here, or email ${EMAIL} if you prefer, and we'll be in touch.`,
@@ -116,9 +117,22 @@ const FAQS: Faq[] = [
       `For sure. From a website assistant like me to agents that run entire workflows, we design them to save time and capture more business. What would you want yours to do?`,
     ],
   },
+  /* Who is behind the studio. An independent team, not a company: never a
+     headcount, office or founding year. */
+  {
+    id: "about",
+    match: /^(gatveon+|what is gatveon+|who (is|are) (behind )?(gatveon+|you)|who are you( guys)?|about (you|us|gatveon+)|tell me about (yourself|yourselves|you|gatveon+|your (team|studio))|(what|who) is your (team|studio)|your team|is gatveon+ a (company|team|studio|agency)|are you a (company|team|studio|agency))$/,
+    answers: [
+      `${NAME} is an independent studio: a team of AI engineers, developers and designers who build websites, apps and AI systems for ambitious businesses. We work closely with each client, from the first call to launch. What are you hoping to build?`,
+      `We're a team of AI engineers and product builders. ${NAME} designs and ships websites, mobile apps, AI apps and agents that do real work for a business. Tell me a little about your project?`,
+      `${NAME} is a small, hands-on team of AI engineers and designers. You work directly with the people building your product, with no layers in between. What would you like to create?`,
+      `Think of ${NAME} as an AI engineering and design team you can bring in: we take an idea through design, build and launch, with AI at the core where it helps. What's the project you have in mind?`,
+      `We're an independent team of engineers and designers focused on AI, web and mobile. Every project gets a clear scope, a fixed price and the same people from start to finish. Where would you like to start?`,
+    ],
+  },
   {
     id: "services",
-    match: /\b(what (do|can) you (do|build|make|offer)|services?|what (does|is) gatveon|who are you|about (you|gatveon)|what you do|offerings?)\b/,
+    match: /\b(what (do|can) you (do|build|make|offer)|services?|what does gatveon+ do|what you do|offerings?)\b/,
     answers: [
       `${NAME} designs and builds websites, mobile apps, AI apps and AI agents, along with UI/UX and brand design. What are you hoping to build?`,
       `We're a product studio: websites and web platforms, iOS and Android apps, AI-powered apps, AI agents that automate real work, and design. What's on your roadmap?`,

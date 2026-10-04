@@ -9,7 +9,14 @@ export const site = {
      and every "email us" fallback. */
   contact: {
     email: "contact@gatveon.com",
-    cta: "Start a project",
+    cta: "Contact Us",
+    /* WhatsApp Business. `link` opens a chat with the studio; `start` also
+       fills in a first line, so a visitor only has to press send. */
+    whatsapp: {
+      display: "+91 94005 22846",
+      link: "https://wa.me/919400522846",
+      start: `https://wa.me/919400522846?text=${encodeURIComponent("Hi GATVEON, I'd like to talk about a project.")}`,
+    },
   },
   nav: [
     { label: "Services", href: "#services" },

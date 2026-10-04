@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, MessageCircle } from "lucide-react";
 
 import { DEMOS, type DemoId } from "@/lib/demos";
 import { EASE_OUT_EXPO, site } from "@/lib/site";
@@ -260,18 +260,29 @@ function Notice({ text, here, onSection }: { text: string } & Omit<Actions, "onO
       <p className="text-[13.5px] leading-relaxed text-ink-soft">
         <Linkified text={text} here={here} onSection={onSection} />
       </p>
-      <a
-        href={`mailto:${site.contact.email}`}
-        className="group mt-3 inline-flex items-center gap-2.5 rounded-full bg-headline py-1 pl-4 pr-1 text-[12.5px] font-medium text-white transition-colors hover:bg-black/80 pointer-coarse:py-2"
-      >
-        Email the team
-        <span className="flex size-6 items-center justify-center rounded-full bg-white text-headline">
-          <ArrowUpRight
-            className="size-3.5 transition-transform duration-500 ease-out-expo group-hover:rotate-45"
-            strokeWidth={2}
-          />
-        </span>
-      </a>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <a
+          href={`mailto:${site.contact.email}`}
+          className="group inline-flex items-center gap-2.5 rounded-full bg-headline py-1 pl-4 pr-1 text-[12.5px] font-medium text-white transition-colors hover:bg-black/80 pointer-coarse:py-2"
+        >
+          Email the team
+          <span className="flex size-6 items-center justify-center rounded-full bg-white text-headline">
+            <ArrowUpRight
+              className="size-3.5 transition-transform duration-500 ease-out-expo group-hover:rotate-45"
+              strokeWidth={2}
+            />
+          </span>
+        </a>
+        <a
+          href={site.contact.whatsapp.start}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-[12.5px] font-medium text-headline ring-1 ring-black/10 transition-colors hover:bg-black/[0.03] pointer-coarse:py-2.5"
+        >
+          <MessageCircle className="size-3.5" strokeWidth={2} />
+          WhatsApp
+        </a>
+      </div>
     </div>
   );
 }
