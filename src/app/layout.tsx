@@ -19,13 +19,42 @@ import { SITE_URL } from "@/lib/site-url";
 
 import "./globals.css";
 
-const DESCRIPTION = site.hero.subheadline;
+/* Search results show the title and description, not the hero, so both say
+   plainly what the studio does: the brand name alone gives Google nothing to
+   match a search against. */
+const TITLE = `${site.name} | Web, AI & App Development Studio`;
+const DESCRIPTION =
+  "GATVEON designs and builds websites, AI apps, AI agents and mobile apps for ambitious brands. Tell us about your project and book a call.";
+
+/* Tells Google that GATVEON is an organisation with this site, logo and
+   inbox, which is what lets a search for the name show the site. */
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": new URL("/#organization", SITE_URL).href,
+      name: site.name,
+      url: SITE_URL.href,
+      logo: new URL("/gatveon-logo-horizontal.svg", SITE_URL).href,
+      email: site.contact.email,
+      description: DESCRIPTION,
+    },
+    {
+      "@type": "WebSite",
+      "@id": new URL("/#website", SITE_URL).href,
+      name: site.name,
+      url: SITE_URL.href,
+      publisher: { "@id": new URL("/#organization", SITE_URL).href },
+    },
+  ],
+};
 
 export const metadata: Metadata = {
   metadataBase: SITE_URL,
   title: {
-    default: site.name,
-    template: `%s — ${site.name}`,
+    default: TITLE,
+    template: `%s | ${site.name}`,
   },
   description: DESCRIPTION,
   /* Link previews in WhatsApp, LinkedIn, Slack and X. The card image is
@@ -33,13 +62,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: site.name,
-    title: site.name,
+    title: TITLE,
     description: DESCRIPTION,
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: site.name,
+    title: TITLE,
     description: DESCRIPTION,
   },
 };
@@ -82,6 +111,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             __html:
               'if("scrollRestoration" in history){history.scrollRestoration="manual"}' +
               'if(!location.hash){window.scrollTo(0,0)}',
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(JSON_LD).replace(/</g, "\\u003c"),
           }}
         />
       </head>
