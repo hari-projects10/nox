@@ -27,8 +27,10 @@ type SplitTextProps = {
  * so it runs on the compositor: it stays smooth through a busy main thread
  * and costs nothing per frame. Reduced motion shows the text in place.
  *
- * Decorative by nature: the tree is aria-hidden, so the parent element
- * must carry the real text via aria-label.
+ * The animated tree is aria-hidden and data-nosnippet: each character is
+ * its own inline-block, which Google reads as separate words ("A r c h i
+ * t e c t i n g"). The plain text rides alongside in an sr-only span, so
+ * search engines and screen readers get the line once, as written.
  */
 export function SplitText({
   text,
@@ -57,31 +59,37 @@ export function SplitText({
   }, [text]);
 
   return (
-    <span
-      ref={ref}
-      aria-hidden="true"
-      data-revealed={revealed ? "" : undefined}
-      className={cn("inline", className)}
-      style={{ "--split-duration": `${duration}s` } as CSSProperties}
-    >
-      {words.map(({ word, chars }, wordIndex) => (
-        <Fragment key={`${word}-${wordIndex}`}>
-          {/* Mask: extra padding keeps descenders from being clipped. */}
-          <span className="inline-block overflow-hidden whitespace-nowrap pb-[0.14em] align-bottom -mb-[0.14em]">
-            {chars.map(({ char, index }) => (
-              <span
-                key={index}
-                className="split-char"
-                style={{ "--d": `${delay + index * stagger}s` } as CSSProperties}
-              >
-                {char}
-              </span>
-            ))}
-          </span>
-          {/* Real space, outside the mask, so words still wrap. */}
-          {wordIndex < words.length - 1 ? " " : null}
-        </Fragment>
-      ))}
-    </span>
+    <>
+      <span className="sr-only">{text}</span>
+      <span
+        ref={ref}
+        aria-hidden="true"
+        data-nosnippet=""
+        data-revealed={revealed ? "" : undefined}
+        className={cn("inline", className)}
+        style={{ "--split-duration": `${duration}s` } as CSSProperties}
+      >
+        {words.map(({ word, chars }, wordIndex) => (
+          <Fragment key={`${word}-${wordIndex}`}>
+            {/* Mask: extra padding keeps descenders from being clipped. */}
+            <span className="inline-block overflow-hidden whitespace-nowrap pb-[0.14em] align-bottom -mb-[0.14em]">
+              {chars.map(({ char, index }) => (
+                <span
+                  key={index}
+                  className="split-char"
+                  style={
+                    { "--d": `${delay + index * stagger}s` } as CSSProperties
+                  }
+                >
+                  {char}
+                </span>
+              ))}
+            </span>
+            {/* Real space, outside the mask, so words still wrap. */}
+            {wordIndex < words.length - 1 ? " " : null}
+          </Fragment>
+        ))}
+      </span>
+    </>
   );
 }

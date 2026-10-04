@@ -22,7 +22,7 @@ import "./globals.css";
 /* Search results show the title and description, not the hero, so both say
    plainly what the studio does: the brand name alone gives Google nothing to
    match a search against. */
-const TITLE = `${site.name} | Web, AI & App Development Studio`;
+const TITLE = `${site.name} | Web, AI and App Development Studio`;
 const DESCRIPTION =
   "GATVEON designs and builds websites, AI apps, AI agents and mobile apps for ambitious brands. Tell us about your project and book a call.";
 
