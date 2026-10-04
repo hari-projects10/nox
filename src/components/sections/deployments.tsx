@@ -41,7 +41,7 @@ const surfaces: Surface[] = [
       "Role-based access and audit",
       "Real-time operational queues",
     ],
-    action: "Open the live console",
+    action: "Open the console demo",
     fit: "top",
     chrome: true,
   },
@@ -56,7 +56,7 @@ const surfaces: Surface[] = [
       "Real-time 3D rendering",
       "Glanceable, one-handed interfaces",
     ],
-    action: "Open the live app",
+    action: "Open the app demo",
     fit: "contain",
     chrome: false,
   },
@@ -246,9 +246,9 @@ export function Deployments() {
             {...reveal(0.2)}
             className="col-span-12 max-w-lg text-base leading-relaxed text-ink-soft md:text-lg lg:col-span-5 lg:justify-self-end 2xl:max-w-xl 2xl:text-xl"
           >
-            Every engagement ends the same way: a system in production, on the surfaces
-            the business actually operates on. Both environments below are running live.
-            Open either one and use it.
+            Every engagement ends the same way: a working system, on the surfaces the
+            business actually operates on. The two below are demo builds of that work,
+            fully interactive. Open either one and use it.
           </motion.p>
         </header>
 

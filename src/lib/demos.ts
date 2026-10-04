@@ -5,7 +5,7 @@ export const DEMOS = {
   "smart-hr": {
     name: "Smart HR",
     tagline: "Multi-agent HR orchestration",
-    url: "console.smarthr.ai/orchestrator",
+    url: "gatveon.com/demos/smart-hr",
     accent: "#2d6bea",
     src: "/demos/smart-hr/index.html",
     poster: "/images/demos/smart-hr-poster.jpg",
@@ -38,7 +38,7 @@ export const DEMOS = {
   veloce: {
     name: "Veloce",
     tagline: "EV telemetry mobile app",
-    url: "fleet.veloce.app/vehicle",
+    url: "gatveon.com/demos/veloce",
     accent: "#ec0618",
     src: "/demos/veloce/index.html",
     poster: "/images/demos/veloce-poster.jpg",

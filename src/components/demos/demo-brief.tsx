@@ -154,7 +154,7 @@ export function DemoBrief({
           )}
           <span className="relative inline-flex h-2 w-2 rounded-full" style={{ background: accent }} />
         </span>
-        Live build — everything here responds. Try it.
+        Working demo. Everything here responds, so try it.
       </motion.p>
     </motion.aside>
   );
