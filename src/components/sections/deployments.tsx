@@ -225,6 +225,15 @@ export function Deployments() {
     return () => window.removeEventListener(OPEN_DEMO, onRequest);
   }, [openDemo]);
 
+  /* Temporary: `/?demo=smart-hr` or `/?demo=veloce` opens that demo by
+     itself, for portfolio links. A beat first, so the page paints behind. */
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("demo");
+    if (!id || !Object.hasOwn(DEMOS, id)) return;
+    const timer = window.setTimeout(() => openDemo(id as DemoId), 400);
+    return () => window.clearTimeout(timer);
+  }, [openDemo]);
+
   return (
     <section id="work" className="relative px-6 py-20 md:px-12 md:py-28">
       <div className="mx-auto w-full max-w-[1600px]">

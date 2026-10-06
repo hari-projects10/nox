@@ -3,6 +3,7 @@
 import {
   useCallback,
   useEffect,
+  useEffectEvent,
   useRef,
   useState,
   useSyncExternalStore,
@@ -44,6 +45,8 @@ const SHOWS_WORK = /\bPlatforms section\b/;
    been read. A phone's sheet covers more, so it waits a little longer. */
 const AUTO_GO_MS = 3000;
 const AUTO_GO_COMPACT_MS = 3400;
+/* The launcher's arrival: a 1.6s wait, then a 0.9s rise. */
+const LINK_OPEN_MS = 2600;
 
 /** The way out of a reveal: quick to start, then gone. */
 const EASE_IN_EXPO = [0.7, 0, 0.84, 0] as const;
@@ -266,6 +269,15 @@ export function ChatWidget() {
     setArrived(true);
     setOpen(true);
   };
+
+  /* Temporary: `/?chat=open` opens the panel by itself, for portfolio links.
+     It waits for the launcher to land, so the panel still grows out of it. */
+  const openFromLink = useEffectEvent(openPanel);
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("chat") !== "open") return;
+    const timer = window.setTimeout(openFromLink, LINK_OPEN_MS);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   /* Focus goes back to the launcher once it is interactive again. From an
      effect, after the commit that lifts its `inert`: a frame callback could
