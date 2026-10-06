@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Smart HR | GATVEON demo</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #E8EFF9; overflow: hidden; }
+  iframe { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; }
+</style>
+</head>
+<body>
+<iframe id="app" src="/demos/smart-hr/index.html" title="Smart HR interactive demo"></iframe>
+<script>
+/* Temporary: the Smart HR demo on a page of its own, for portfolio links.
+   It fills the screen at its natural size. On a wide screen the console
+   would switch to a 12-column arrangement the main site never shows, so the
+   rules it keeps for the main site's width are applied at every width. Kept
+   as a stylesheet that is put back whenever the runtime, which rebuilds the
+   document as it renders, clears it away. */
+(function () {
+  var frame = document.getElementById("app");
+  var AUTHORED = /max-width:\s*1360px/;
+
+  function authored(doc) {
+    var css = "";
+    for (var i = 0; i < doc.styleSheets.length; i++) {
+      var rules;
+      try { rules = doc.styleSheets[i].cssRules; } catch (e) { continue; }
+      for (var j = 0; j < rules.length; j++) {
+        var rule = rules[j];
+        if (!rule.media || !AUTHORED.test(rule.media.mediaText)) continue;
+        for (var k = 0; k < rule.cssRules.length; k++) css += rule.cssRules[k].cssText;
+      }
+    }
+    return css;
+  }
+
+  function keepLayout(doc) {
+    if (doc.getElementById("vx-authored")) return;
+    var css = authored(doc);
+    if (!css) return;
+    var style = doc.createElement("style");
+    style.id = "vx-authored";
+    style.textContent = "@media (min-width:1361px){" + css + "}";
+    (doc.head || doc.documentElement).appendChild(style);
+  }
+
+  function attach() {
+    var doc = frame.contentDocument;
+    if (!doc) return;
+    keepLayout(doc);
+    new MutationObserver(function () { keepLayout(doc); }).observe(doc, { childList: true, subtree: true });
+  }
+
+  frame.addEventListener("load", attach);
+  if (frame.contentDocument && frame.contentDocument.readyState === "complete") attach();
+})();
+</script>
+</body>
+</html>

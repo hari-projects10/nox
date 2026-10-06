@@ -64,6 +64,14 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  /* Temporary: each demo full screen on a short address of its own, for
+     portfolio links. The pages frame the demo, so its relative assets hold. */
+  async rewrites() {
+    return [
+      { source: "/view/smart-hr", destination: "/demos/smart-hr/view.html" },
+      { source: "/view/veloce", destination: "/demos/veloce/view.html" },
+    ];
+  },
   images: {
     /* AVIF first: same picture, materially fewer bytes. Local images only:
        an allowed remote host would let anyone spend the optimisation quota

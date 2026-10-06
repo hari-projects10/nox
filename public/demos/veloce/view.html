@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Veloce | GATVEON demo</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0b0b0c; overflow: hidden; }
+  /* Sizer carries the scaled footprint, so the phone sits dead centre. */
+  .stage { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+  .sizer { position: relative; flex: none; }
+  iframe { position: absolute; left: 0; top: 0; border: 0; transform-origin: top left; }
+  /* A real phone is the device: the app takes its whole screen. */
+  .phone .sizer, .phone iframe { position: static; width: 100% !important; height: 100% !important; transform: none !important; }
+</style>
+</head>
+<body>
+<div class="stage"><div class="sizer"><iframe id="app" title="Veloce interactive demo"></iframe></div></div>
+<script>
+/* Temporary: the Veloce demo on a page of its own, for portfolio links.
+   The drawn phone (384x812 + bezel + page padding) is fitted to the screen. */
+(function () {
+  var DESIGN = { width: 436, height: 872 };
+  var MAX_SCALE = 1.25;
+  var frame = document.getElementById("app");
+  var sizer = frame.parentNode;
+  var phone = window.matchMedia("(max-width: 767px)");
+
+  function fit() {
+    var scale = Math.min(window.innerWidth / DESIGN.width, window.innerHeight / DESIGN.height, MAX_SCALE);
+    sizer.style.width = DESIGN.width * scale + "px";
+    sizer.style.height = DESIGN.height * scale + "px";
+    frame.style.width = DESIGN.width + "px";
+    frame.style.height = DESIGN.height + "px";
+    frame.style.transform = "scale(" + scale + ")";
+  }
+
+  function mount() {
+    var compact = phone.matches;
+    document.body.classList.toggle("phone", compact);
+    var src = "/demos/veloce/index.html" + (compact ? "?fullbleed" : "");
+    if (frame.getAttribute("src") !== src) frame.setAttribute("src", src);
+    if (!compact) fit();
+  }
+
+  mount();
+  phone.addEventListener("change", mount);
+  window.addEventListener("resize", function () { if (!phone.matches) fit(); });
+})();
+</script>
+</body>
+</html>
