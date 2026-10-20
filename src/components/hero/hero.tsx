@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
+import { showService } from "@/components/sections/capabilities";
 import { SplitText } from "@/components/ui/split-text";
 import { AMBIENT_VIDEO, EASE_OUT_EXPO, site } from "@/lib/site";
 
@@ -140,6 +141,79 @@ export function Hero() {
         >
           {site.hero.subheadline}
         </motion.p>
+
+        {/* What we build, in plain words, set as a quiet index line under a
+            hairline rule: one glance answers "what do they do?" without
+            pulling focus from the headline. */}
+        <div className="mt-12 flex w-full max-w-5xl flex-col items-center gap-5">
+          <motion.span
+            aria-hidden="true"
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={introReady ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
+            transition={{ duration: 1.4, delay: 1.35, ease: EASE_OUT_EXPO }}
+            className="h-px w-20 bg-gradient-to-r from-transparent via-ink/30 to-transparent"
+          />
+          {/* Phones and tablets: one endless line instead of a ragged wrap.
+              Two copies of the list run back to back, so the loop has no seam. */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={introReady ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 1.2, delay: 1.5, ease: EASE_OUT_EXPO }}
+            className="hero-ticker -mx-6 w-[calc(100%+3rem)] overflow-hidden lg:hidden"
+          >
+            <div className="hero-ticker-track flex w-max">
+              {[0, 1].map((copy) => (
+                <ul
+                  key={copy}
+                  aria-label={copy === 0 ? "What we build" : undefined}
+                  aria-hidden={copy === 1 || undefined}
+                  className="flex shrink-0 items-center text-[11px] font-medium uppercase tracking-[0.2em] text-ink-soft"
+                >
+                  {site.hero.offer.map(({ label, slide }) => (
+                    <li key={label} className="flex items-center">
+                      <a
+                        href="#services"
+                        onClick={() => showService(slide)}
+                        tabIndex={copy === 1 ? -1 : undefined}
+                        className="py-1"
+                      >
+                        {label}
+                      </a>
+                      <span aria-hidden="true" className="mx-4 h-[3px] w-[3px] rounded-full bg-ink/25" />
+                    </li>
+                  ))}
+                </ul>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Laptops and up: the full index fits on a single line. */}
+          <ul
+            aria-label="What we build"
+            className="hidden items-center justify-center text-xs font-medium uppercase tracking-[0.2em] text-ink-soft lg:flex"
+          >
+            {site.hero.offer.map(({ label, slide }, i) => (
+              <motion.li
+                key={label}
+                initial={{ opacity: 0, y: 8 }}
+                animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+                transition={{ duration: 1, delay: 1.5 + i * 0.07, ease: EASE_OUT_EXPO }}
+                className="flex items-center"
+              >
+                {i > 0 && (
+                  <span aria-hidden="true" className="mx-4 h-[3px] w-[3px] rounded-full bg-ink/25" />
+                )}
+                <a
+                  href="#services"
+                  onClick={() => showService(slide)}
+                  className="relative py-1 transition-colors duration-300 after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:scale-x-0 after:bg-ink after:transition-transform after:duration-500 hover:text-ink hover:after:scale-x-100"
+                >
+                  {label}
+                </a>
+              </motion.li>
+            ))}
+          </ul>
+        </div>
       </div>
 
     </section>

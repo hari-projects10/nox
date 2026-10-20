@@ -75,6 +75,13 @@ const capabilities: Capability[] = [
   },
 ];
 
+/** Asks the stage to cut to one capability, e.g. from the hero's index. */
+const SHOW_SERVICE = "gatveon:show-service";
+
+export function showService(id: string | null) {
+  if (id) window.dispatchEvent(new CustomEvent(SHOW_SERVICE, { detail: id }));
+}
+
 /** Whether the page has finished loading, read as an external store. */
 const isLoaded = () => document.readyState === "complete";
 const subscribeLoad = (onChange: () => void) => {
@@ -129,19 +136,41 @@ export function Capabilities() {
   const active = capabilities[activeIndex];
   const { lead, body } = splitContent(active.content);
 
+  /* A slide the visitor asked for holds twice as long before moving on. */
+  const [picked, setPicked] = useState(false);
+
+  /* Cut to a requested capability. It lands while the page is still
+     scrolling down, so the stage arrives already showing it. */
+  useEffect(() => {
+    const onShow = (event: Event) => {
+      const index = capabilities.findIndex(
+        (item) => item.id === (event as CustomEvent<string>).detail,
+      );
+      if (index < 0) return;
+      setPicked(true);
+      setSlide(({ activeIndex: i }) =>
+        i === index ? { activeIndex: i, previousIndex: -1 } : { activeIndex: index, previousIndex: i },
+      );
+    };
+    window.addEventListener(SHOW_SERVICE, onShow);
+    return () => window.removeEventListener(SHOW_SERVICE, onShow);
+  }, []);
+
   /* Advance after a fixed hold. Paused while off-screen. */
   useEffect(() => {
     if (!isInView) return;
     const timer = window.setTimeout(
-      () =>
+      () => {
+        setPicked(false);
         setSlide(({ activeIndex: i }) => ({
           activeIndex: (i + 1) % capabilities.length,
           previousIndex: i,
-        })),
-      SLIDE_DURATION * 1000,
+        }));
+      },
+      SLIDE_DURATION * (picked ? 2 : 1) * 1000,
     );
     return () => window.clearTimeout(timer);
-  }, [activeIndex, isInView]);
+  }, [activeIndex, isInView, picked]);
 
   /* The slide whose clip was last started. Coming back to the section on
      the same slide resumes its clip instead of seeking it back to the

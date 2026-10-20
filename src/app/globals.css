@@ -130,6 +130,41 @@
   50% { transform: translateX(-2.5%); }
 }
 
+/* Hero services ticker (below lg): the track holds the list twice, so
+   sliding it by half lands exactly where it started. */
+@keyframes hero-ticker {
+  to { transform: translateX(-50%); }
+}
+.hero-ticker {
+  mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
+}
+.hero-ticker-track {
+  animation: hero-ticker 32s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Still: one copy, wrapped and centred, with nothing faded out. */
+  .hero-ticker {
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+  .hero-ticker-track {
+    animation: none;
+    width: auto;
+    justify-content: center;
+    padding-inline: 1.5rem;
+  }
+  .hero-ticker-track > ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.75rem;
+  }
+  .hero-ticker-track > ul + ul {
+    display: none;
+  }
+}
+
 .ambient {
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;

@@ -3,7 +3,21 @@ export const site = {
   hero: {
     headline: "Architecting the Digital Frontier.",
     subheadline:
-      "We engineer kinetic interfaces and scalable architectures for the world’s most ambitious brands.",
+      "We engineer AI agents, intelligent systems and digital products for the world’s most ambitious brands.",
+    /* Plain-language list of what we build, set as an index line under the
+       headline so a first-time visitor knows the offer at a glance. `slide`
+       is the capability (sections/capabilities.tsx) each one opens on;
+       null just goes to Services, for work without a clip of its own yet. */
+    offer: [
+      { label: "AI Agents", slide: "agents" },
+      { label: "AI Systems", slide: "ai-systems" },
+      { label: "Software", slide: "enterprise" },
+      { label: "Websites", slide: "ai-web" },
+      { label: "Mobile Apps", slide: "mobile" },
+      { label: "Automation", slide: "agents" },
+      { label: "Design", slide: "ai-web" },
+      { label: "Video Editing", slide: null },
+    ],
   },
   /* The studio's public inbox (Zoho Mail). Used by the footer, the assistant
      and every "email us" fallback. */
