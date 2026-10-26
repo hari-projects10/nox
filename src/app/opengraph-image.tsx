@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 import { ImageResponse } from "next/og";
 
-import { ARCS, WORDMARK } from "@/components/layout/logo";
+import { LOGO_RATIO, LOGO_VIEWBOX, SPARKLE, WORDMARK } from "@/components/layout/logo";
 import { site } from "@/lib/site";
 
 /*
@@ -25,7 +25,7 @@ const AURORA = [
   "radial-gradient(circle at 40% 120%, rgba(243,232,255,1) 0%, rgba(243,232,255,0) 55%)",
 ].join(", ");
 
-const LOGO_HEIGHT = 46;
+const LOGO_HEIGHT = 52;
 
 const font = (file: string) => readFile(join(process.cwd(), "assets/fonts", file));
 
@@ -52,17 +52,12 @@ export default async function OpenGraphImage() {
         }}
       >
         <svg
-          width={(LOGO_HEIGHT * 515.8) / 100}
+          width={LOGO_HEIGHT * LOGO_RATIO}
           height={LOGO_HEIGHT}
-          viewBox="0 0 515.8 100"
+          viewBox={LOGO_VIEWBOX}
         >
-          <g fill="none" stroke="#111111" strokeWidth={7.5} strokeLinecap="round">
-            {ARCS.map((d) => (
-              <path key={d} d={d} />
-            ))}
-          </g>
-          <circle cx={88} cy={50} r={6.5} fill="#0E9C98" />
-          <path d={WORDMARK} fill="#111111" />
+          <path d={WORDMARK} fill="#111111" fillRule="evenodd" />
+          <path d={SPARKLE} fill="#111111" />
         </svg>
 
         <div style={{ display: "flex", flexDirection: "column" }}>

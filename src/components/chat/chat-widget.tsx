@@ -22,6 +22,7 @@ import { useLenis } from "lenis/react";
 import { usePathname, useRouter } from "next/navigation";
 import { ArrowUp, RotateCcw, Square, X } from "lucide-react";
 
+import { Wordmark } from "@/components/layout/logo";
 import { GRAIN } from "@/components/ui/film-grain";
 import { requestDemo, type DemoId } from "@/lib/demos";
 import { DELIBERATE_SCROLL } from "@/lib/scroll-store";
@@ -730,13 +731,13 @@ export function ChatWidget() {
             transition={{ duration: motionOff ? 0 : 0.6, ease: EASE_OUT_EXPO }}
           >
             <span className="block transition-transform duration-500 ease-out-expo group-hover:-translate-y-full">
-              Ask {site.name}
+              Ask <Wordmark />
             </span>
             <span
               aria-hidden="true"
               className="absolute inset-x-0 top-full block transition-transform duration-500 ease-out-expo group-hover:-translate-y-full"
             >
-              Ask {site.name}
+              Ask <Wordmark />
             </span>
           </motion.span>
 

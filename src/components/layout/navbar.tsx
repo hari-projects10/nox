@@ -137,9 +137,9 @@ export function Navbar() {
       <a
         href={onHome ? "#top" : "/"}
         aria-label={onHome ? `${site.name}, back to top` : `${site.name}, home`}
-        className="flex shrink-0 items-center"
+        className="group/logo flex shrink-0 items-center"
       >
-        <Logo className="h-6 sm:h-[26px] md:h-8" />
+        <Logo className="h-4 sm:h-[18px] md:h-5" />
       </a>
 
       <nav className="-mr-2 flex items-center sm:gap-1">

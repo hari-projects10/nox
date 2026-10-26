@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-import { ARCS } from "@/components/layout/logo";
+import { SPARKLE, SPARKLE_VIEWBOX } from "@/components/layout/logo";
 
 /*
  * Home-screen and Safari icon. Safari does not use the SVG favicon
@@ -25,13 +25,8 @@ export default function AppleIcon() {
         }}
       >
         {/* The favicon's own crop of the mark. */}
-        <svg width={118} height={118} viewBox="4 2 96 96">
-          <g fill="none" stroke="#0A0F1E" strokeWidth={7.5} strokeLinecap="round">
-            {ARCS.map((d) => (
-              <path key={d} d={d} />
-            ))}
-          </g>
-          <circle cx={88} cy={50} r={6.5} fill="#0E9C98" />
+        <svg width={118} height={118} viewBox={SPARKLE_VIEWBOX}>
+          <path d={SPARKLE} fill="#0A0F1E" />
         </svg>
       </div>
     ),
