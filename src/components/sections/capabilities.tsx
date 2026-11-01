@@ -124,14 +124,26 @@ export function Capabilities() {
   const prefersReducedMotion = useReducedMotion();
   const motionOff = Boolean(prefersReducedMotion);
 
-  /* The hero's clip is above the fold and these are not, so they wait for
-     the page to finish loading before claiming any bandwidth. Buffering all
-     of them from the first byte left the hero with nothing to stream. */
-  const warm = useSyncExternalStore(subscribeLoad, isLoaded, () => false);
-
   const stage = useRef<HTMLDivElement>(null);
   const videos = useRef<(HTMLVideoElement | null)[]>([]);
   const isInView = useInView(stage, { amount: 0.2 });
+
+  /* The hero's clip is above the fold and these are not, so they wait
+     before claiming bandwidth: for the page to finish loading, or for the
+     visitor to scroll within a screen of the stage, whichever comes first.
+     On a phone the load event can be slow, and waiting on it alone left the
+     stage black when the visitor got there first. */
+  const loaded = useSyncExternalStore(subscribeLoad, isLoaded, () => false);
+  const near = useInView(stage, { once: true, margin: "0px 0px 100% 0px" });
+  const warm = loaded || near;
+
+  /* Clips that have drawn a frame of their own. Until then their opening
+     frame shows as a plain image beneath them: a video's poster attribute
+     is not reliably painted by WebKit (every iPhone browser) before the
+     clip has data, which showed as a black stage. */
+  const [playing, setPlaying] = useState<boolean[]>(() => capabilities.map(() => false));
+  const markPlaying = (i: number) =>
+    setPlaying((prev) => (prev[i] ? prev : prev.map((value, j) => value || j === i)));
 
   const active = capabilities[activeIndex];
   const { lead, body } = splitContent(active.content);
@@ -252,30 +264,8 @@ export function Capabilities() {
                 animate={{ x: role === "idle" ? "100%" : "0%" }}
                 transition={wipe}
               >
-                <motion.video
-                  ref={(el) => {
-                    videos.current[i] = el;
-                  }}
-                  src={item.video}
-                  /* Its opening frame, until it can draw one itself. The first
-                     clip is the only one with nothing beneath it (the others
-                     wipe in over the last), so without this it flashed the
-                     stage's black as it scrolled in. The rest wait for the
-                     page to load, as the clips themselves do. */
-                  poster={i === 0 || warm ? item.poster : undefined}
-                  muted
-                  loop
-                  playsInline
-                  {...AMBIENT_VIDEO}
-                  /* Buffer the showing clip and the one queued next only,
-                     and only once the page above has finished loading. */
-                  preload={
-                    warm &&
-                    (i === activeIndex || i === (activeIndex + 1) % capabilities.length)
-                      ? "auto"
-                      : "metadata"
-                  }
-                  className="h-full w-full object-cover will-change-transform"
+                <motion.div
+                  className="absolute inset-0 will-change-transform"
                   initial={false}
                   animate={{
                     x:
@@ -286,7 +276,44 @@ export function Capabilities() {
                           : "0%",
                   }}
                   transition={wipe}
-                />
+                >
+                  {/* The clip's opening frame, painted at once. The first is
+                      fetched with the page; the rest once the stage is near. */}
+                  {(i === 0 || warm) && (
+                    // eslint-disable-next-line @next/next/no-img-element -- a frame matched to the clip's own pixels, not a responsive image
+                    <img
+                      src={item.poster}
+                      alt=""
+                      decoding="async"
+                      fetchPriority={i === 0 ? "auto" : "low"}
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                  )}
+                  <video
+                    ref={(el) => {
+                      videos.current[i] = el;
+                    }}
+                    src={item.video}
+                    muted
+                    loop
+                    playsInline
+                    {...AMBIENT_VIDEO}
+                    /* Buffer the showing clip and the one queued next only. */
+                    preload={
+                      warm &&
+                      (i === activeIndex || i === (activeIndex + 1) % capabilities.length)
+                        ? "auto"
+                        : "metadata"
+                    }
+                    onPlaying={() => markPlaying(i)}
+                    /* Over its opening frame until it is really moving, so the
+                       hand-over from still to motion cannot be seen. */
+                    className={cn(
+                      "absolute inset-0 h-full w-full object-cover transition-opacity duration-500",
+                      playing[i] ? "opacity-100" : "opacity-0",
+                    )}
+                  />
+                </motion.div>
               </motion.div>
             );
           })}

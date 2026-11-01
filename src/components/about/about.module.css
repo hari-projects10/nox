@@ -117,13 +117,28 @@
   font-variation-settings: "wght" 506;
 }
 
+/* The glow is a gradient behind the mark, not a filter on it: WebKit
+   (every iPhone browser) can rasterise a filtered, animating SVG at low
+   resolution and leave it soft. */
+.logoWrap {
+  position: relative;
+  display: inline-block;
+}
+.logoWrap::before {
+  content: "";
+  position: absolute;
+  inset: -45% -10%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(120, 170, 255, 0.22), rgba(120, 170, 255, 0));
+}
+
 .logo {
   display: block;
   width: auto;
   height: calc(var(--k) * 30);
   margin: calc(var(--k) * 10) 0 calc(var(--k) * 6);
   color: var(--ink);
-  filter: drop-shadow(0 0 calc(var(--k) * 18) rgba(168, 204, 252, 0.28));
 }
 
 .title {
@@ -384,7 +399,8 @@
 /* ------------------------------------------------------------------
    Entrance: one timeline, once. Fill-mode backwards holds the start state
    through each delay, and only the independent properties are animated.
-   --d0 lets the route curtain clear before the type starts to move.
+   --d0 is a short lead-in; kept small, since a long one read as a slow
+   start on phones, where the page arrives without the route curtain.
 ------------------------------------------------------------------ */
 @keyframes en-wipe {
   from {
@@ -406,17 +422,17 @@
   from { scale: 1 0; }
 }
 @keyframes en-glow {
-  from { opacity: 0; scale: 0.96; filter: blur(8px); }
+  from { opacity: 0; scale: 0.96; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .hero {
-    --d0: 0.35s;
+    --d0: 0.08s;
     --ent-line: cubic-bezier(0.16, 1, 0.3, 1);
     --ent-soft: cubic-bezier(0.25, 0.8, 0.35, 1);
   }
   .hero:not(.entered) .eyebrow { animation: en-lift 0.6s var(--ent-soft) calc(var(--d0) + 0.12s) backwards; }
-  .hero:not(.entered) .logo { animation: en-glow 1.1s var(--ent-line) calc(var(--d0) + 0.2s) backwards; }
+  .hero:not(.entered) .logoWrap { animation: en-glow 0.9s var(--ent-line) calc(var(--d0) + 0.16s) backwards; }
   .hero:not(.entered) .title span:first-child { animation: en-wipe 0.95s var(--ent-line) calc(var(--d0) + 0.44s) backwards; }
   .hero:not(.entered) .title span:last-child { animation: en-wipe 0.95s var(--ent-line) calc(var(--d0) + 0.54s) backwards; }
   .hero:not(.entered) .sub span:first-child { animation: en-lift 0.7s var(--ent-soft) calc(var(--d0) + 0.84s) backwards; }

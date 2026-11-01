@@ -91,7 +91,7 @@ export function AboutHero() {
       <div className={styles.main}>
         <p className={styles.eyebrow}>About us</p>
 
-        <span className="group/logo">
+        <span className={cn("group/logo", styles.logoWrap)}>
           <Logo className={styles.logo} />
         </span>
 
