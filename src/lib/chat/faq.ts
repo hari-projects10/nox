@@ -117,17 +117,18 @@ const FAQS: Faq[] = [
       `For sure. From a website assistant like me to agents that run entire workflows, we design them to save time and capture more business. What would you want yours to do?`,
     ],
   },
-  /* Who is behind the studio. An independent team, not a company: never a
-     headcount, office or founding year. */
+  /* Who is behind the studio, told the way the About page tells it, and
+     always naming the "About page" so the thread offers a way there. An
+     independent team, not a company: never a headcount, office or year. */
   {
     id: "about",
-    match: /^(gatveon+|what is gatveon+|who (is|are) (behind )?(gatveon+|you)|who are you( guys)?|about (you|us|gatveon+)|tell me about (yourself|yourselves|you|gatveon+|your (team|studio))|(what|who) is your (team|studio)|your team|is gatveon+ a (company|team|studio|agency)|are you a (company|team|studio|agency))$/,
+    match: /^(gatveon+|what is gatveon+|who (is|are) (behind )?(gatveon+|you)|who are you( guys)?|about (you|us|gatveon+)|tell me about (yourself|yourselves|you|gatveon+|your (team|studio|company))|(what|who) is your (team|studio)|your team|is gatveon+ a (company|team|studio|agency)|are you a (company|team|studio|agency))$|\b(your (mission|vision|values|story)|gatveon+'?s? (mission|vision|story)|why (choose|hire|pick) (you|gatveon+|us)|why should i (choose|hire|pick|work with) (you|gatveon+)|what makes (you|gatveon+) different|about page)\b/,
     answers: [
-      `${NAME} is an independent studio: a team of AI engineers, developers and designers who build websites, apps and AI systems for ambitious businesses. We work closely with each client, from the first call to launch. What are you hoping to build?`,
-      `We're a team of AI engineers and product builders. ${NAME} designs and ships websites, mobile apps, AI apps and agents that do real work for a business. Tell me a little about your project?`,
-      `${NAME} is a small, hands-on team of AI engineers and designers. You work directly with the people building your product, with no layers in between. What would you like to create?`,
-      `Think of ${NAME} as an AI engineering and design team you can bring in: we take an idea through design, build and launch, with AI at the core where it helps. What's the project you have in mind?`,
-      `We're an independent team of engineers and designers focused on AI, web and mobile. Every project gets a clear scope, a fixed price and the same people from start to finish. Where would you like to start?`,
+      `${NAME} is a design and engineering studio. We build websites, apps, AI agents and software for businesses that want to grow, from the first idea to launch day and beyond. You can read our full story on the About page. What are you hoping to build?`,
+      `We're a team of designers and engineers turning bold ideas into products people love. Our mission is to give every ambitious business access to world-class design, engineering and AI, without the agency overhead. There's more on the About page. What's your project?`,
+      `${NAME} started with one belief: good ideas deserve better than template work. We work with clients across India and around the world, and you talk directly to the people building your product. Our story is on the About page. Where would you like to start?`,
+      `Think of ${NAME} as your product team. We listen, shape, build and then keep growing the product with you, with AI at the core wherever it pays off. The About page has the full picture. What would you like to create?`,
+      `We're an independent studio of AI engineers, developers and designers. Craft in every detail, a direct line to the builders and real support after launch are what set us apart. Have a look at the About page, or tell me about your project?`,
     ],
   },
   {
@@ -163,6 +164,20 @@ const normalise = (text: string) =>
     .trim()
     .replace(/[.\s]+$/, "");
 
+/** "Tell me more", "about it": asks to carry on with the last answer. */
+const FOLLOW_UP =
+  /^(about (it|that|this)|more|tell me more( about (it|that|this))?|(go on|continue|explain|elaborate)( more)?|what else|anything else|and)$/;
+
+/**
+ * The topic a follow-up continues: the prepared answer just given, so a
+ * short "tell me more" gets another take on it instead of a model call.
+ */
+function followedUp(text: string, history: { role: string; content: string }[]) {
+  if (!FOLLOW_UP.test(text)) return null;
+  const last = history.slice(0, -1).findLast((turn) => turn.role === "assistant")?.content.trim();
+  return last ? (FAQS.find((entry) => entry.answers.includes(last)) ?? null) : null;
+}
+
 /**
  * A prepared answer for the newest message, or null to ask the model.
  * Wordings already used in this conversation are skipped.
@@ -174,7 +189,7 @@ export function answerFromFaq(history: { role: string; content: string }[]) {
   const text = normalise(latest.content);
   if (!text || text.length > MAX_LENGTH || PERSONAL.test(latest.content)) return null;
 
-  const faq = FAQS.find((entry) => entry.match.test(text));
+  const faq = FAQS.find((entry) => entry.match.test(text)) ?? followedUp(text, history);
   if (!faq) return null;
 
   const said = new Set(history.filter((turn) => turn.role === "assistant").map((turn) => turn.content.trim()));

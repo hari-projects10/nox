@@ -208,7 +208,7 @@ export function Capabilities() {
     <section id="services" className="relative">
       {/* ---- Section label ---- */}
       {/* Same container as the stage, so the label lines up with it */}
-      <header className="mx-auto w-full max-w-[1600px] px-6 pb-6 pt-10 md:px-12 md:pb-8 md:pt-12">
+      <header className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 pb-6 pt-10 md:px-12 md:pb-8 md:pt-12">
         {/* The section's heading, so each capability's (level 3) sits under
             it. Inline, so it sets exactly as the plain label did. */}
         <h2 className="inline text-[11px] font-medium uppercase tracking-[0.25em] text-headline">
@@ -299,7 +299,7 @@ export function Capabilities() {
           className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(5,6,10,0.7)_0%,rgba(5,6,10,0.2)_55%,transparent_100%),linear-gradient(0deg,rgba(5,6,10,0.75)_0%,transparent_32%)]"
         />
 
-        <div className="relative mx-auto h-full w-full max-w-[1600px] px-6 md:px-12">
+        <div className="relative mx-auto h-full w-full max-w-[1600px] px-4 sm:px-6 md:px-12">
           <div className="relative h-full">
             {/* Architectural hairlines */}
             <div aria-hidden="true" className="pointer-events-none absolute inset-0">

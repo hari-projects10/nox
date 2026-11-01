@@ -5,7 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
 import { SplitText } from "@/components/ui/split-text";
-import { EASE_OUT_EXPO } from "@/lib/site";
+import { EASE_OUT_EXPO, site } from "@/lib/site";
 
 /**
  * Openers that get a visitor talking about their own project, each leading
@@ -15,6 +15,7 @@ import { EASE_OUT_EXPO } from "@/lib/site";
  */
 const STARTERS = [
   "What can you build for my business?",
+  `Who is ${site.name}?`,
   "Can you build an AI agent for my business?",
   "I have an idea. How do we get started?",
   "Where can I see your work?",

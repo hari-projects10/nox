@@ -226,7 +226,7 @@ export function Deployments() {
   }, [openDemo]);
 
   return (
-    <section id="work" className="relative px-6 py-20 md:px-12 md:py-28">
+    <section id="work" className="relative px-4 sm:px-6 py-20 md:px-12 md:py-28">
       <div className="mx-auto w-full max-w-[1600px]">
         {/* ---- Section header ---- */}
         <header className="mb-12 grid grid-cols-12 items-end gap-y-8 md:mb-16 md:gap-x-10">

@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 import { AuroraField } from "@/components/background/aurora-field";
 import { ChatWidget } from "@/components/chat/chat-widget";
-import { Footer } from "@/components/layout/footer";
+import { SiteFooter } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { KineticViewport } from "@/components/providers/kinetic-viewport";
 import {
@@ -132,7 +132,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
             <KineticViewport>
               <PageTransition>{children}</PageTransition>
-              <Footer />
+              <SiteFooter />
             </KineticViewport>
           </RouteTransitionProvider>
         </SmoothScroll>

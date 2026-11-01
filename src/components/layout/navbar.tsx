@@ -43,10 +43,23 @@ const anchors = site.nav
 export function Navbar() {
   /* The sections live on the home page; anywhere else (a 404, say) the
      links go there first. */
-  const onHome = usePathname() === "/";
+  const pathname = usePathname();
+  const onHome = pathname === "/";
   const [active, setActive] = useState<string | null>(null);
   const [onDark, setOnDark] = useState(false);
   const [hidden, setHidden] = useState(false);
+  /* Pages whose opening screen already carries the full logo: the bar's
+     own mark waits until that screen has scrolled away. */
+  const heroLogo = pathname === "/about";
+  const [pastHero, setPastHero] = useState(false);
+
+  const links = onHome
+    ? site.nav
+    : [
+        { label: "Home", href: "/" },
+        ...site.nav.filter((item) => item.href !== pathname),
+        ...site.nav.filter((item) => item.href === pathname),
+      ];
   const lastScroll = useRef(0);
   const targets = useRef<{ anchors: Band[]; dark: Band[] }>({
     anchors: [],
@@ -98,18 +111,26 @@ export function Navbar() {
     };
 
     remeasure();
+    /* A new route brings new sections (the About page is dark from the top,
+       the home page is not), so measure again once it has painted and the
+       curtain has put it back at the top. */
+    const settle = [setTimeout(remeasure, 250), setTimeout(remeasure, 900)];
     window.addEventListener("resize", remeasure);
     window.addEventListener("load", remeasure);
     document.fonts?.ready.then(remeasure);
 
     return () => {
+      settle.forEach(clearTimeout);
       window.removeEventListener("resize", remeasure);
       window.removeEventListener("load", remeasure);
     };
-  }, [collect, probe]);
+  }, [collect, probe, pathname]);
 
   useLenis((lenis) => {
     probe(lenis.scroll);
+
+    const past = lenis.scroll > window.innerHeight * 0.55;
+    setPastHero((prev) => (prev === past ? prev : past));
 
     const y = lenis.scroll;
     const delta = y - lastScroll.current;
@@ -131,20 +152,27 @@ export function Navbar() {
       className={cn(
         "fixed inset-x-0 top-0 z-30 flex h-16 items-center justify-between gap-3 px-4 sm:gap-6 sm:px-6 md:h-20 md:px-12",
         "transition-colors duration-700 ease-out-expo",
-        onDark ? "text-white" : "text-headline",
+        /* Over footage the links also get a soft shadow, so bright frames
+           never wash them out. */
+        onDark ? "text-white [text-shadow:0_1px_14px_rgba(0,0,0,0.6)]" : "text-headline",
       )}
     >
       <a
         href={onHome ? "#top" : "/"}
         aria-label={onHome ? `${site.name}, back to top` : `${site.name}, home`}
-        className="group/logo flex shrink-0 items-center"
+        aria-hidden={heroLogo && !pastHero ? true : undefined}
+        tabIndex={heroLogo && !pastHero ? -1 : undefined}
+        className={cn(
+          "group/logo flex shrink-0 items-center transition-opacity duration-500 ease-out-expo",
+          heroLogo && !pastHero && "pointer-events-none opacity-0",
+        )}
       >
         <Logo className="h-4 sm:h-[18px] md:h-5" />
       </a>
 
       <nav className="-mr-2 flex items-center sm:gap-1">
-        {site.nav.map((item) => {
-          const isActive = item.href === active;
+        {links.map((item) => {
+          const isActive = item.href === active || item.href === pathname;
 
           return (
             <a
@@ -154,7 +182,11 @@ export function Navbar() {
               className={cn(
                 "group relative block px-2 py-3 text-[12px] font-medium sm:px-3 sm:text-[13px]",
                 "transition-opacity duration-300",
-                isActive ? "opacity-100" : "opacity-60 hover:opacity-100",
+                isActive
+                  ? "opacity-100"
+                  : onDark
+                    ? "opacity-80 hover:opacity-100"
+                    : "opacity-60 hover:opacity-100",
               )}
             >
               {item.label}

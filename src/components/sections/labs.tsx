@@ -131,7 +131,7 @@ export function Labs() {
   const active = tools.find((tool) => tool.id === activeId) ?? tools[0];
 
   return (
-    <section id="labs" className="relative px-6 py-20 md:px-12 md:py-28">
+    <section id="labs" className="relative px-4 sm:px-6 py-20 md:px-12 md:py-28">
       <div className="mx-auto w-full max-w-[1600px]">
         {/* ---- Section header ---- */}
         <header className="mb-10 grid grid-cols-12 items-end gap-y-8 md:mb-14 md:gap-x-10">

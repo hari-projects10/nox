@@ -98,10 +98,13 @@ function useOverDark(fromBottom: number) {
     };
 
     measure();
+    /* Again once a new route has painted and been put back at the top. */
+    const settle = [setTimeout(measure, 250), setTimeout(measure, 900)];
     window.addEventListener("resize", measure);
     window.addEventListener("load", measure);
     document.fonts?.ready.then(measure);
     return () => {
+      settle.forEach(clearTimeout);
       window.removeEventListener("resize", measure);
       window.removeEventListener("load", measure);
     };
@@ -150,10 +153,13 @@ function useSectionHere() {
     };
 
     measure();
+    /* Again once a new route has painted and been put back at the top. */
+    const settle = [setTimeout(measure, 250), setTimeout(measure, 900)];
     window.addEventListener("resize", measure);
     window.addEventListener("load", measure);
     document.fonts?.ready.then(measure);
     return () => {
+      settle.forEach(clearTimeout);
       window.removeEventListener("resize", measure);
       window.removeEventListener("load", measure);
     };

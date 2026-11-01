@@ -32,7 +32,10 @@ export const site = {
       start: `https://wa.me/919400522846?text=${encodeURIComponent("Hi GATVEON, I'd like to talk about a project.")}`,
     },
   },
+  /* About leads on the home page. Away from home the bar also offers Home
+     first, and About moves to the end, marked as the page being read. */
   nav: [
+    { label: "About", href: "/about" },
     { label: "Services", href: "#services" },
     { label: "Platforms", href: "#work" },
     // { label: "Studio", href: "/studio" },

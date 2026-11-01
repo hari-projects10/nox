@@ -10,6 +10,8 @@ import {
   useTransform,
 } from "framer-motion";
 
+import { usePathname } from "next/navigation";
+
 import { EASE_OUT_EXPO, site } from "@/lib/site";
 
 import { GrassField } from "./grass-field";
@@ -45,6 +47,15 @@ const CLOUDS = "/images/footer-clouds.webp";
  * version standing in wherever that cannot run. Layers drift apart on the
  * way in for depth, and the clouds move slowly once it settles.
  */
+/** Pages that close on their own contact section instead of this one. */
+const OWN_CLOSE = new Set(["/about"]);
+
+/** The site footer, left out where a page already ends on its own close. */
+export function SiteFooter() {
+  const pathname = usePathname();
+  return OWN_CLOSE.has(pathname) ? null : <Footer />;
+}
+
 export function Footer() {
   const ref = useRef<HTMLElement>(null);
   const motionOff = useReducedMotion();
@@ -115,7 +126,7 @@ export function Footer() {
            in separate layers either side of the scene (z 1 < scene 2 < 3):
            this wrapper must not form a stacking context of its own, so the
            parallax and fade are carried by each of them, not by it. */}
-      <div className="relative flex flex-1 flex-col items-center justify-center gap-10 px-6 pb-[14svh] md:gap-14 md:px-12">
+      <div className="relative flex flex-1 flex-col items-center justify-center gap-10 px-4 sm:px-6 pb-[14svh] md:gap-14 md:px-12">
         {/* ---- Screen-width wordmark ----
              Gradient clipped to the glyphs: the weight stays enormous while
              the letters fade off at the baseline, which keeps it elegant. */}

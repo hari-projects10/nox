@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 import { ArrowDownRight, ArrowUpRight, MessageCircle } from "lucide-react";
 
 import { DEMOS, type DemoId } from "@/lib/demos";
@@ -149,6 +150,7 @@ export function ChatThread({
                     <Linkified text={message.content} {...actions} />
                     {live && <span aria-hidden="true" className="chat-caret text-ink/50" />}
                   </p>
+                  {!live && <AboutLink text={message.content} />}
                   {message.goTo && (
                     <Trip
                       state={message.goTo.state}
@@ -170,6 +172,42 @@ export function ChatThread({
 }
 
 /**
+ * Under a reply that mentions the About page: a way there, unless the
+ * visitor is already reading it.
+ */
+function AboutLink({ text }: { text: string }) {
+  const onAbout = usePathname() === "/about";
+  if (onAbout || !/\bAbout page\b/.test(text)) return null;
+
+  return (
+    <motion.div
+      className="mt-3"
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
+    >
+      {/* A plain anchor, so the route curtain runs on the way there. */}
+      <a
+        href="/about"
+        className={cn(
+          CHIP,
+          "group transition-colors duration-300 hover:bg-headline hover:text-white hover:ring-headline pointer-coarse:py-2.5",
+        )}
+      >
+        Read our story
+        <ArrowUpRight
+          className="size-3.5 transition-transform duration-500 ease-out-expo group-hover:rotate-45"
+          strokeWidth={2}
+        />
+      </a>
+    </motion.div>
+  );
+}
+
+const CHIP =
+  "relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-white/85 py-1.5 pl-3.5 pr-3 text-[12px] font-medium text-ink-soft ring-1 ring-black/[0.07]";
+
+/**
  * Under a reply that points to the work. While the page is on its way, a
  * line fills over the countdown so the move never comes as a surprise.
  * Once there (or if the visitor stays), it offers the demos themselves,
@@ -186,8 +224,7 @@ function Trip({
   onStay: () => void;
   onOpenDemo: (id: DemoId) => void;
 }) {
-  const chip =
-    "relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-white/85 py-1.5 pl-3.5 pr-3 text-[12px] font-medium text-ink-soft ring-1 ring-black/[0.07]";
+  const chip = CHIP;
 
   if (state === "pending") {
     return (
