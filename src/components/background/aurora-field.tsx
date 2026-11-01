@@ -1,3 +1,7 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+
 import { cn } from "@/lib/utils";
 
 /** One 20s loop, shared by every orb, with staggered keyframe timing. */
@@ -52,7 +56,13 @@ const ORBS: Orb[] = [
  * frame and keeps gliding even while the page is busy. Reduced motion stops
  * it (see .ambient).
  */
+/** Pages painted on their own dark ground, which hides the aurora. */
+const OPAQUE_PAGES = new Set(["/about"]);
+
 export function AuroraField() {
+  /* Covered, it would still drift three viewport-sized layers every frame. */
+  if (OPAQUE_PAGES.has(usePathname())) return null;
+
   return (
     <div
       aria-hidden="true"

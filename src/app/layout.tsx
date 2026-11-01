@@ -5,7 +5,6 @@ import { AuroraField } from "@/components/background/aurora-field";
 import { ChatWidget } from "@/components/chat/chat-widget";
 import { SiteFooter } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
-import { KineticViewport } from "@/components/providers/kinetic-viewport";
 import {
   PageTransition,
   RouteTransitionProvider,
@@ -84,7 +83,7 @@ export const viewport: Viewport = {
  *
  *   html background   off-white ground (set in globals.css)
  *  -z-10  AuroraField   fixed pastel wash
- *   z-10  KineticViewport  page content + footer, given under scroll velocity
+ *   z-10  page content + footer
  *   z-30  Navbar        floating chrome
  *   z-40  FilmGrain     unifies DOM and WebGL into one photographic plane
  *   z-[900]  route curtain
@@ -130,16 +129,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
             <Navbar />
 
-            <KineticViewport>
+            {/* Never transformed: a transform here would put the whole site
+                on one layer to re-composite every scroll frame, and resample
+                its text while it moved. */}
+            <div className="relative z-10">
               <PageTransition>{children}</PageTransition>
               <SiteFooter />
-            </KineticViewport>
+            </div>
           </RouteTransitionProvider>
         </SmoothScroll>
 
         <FilmGrain />
 
-        {/* Outside KineticViewport: its transform would unpin a fixed child. */}
         <ChatWidget />
       </body>
     </html>

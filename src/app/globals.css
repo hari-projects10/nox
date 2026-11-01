@@ -170,6 +170,15 @@
   animation-iteration-count: infinite;
 }
 
+/* Decorative loops hold still while the page is moving and resume where
+   they were. Their drift is far too slow to see stop, and it takes their
+   per-frame upkeep out of every scroll frame. Lenis sets the class.
+   !important: the footer clouds set their play state inline. */
+html.lenis-scrolling .ambient,
+html.lenis-scrolling .chat-orb-swirl {
+  animation-play-state: paused !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   /* !important: each loop's name and length are set inline. */
   .ambient {

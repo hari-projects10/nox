@@ -72,6 +72,8 @@ export function Footer() {
   // One trigger for the whole close, so the wordmark and the button (which
   // live in different layers) still arrive together.
   const arrived = useInView(ref, { once: true, amount: 0.4 });
+  /* The cloud drift is endless; it only needs to run while it can be seen. */
+  const onScreen = useInView(ref);
   const arrival = {
     initial: { opacity: 0 },
     animate: { opacity: arrived ? 1 : 0 },
@@ -96,7 +98,11 @@ export function Footer() {
         <motion.div className="absolute inset-0 will-change-transform" style={{ y: cloudsY }}>
           <div
             className="ambient absolute inset-y-0 -left-[4%] w-[108%] will-change-transform"
-            style={{ animationName: "drift-clouds", animationDuration: "70s" }}
+            style={{
+              animationName: "drift-clouds",
+              animationDuration: "70s",
+              animationPlayState: onScreen ? "running" : "paused",
+            }}
           >
             {/* object-cover is the scene's xMidYMid slice. A plain img: it is
                 one fixed decorative plate, already sized for any width. */}

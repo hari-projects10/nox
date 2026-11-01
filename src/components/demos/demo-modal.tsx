@@ -100,9 +100,9 @@ function useWindowBox(
 }
 
 /**
- * Full-viewport product window. Portalled to <body> because page content
- * lives inside a transformed wrapper (KineticViewport), which would
- * otherwise trap `position: fixed`.
+ * Full-viewport product window. Portalled to <body>, so no transformed
+ * ancestor (a section's reveal, the route curtain) can trap
+ * `position: fixed`.
  */
 export function DemoModal({
   open,
